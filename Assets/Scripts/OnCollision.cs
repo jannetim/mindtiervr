@@ -30,9 +30,6 @@ public class OnCollision : MonoBehaviour {
         wave = gameObject;
         fadeWave = true;
         //wave = GameObject.Find("sceneholder2/planewaveP2/Cube");
-
-        Debug.Log("Enter trigger zone");
-
     }
 
     void OnTriggerStay(Collider other)
@@ -42,7 +39,6 @@ public class OnCollision : MonoBehaviour {
 
     void OnTriggerExit(Collider other)
     {
-        Debug.Log("Exit trigger zone");
     }
 
     void Update()

@@ -9,7 +9,7 @@ public class OnSyncCollision : MonoBehaviour {
     void OnTriggerEnter(Collider other)
     {
         objectsInZone++;
-        Debug.Log("Enter, objects: " + objectsInZone);
+        //Debug.Log("Enter, objects: " + objectsInZone);
     }
 
     void OnTriggerStay(Collider other)
@@ -26,6 +26,6 @@ public class OnSyncCollision : MonoBehaviour {
     void OnTriggerExit(Collider other)
     {
         objectsInZone--;
-        Debug.Log("Exit, objects: " + objectsInZone);
+        //Debug.Log("Exit, objects: " + objectsInZone);
     }
 }
