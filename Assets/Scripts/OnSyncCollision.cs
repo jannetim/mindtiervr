@@ -17,7 +17,7 @@ public class OnSyncCollision : MonoBehaviour {
         // one wave has objects to render both sides -> 2 waves == 4 objects
         if (objectsInZone >= 4)
         {
-            Debug.Log("Breathe in sync");
+            //Debug.Log("Breathe in sync");
             // do sync stuff
             // if player1 color/gradient is close to player2 color/gradient, then plane
         } 

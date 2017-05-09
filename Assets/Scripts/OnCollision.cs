@@ -55,7 +55,7 @@ public class OnCollision : MonoBehaviour {
 
         renderer = wave.GetComponent<Renderer>();
         material = renderer.material;
-        //Debug.Log("enter fadeout function");
+        Debug.Log("enter fadeout function");
         Color color = material.color;
         //Debug.Log(color.a);
         float origAlpha = color.a;
