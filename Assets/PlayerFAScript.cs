@@ -11,6 +11,7 @@ public class PlayerFAScript : MonoBehaviour {
 
 	public GameObject PlayerBridgeSides;
 	public GameObject PlayerAura;
+	public GameObject PlayerAura2;
 	public GameObject[] PlayerLights;
 	public GameObject PlayerStatue;
 	public float PlayerFA_Display = 0.0f;
@@ -45,7 +46,7 @@ public class PlayerFAScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-		PlayerFA_Display = Mathf.Abs(Mathf.Sin((SimuColorOffSet + Time.time) * 0.1f));
+		PlayerFA_Display = 0.5f+0.5f*Mathf.Sin((SimuColorOffSet + Time.time) * 0.2f);
 
 
 
@@ -55,7 +56,10 @@ public class PlayerFAScript : MonoBehaviour {
 		auraS = 0.72f;
 		auraV = 0.35f;
 		AuraColor = Color.HSVToRGB(auraH,auraS,auraV);
+		AuraColor.a = 0.05f + PlayerFA_Display*0.7f;
 		PlayerAura.GetComponent<Renderer> ().material.SetColor ("_TintColor", AuraColor); 
+		AuraColor.a = AuraColor.a*0.4f;
+		PlayerAura2.GetComponent<Renderer> ().material.SetColor ("_TintColor", AuraColor); 
 
 
 
@@ -63,6 +67,7 @@ public class PlayerFAScript : MonoBehaviour {
 			
 			Light l = PlayerLights[i].GetComponent<Light> ();
 			l.color = PlayerColor;
+			l.intensity = 0.2f + PlayerFA_Display*1.5f;
 			}
 
 		PlayerBridgeSides.GetComponent<Renderer> ().material.color = PlayerColor;

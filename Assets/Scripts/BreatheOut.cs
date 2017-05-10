@@ -33,7 +33,7 @@ public class BreatheOut : MonoBehaviour {
         dWave.enabled = true;
 
 		auraColor = GameObject.Find ("Player1_Manager").GetComponent<PlayerFAScript> ().PlayerColor;
-		auraColor.a = 0.5f;
+		auraColor.a = GameObject.Find ("Player1_Manager").GetComponent<PlayerFAScript> ().AuraColor.a*2 + 0.2f;
 		GameObject waveGeometry = newWave.transform.Find("wave1_side1").gameObject;
 		waveGeometry.GetComponent<Renderer> ().material.color = auraColor;
 		waveGeometry.GetComponent<Renderer> ().material.SetColor ("_EmissionColor", auraColor); 
@@ -52,7 +52,7 @@ public class BreatheOut : MonoBehaviour {
         dWave.enabled = true;
 	
 		auraColor = GameObject.Find ("Player2_Manager").GetComponent<PlayerFAScript> ().PlayerColor;
-		auraColor.a = 0.5f;
+		auraColor.a = GameObject.Find ("Player2_Manager").GetComponent<PlayerFAScript> ().AuraColor.a*2 + 0.2f;
 		waveGeometry = newWave.transform.Find("wave2_side1").gameObject;
 		waveGeometry.GetComponent<Renderer> ().material.color = auraColor;
 		waveGeometry.GetComponent<Renderer> ().material.SetColor ("_EmissionColor", auraColor); 
