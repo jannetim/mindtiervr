@@ -59,11 +59,11 @@ public class PlayerFAScript : MonoBehaviour {
 		AuraColor.a = 0.05f + PlayerFA_Display*0.7f;
 		PlayerAura.GetComponent<Renderer> ().material.SetColor ("_TintColor", AuraColor); 
 		AuraColor.a = AuraColor.a*0.4f;
-		PlayerAura2.GetComponent<Renderer> ().material.SetColor ("_TintColor", AuraColor); 
+		PlayerAura2.GetComponent<Renderer> ().material.SetColor ("_TintColor", AuraColor);
 
 
 
-		for (int i = 0; i < PlayerLights.Length; i++) {
+        for (int i = 0; i < PlayerLights.Length; i++) {
 			
 			Light l = PlayerLights[i].GetComponent<Light> ();
 			l.color = PlayerColor;
@@ -71,7 +71,7 @@ public class PlayerFAScript : MonoBehaviour {
 			}
 
 		PlayerBridgeSides.GetComponent<Renderer> ().material.color = PlayerColor;
+        PlayerBridgeSides.GetComponent<Renderer>().material.SetFloat("_Threshold", PlayerFA_Display);
 
-		
-	}
+    }
 }
