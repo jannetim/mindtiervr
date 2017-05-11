@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MoveWave2 : MonoBehaviour {
 
-	public float WaveSpeed = 0.4f;
+	public float WaveSpeed = 0.2f;
 
 	// Use this for initialization
 	void Start () {
@@ -13,6 +13,6 @@ public class MoveWave2 : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
-        transform.Translate(new Vector3(-1, 0, 1) * Time.deltaTime * WaveSpeed);
+        transform.Translate(new Vector3(1, 0, 0) * Time.deltaTime * WaveSpeed);
     }
 }

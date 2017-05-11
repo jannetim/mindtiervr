@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class DestroyWave : MonoBehaviour {
+	public float WaveDuration = 4.5f;
 
 	// Use this for initialization
 	void Start () {
-        Destroy(gameObject, 4.5f);
+        Destroy(gameObject, WaveDuration);
     }
 	
 	// Update is called once per frame
