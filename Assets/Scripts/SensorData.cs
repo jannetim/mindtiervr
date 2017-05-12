@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class eeg_data : MonoBehaviour // removed static from this, possible issues?
+public class SensorData : MonoBehaviour // removed static from this, possible issues?
 	// static class GlobalClass
 
 
@@ -15,8 +15,8 @@ public class eeg_data : MonoBehaviour // removed static from this, possible issu
 	
 	//public static float eeg1;
 
-	public static float eeg2;	//relaxation, fades to whie.
-	public static float eeg1;  //concentration, goes up and down
+	public static float RespOut;	//relaxation, fades to whie.
+	public static float FAOut;  //concentration, goes up and down
 	
 
 	// to access just refer to GlobalClass.eeg1
