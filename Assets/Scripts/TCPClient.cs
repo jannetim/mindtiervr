@@ -27,8 +27,8 @@ public class TCPClient : MonoBehaviour
         myThread.Start();
 
       //  GlobalClass.EDA = 1;
-		eeg_data.eeg2 = 0;
-		eeg_data.eeg1 = 0;
+		eeg_data.RespOut = 0;
+		eeg_data.FAOut = 0;
 
 
 
@@ -170,7 +170,7 @@ public class TCPClientThread
 					 	
 				}
 				ThetaPower = ThetaPower/numberOfThetaChannels;
-				Debug.Log ("Relax: " + eeg_data.eeg2);
+				Debug.Log ("Relax: " + eeg_data.RespOut);
 			
 		//		if (BaselineLength > 0){
 				
@@ -206,15 +206,15 @@ public class TCPClientThread
 				Debug.Log("AlphaRange: " + AlphaRange);
 
 				if(BaselineLength > 0)
-					eeg_data.eeg2 = 0;
+					eeg_data.RespOut = 0;
 				else 
-					eeg_data.eeg2 = (AlphaPower-AlphaMin)/AlphaRange - 0.2f;
+					eeg_data.RespOut = (AlphaPower-AlphaMin)/AlphaRange - 0.2f;
 
 
 				if(BaselineLength >0 )
-					eeg_data.eeg1 = 0;
+					eeg_data.FAOut = 0;
 				else
-					eeg_data.eeg1 = (ThetaPower-ThetaMin)/ThetaRange -0.2f;
+					eeg_data.FAOut = (ThetaPower-ThetaMin)/ThetaRange -0.2f;
 				
 
 				if (BaselineLength == 1){
