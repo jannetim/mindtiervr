@@ -165,7 +165,7 @@ public class TCPClientThreadFA
 
                 frontalAss = Mathf.Log(alphaRight) - Mathf.Log(alphaLeft);
 
-                Debug.Log("Relax: " + eeg_data.RespOut);
+                Debug.Log("Relax: " + SensorData.RespOut);
 
 
                 if (frontalAss < faMin)
@@ -191,13 +191,13 @@ public class TCPClientThreadFA
 
                 if (initSteps > 0)
                 {
-                    eeg_data.RespOut = 0;
-                    eeg_data.FAOut = 0;
+                    SensorData.RespOut = 0;
+                    SensorData.FAOut = 0;
                 }
                 else
                 {
-                    eeg_data.FAOut = (frontalAss - faMin) / faRange; //- 0.2f;
-                    eeg_data.RespOut = respiration - prevRespiration;
+                    SensorData.FAOut = (frontalAss - faMin) / faRange; //- 0.2f;
+                    SensorData.RespOut = respiration - prevRespiration;
                 }
 
                 if (initSteps == 1)
