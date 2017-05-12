@@ -42,7 +42,7 @@ public class BreatheOut : MonoBehaviour {
 
 		auraColor = GameObject.Find ("Player1_Manager").GetComponent<PlayerFAScript> ().PlayerColor;
 
-        auraColor.a = 0.1f;// GameObject.Find("Player1_Manager").GetComponent<PlayerFAScript>().AuraColor.a / 5;// + 0.2f;
+        auraColor.a = 0.005f;// GameObject.Find("Player1_Manager").GetComponent<PlayerFAScript>().AuraColor.a / 5;// + 0.2f;
 	//	newWave.GetComponent<Renderer> ().material.color = auraColor;
 	//	newWave.GetComponent<Renderer> ().material.SetColor ("_EmissionColor", auraColor); 
 		newWave.GetComponent<ParticleSystem>().startColor = auraColor;
@@ -61,7 +61,7 @@ public class BreatheOut : MonoBehaviour {
 
 		auraColor = GameObject.Find ("Player2_Manager").GetComponent<PlayerFAScript> ().PlayerColor;
 
-        auraColor.a = 0.1f;// GameObject.Find("Player2_Manager").GetComponent<PlayerFAScript>().AuraColor.a / 5;// + 0.2f;
+        auraColor.a = 0.005f;// GameObject.Find("Player2_Manager").GetComponent<PlayerFAScript>().AuraColor.a / 5;// + 0.2f;
 	//	newWave.GetComponent<Renderer> ().material.color = auraColor;
 	//	newWave.GetComponent<Renderer> ().material.SetColor ("_EmissionColor", auraColor); 
 		newWave.GetComponent<ParticleSystem>().startColor = auraColor;

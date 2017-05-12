@@ -197,9 +197,9 @@ public class TCPClientThreadFA
 
                 //	Debug.Log("AlphaRange: " + AlphaRange);
                 Debug.Log("ThetaRange: " + ThetaRange);
-                Debug.Log("ThetaMin: " + ThetaMin);
-                Debug.Log("ThetaMax: " + ThetaMax);
-                Debug.Log("thetapower: " + ThetaPower);
+              //  Debug.Log("ThetaMin: " + ThetaMin);
+             //   Debug.Log("ThetaMax: " + ThetaMax);
+           //     Debug.Log("thetapower: " + ThetaPower);
 
                 Debug.Log(" Toimii kuin junan vessa - works like a toilet in a train ");
 
