@@ -27,8 +27,8 @@ public class TCPClientFA : MonoBehaviour
         myThread.Start();
 
         //  GlobalClass.EDA = 1;
-        eeg_data.RespOut = 0;
-        eeg_data.FAOut = 0;
+        SensorData.RespOut = 0;
+        SensorData.FAOut = 0;
 
     }
 
@@ -66,16 +66,15 @@ public class TCPClientThreadFA
     float alphaRight;
     float respiration;
     float prevRespiration;
-    int BaselineLength;
+    int initSteps;
     float faMin;
-    float AlphaPower;
 
     float faMax;
 
     //float ThetaMax;
 
     float faRange = 0.01f;
-    float ThetaRange = 0.01f;
+
 
     string StaticIP = "130.233.50.206";
 
@@ -88,7 +87,7 @@ public class TCPClientThreadFA
         //	BaselineLength = 30;
         numberOfAlphaChannels = 3;
 
-        BaselineLength = 2;
+        initSteps = 2;
 
         faMin = 1000000;
         faMax = -1;
@@ -165,70 +164,52 @@ public class TCPClientThreadFA
                 respiration = (float)Convert.ToDouble(words[2]);
 
                 frontalAss = Mathf.Log(alphaRight) - Mathf.Log(alphaLeft);
-                /*for (int i = numberOfAlphaChannels; i < (numberOfAlphaChannels+numberOfThetaChannels);
-				     i++){
-					ThetaPower = (float)Convert.ToDouble (words[i]) + ThetaPower;
-					 	
-				}
-				ThetaPower = ThetaPower/numberOfThetaChannels;*/
+
                 Debug.Log("Relax: " + eeg_data.RespOut);
-
-                //		if (BaselineLength > 0){
-
 
 
                 if (frontalAss < faMin)
                 {
                     faMin = frontalAss;
                 }
-                /*if(ThetaPower < ThetaMin){
-                    ThetaMin = ThetaPower;
-                }*/
+
 
                 if (frontalAss > faMax)
                 {
                     faMax = frontalAss;
                 }
-                /*	if(ThetaPower > ThetaMax){
-						ThetaMax = ThetaPower;
-					} */
+
                 faRange = faMax - faMin;
-                //ThetaRange = ThetaMax - ThetaMin;
 
-                //	Debug.Log("AlphaRange: " + AlphaRange);
-                Debug.Log("ThetaRange: " + ThetaRange);
-                Debug.Log("ThetaMin: " + ThetaMin);
-                Debug.Log("ThetaMax: " + ThetaMax);
-                Debug.Log("thetapower: " + ThetaPower);
 
-                Debug.Log(" Toimii kuin junan vessa - works like a toilet in a train ");
+                Debug.Log(" Toimii kuin junan vessa");
 
                 Debug.Log("AlphaMin: " + faMin);
                 Debug.Log("AlphaMax: " + faMax);
                 Debug.Log("frontalAss: " + frontalAss);
                 Debug.Log("AlphaRange: " + faRange);
 
-                if (BaselineLength > 0)
+                if (initSteps > 0)
                 {
                     eeg_data.RespOut = 0;
                     eeg_data.FAOut = 0;
                 }
                 else
                 {
-                    eeg_data.RespOut = (frontalAss - faMin) / faRange - 0.2f;
-                    eeg_data.FAOut = respiration - prevRespiration;
+                    eeg_data.FAOut = (frontalAss - faMin) / faRange; //- 0.2f;
+                    eeg_data.RespOut = respiration - prevRespiration;
                 }
 
-                if (BaselineLength == 1)
+                if (initSteps == 1)
                 {
                     faRange = faMax - faMin;
                     prevRespiration = respiration;
                     Debug.Log("AlphaRange: " + faRange);
-                    Debug.Log("BaselineLength: " + BaselineLength);
+                    Debug.Log("BaselineLength: " + initSteps);
                 }
-                if (BaselineLength > 0)
+                if (initSteps > 0)
                 {
-                    BaselineLength--;
+                    initSteps--;
                 }
                 /*
                 if(AlphaPower < AlphaMin){
@@ -255,8 +236,7 @@ public class TCPClientThreadFA
             }
 
             Debug.Log("input from server " + stringData);
-            Debug.Log("Alpha power is: " + AlphaPower);
-
+            Debug.Log("frontal A$$ " + frontalAss);
         }
         //myClient.Close();
         //     Console.WriteLine("Disconnecting...");
