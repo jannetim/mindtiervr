@@ -71,7 +71,8 @@ public class PlayerFAScript : MonoBehaviour {
 			}
 
 		PlayerBridgeSides.GetComponent<Renderer> ().material.color = PlayerColor;
-        PlayerBridgeSides.GetComponent<Renderer>().material.SetFloat("_Threshold", PlayerFA_Display);
+        PlayerBridgeSides.GetComponent<Renderer>().material.SetFloat("_Threshold", 1.0f - PlayerFA_Display);
+
 
     }
 }
