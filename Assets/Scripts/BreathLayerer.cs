@@ -6,17 +6,30 @@ public class BreathLayerer : MonoBehaviour {
     //public GameObject Plane, Plane2, Plane3, Plane4;
     public GameObject[] planes;
     private Color planeColor;
-    GameObject player1;
+    GameObject player;
+    [Range(0, 1)]
+    public float PlaneTransparency = 0.2f;
+    private float origAlpha;
+    private bool isFadingIn;
+    private bool isFadingOut;
     // Use this for initialization
     void Start () {
         System.Array.Reverse(planes);
-        player1 = GameObject.Find("Player1_Manager");
-        InvokeRepeating("InitBreatheBar", 2.0f, 6.0f);
+        if (gameObject.name == "Player1_BridgeLayers")
+        {
+            player = GameObject.Find("Player1_Manager");
+        } else if (gameObject.name == "Player2_BridgeLayers")
+        {
+            player = GameObject.Find("Player2_Manager");
+        }
+
+        origAlpha = 0.2f;
+        InvokeRepeating("InitBreatheBar", 2.0f, 5.0f);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        planeColor = player1.GetComponent<PlayerFAScript>().PlayerColor;
+        planeColor = player.GetComponent<PlayerFAScript>().PlayerColor;
     }
 
     void InitBreatheBar()
@@ -26,46 +39,59 @@ public class BreathLayerer : MonoBehaviour {
 
     IEnumerator Fades()
     {
+        if (isFadingIn)
+        {
+            StopCoroutine("FadeIn");
+        } else if (isFadingOut)
+        {
+            StopCoroutine("FadeOut");
+        }
         yield return StartCoroutine("FadeIn");
+        isFadingIn = false;
         yield return StartCoroutine("FadeOut");
+        isFadingOut = false;
     }
 
     IEnumerator FadeOut()
     {
-        print("out");
+        isFadingOut = true;
+        //print("out");
         System.Array.Reverse(planes);
         foreach (GameObject o in planes)
         { 
-            //Debug.Log("enter fadeout function");
             Color color = o.GetComponent<Renderer>().material.color;
             //Debug.Log(color.a);
-            float origAlpha = color.a;
-            for (float f = origAlpha; f >= 0; f -= 0.01f)
+            //float origAlpha = color.a;
+            for (float f = origAlpha; f >= 0; f -= 0.005f)
             {
                 color.a = f;
                 o.GetComponent<Renderer>().material.SetColor("_Color", color);
                 yield return null;
             }
+            o.SetActive(false);
         }
     }
 
     IEnumerator FadeIn()
     {
-        print("in");
+        isFadingIn = true;
+        //print("in");
         foreach (GameObject o in planes)
         {
             planeColor.a = 0;
             o.GetComponent<Renderer>().material.SetColor("_Color", planeColor);
+            o.SetActive(false);
             //print(o.GetComponent<Renderer>().material.color);
         }
         System.Array.Reverse(planes);
         foreach (GameObject o in planes)
         {
+            o.SetActive(true);
             //Debug.Log("enter fadeout function");
             Color color = o.GetComponent<Renderer>().material.color;
             //Debug.Log(color.a);
-            float origAlpha = color.a;
-            for (float f = 0; f <= 1; f += 0.1f)
+            //float origAlpha = color.a;
+            for (float f = 0; f <= origAlpha; f += 0.05f)
             {
                 color.a = f;
                 o.GetComponent<Renderer>().material.SetColor("_Color", color);
