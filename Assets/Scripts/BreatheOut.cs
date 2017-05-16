@@ -8,9 +8,10 @@ public class BreatheOut : MonoBehaviour {
 	public GameObject Player1WaveSpawn;
 	public GameObject Player2WaveSpawn;
 	Color auraColor;
-
     public float instantiateSpeed = 4.0f;
-	// Use this for initialization
+
+
+
 	void Start () {
 		avatar1 = GameObject.Find("NewWave1");
 		avatar2 = GameObject.Find("NewWave2");
@@ -23,8 +24,6 @@ public class BreatheOut : MonoBehaviour {
 		// avatar1 = GameObject.Find("planewaveP1");
         //avatar2 = GameObject.Find("planewaveP2");
 
-
-        //Debug.Log(avatar2.transform.position);
         InvokeRepeating("InstantiateWaves", 2.0f, 6.0f);
     }
 	
