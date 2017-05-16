@@ -21,7 +21,7 @@ public class Adap_WaveSend : MonoBehaviour {
 	}
 
 	public void SendWave(int playerNumber){
-		Debug.Log ("Wave Away "+ playerNumber);
+		//Debug.Log ("Wave Away "+ playerNumber);
 
 		if (playerNumber == 1) {
 			

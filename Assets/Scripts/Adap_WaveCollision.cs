@@ -13,7 +13,7 @@ public class Adap_WaveCollision : MonoBehaviour {
 
 	void OnTriggerEnter(Collider other)
 	{
-		Debug.Log (other.gameObject.name);
+	//	Debug.Log (other.gameObject.name);
 		if (other.gameObject.GetComponent<Adap_WaveCollision>().PlayerNumber != PlayerNumber)
 		fadeWave = true;
 
