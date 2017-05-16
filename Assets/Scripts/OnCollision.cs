@@ -8,7 +8,9 @@ public class OnCollision : MonoBehaviour {
     Material material;
     Collider collider;
     bool fadeWave = false;
-    void OnCollisionEnter(Collision collision)
+   
+	/*
+	void OnCollisionEnter(Collision collision)
     {
         Debug.Log("Enter collision");
     }
@@ -19,31 +21,35 @@ public class OnCollision : MonoBehaviour {
     }
 
     void OnCollisionExit(Collision collision)
-    {
-        Debug.Log("Exit collision");
-    }
+	{
+		Debug.Log ("Exit collision");
+	}
+	void OnTriggerStay(Collider other)
+	{
+		//Debug.Log("Stay in trigger zone");
+	}
+	void OnTriggerExit(Collider other)
+	{
+	}*/
+
 
     void OnTriggerEnter(Collider other)
     {
         //Debug.Log(fadeWave);
         //wave = other.gameObject;
-        wave = gameObject;
+  		//wave = gameObject;
+		//wave = GameObject.Find("sceneholder2/planewaveP2/Cube");
         fadeWave = true;
-        //wave = GameObject.Find("sceneholder2/planewaveP2/Cube");
+        
     }
 
-    void OnTriggerStay(Collider other)
-    {
-        //Debug.Log("Stay in trigger zone");
-    }
+   
 
-    void OnTriggerExit(Collider other)
-    {
-    }
+   
 
     void Update()
     {
-        //Debug.Log("updating " + fadeWave);
+       
         if (fadeWave)
         {
             StartCoroutine("FadeOut");
@@ -52,19 +58,24 @@ public class OnCollision : MonoBehaviour {
 
     IEnumerator FadeOut()
     {
-
-        renderer = wave.GetComponent<Renderer>();
-        material = renderer.material;
-        //Debug.Log("enter fadeout function");
-        Color color = material.color;
-        //Debug.Log(color.a);
-        float origAlpha = color.a;
+		Debug.Log("enter fadeout function");
+		Destroy (gameObject);
+		yield return null;
+       /* 
+        * renderer = wave.GetComponent<Renderer>();
+       material = renderer.material;
+       
+     	 Color color = material.color;
+       Debug.Log(color.a);
+       float origAlpha = color.a;
         for (float f = origAlpha; f >= 0; f -= 0.01f)
         {
             color.a = f;
             material.SetColor("_Color", color);
-            yield return null;
+
         }
+        */
+		
 
     }
 }
