@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class PlayerManager : MonoBehaviour {
 
+	public GameObject AuraExpander;
+	public GameObject AuraController;
+	float PlayerFA;
 	GameObject SessionManager;
 	GameObject DataHolder;
 	GameObject SpawnPoint1;
@@ -19,8 +22,10 @@ public class PlayerManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
-		SessionManager = GameObject.Find ("SessionManager");
-		DataHolder = GameObject.Find ("DataHolder");
+
+
+		SessionManager = GameObject.Find ("Session Manager");
+		DataHolder = GameObject.Find ("Data Holder");
 
 		SpawnPoint1 = GameObject.Find ("Spawn Point 1");
 		SpawnPoint2 = GameObject.Find ("Spawn Point 2");
@@ -29,12 +34,20 @@ public class PlayerManager : MonoBehaviour {
 		float dist1 = Vector3.Distance(this.transform.position, SpawnPoint1.transform.position);
 		float dist2 = Vector3.Distance(this.transform.position, SpawnPoint2.transform.position);
 		if (dist1 < dist2) { 
+			PlayerNumber = 2; 
+			Debug.Log ("Player 2 found");
+		}
+		else{
 			PlayerNumber = 1; 
 			Debug.Log ("Player 1 found");
 		}
-		else{
-			PlayerNumber = 2; 
-			Debug.Log ("Player 2 found");
+
+		if (PlayerNumber == 1) {
+			AuraController = GameObject.Find ("Player1_Manager");
+			AuraExpander = GameObject.Find ("Aura_player1Expander");
+		} else {
+			AuraController = GameObject.Find ("Player2_Manager");
+			AuraExpander = GameObject.Find ("Aura_player2Expander");
 		}
 
 
@@ -45,55 +58,83 @@ public class PlayerManager : MonoBehaviour {
 
 	
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
+		if (PlayerNumber == 1) {
+			PlayerFA = DataHolder.GetComponent<SimulationData> ().P1FrontAs;
+		}
 
+		if (PlayerNumber == 2) {
+			PlayerFA = DataHolder.GetComponent<SimulationData> ().P2FrontAs;
+
+		}
+
+	
+		AuraController.GetComponent<PlayerFAScript> ().PlayerFA_Display = PlayerFA;
+
+
+
+
+
+
+
+
+
+		// RESPIRATION CONTROLS
+
+
+			breathePast = breatheNow;
 
 		if (PlayerNumber == 1) {
-			breathePast = breatheNow;
 			breatheNow = DataHolder.GetComponent<SimulationData> ().P1Breathing;
-		
 		}
+
 		if (PlayerNumber == 2) {
-			breathePast = breatheNow;
 			breatheNow = DataHolder.GetComponent<SimulationData> ().P1Breathing;
 		
 		}
 
 
-/*
 
 
-		if (breatheNow < breathePast) {
-			Debug.Log ("Player " + PlayerNumber + " breathing out");
+		// first breathe out
+		if ((breatheNow < breathePast) && (outBreathContinues == false)) {
+
+		//	Debug.Log ("Player " + PlayerNumber + " breathing out");
 			outBreathStart = true;
-			if (outBreathContinues == true;
-			
-
-			outBreathContinues = false;
-			inBreathContinues = false;
+			outBreathContinues = true;
 			inBreathStart = false;
+			inBreathContinues = false;
 
-			if (outBreathStart == true) {
-				//initialize waves
-				outBreathStart = 
-			} 
-		
-		}*/
-
-
-
-
-
-
-
-		if (breatheNow => breathePast) {
-
-
-			Debug.Log ("Player " + PlayerNumber + " breathing in");
-			outBreathStart = false;
-			inBreathStart = true;
 
 		}
+
+		//breathing out continues
+		if (outBreathContinues == true){
+			AuraExpander.GetComponent<AuraScaler> ().expand = false;
+
+		}
+
+		if ((breatheNow >= breathePast) && (inBreathContinues == false)) {
+			//outbreathing is over, send a wave.
+			GetComponent<Adap_WaveSend>().SendWave (PlayerNumber);
+
+		//	Debug.Log ("Player " + PlayerNumber + " breathing in");
+			
+			outBreathStart = false;
+			outBreathContinues = false;
+			inBreathStart = true;
+			inBreathContinues = true;
+		}
+
+		//breathing in continues
+		if (inBreathContinues == true){
+			AuraExpander.GetComponent<AuraScaler> ().expand = true;
+
+
+		}
+
+
+	
 
 
 		

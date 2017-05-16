@@ -58,7 +58,7 @@ public class OnCollision : MonoBehaviour {
 
     IEnumerator FadeOut()
     {
-		Debug.Log("enter fadeout function");
+		//Debug.Log("enter fadeout function");
 		Destroy (gameObject);
 		yield return null;
        /* 

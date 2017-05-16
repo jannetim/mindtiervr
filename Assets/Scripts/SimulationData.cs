@@ -4,8 +4,15 @@ using UnityEngine;
 
 public class SimulationData : MonoBehaviour {
 
+	public float breathingSpeed = 0.2f;
+	public float breathingOffset = 1f;
 	public float P1Breathing;
 	public float P2Breathing;
+
+	public float frontAsSpeed = 0.2f;
+	public float frontAsOffset = 3f;
+	public float P1FrontAs;
+	public float P2FrontAs;
 
 	// Use this for initialization
 	void Start () {
@@ -14,9 +21,10 @@ public class SimulationData : MonoBehaviour {
 
 	// Update is called once per frame
 	void FixedUpdate () {
-		P1Breathing = Mathf.Sin(Time.time) * 0.2f);
-		P2Breathing = 1f + Mathf.Sin(Time.time) * 0.2f);
-
+		P1Breathing = Mathf.Sin(Time.time) * breathingSpeed;
+		P2Breathing = breathingOffset + Mathf.Sin (Time.time) * breathingSpeed;
+		P1FrontAs = 0.5f+0.5f*Mathf.Sin((Time.time) * frontAsSpeed);
+		P2FrontAs = 0.5f+0.5f*Mathf.Sin((Time.time + frontAsOffset) * frontAsSpeed);	
 
 	}
 }

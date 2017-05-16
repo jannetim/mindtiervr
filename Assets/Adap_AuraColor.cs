@@ -2,17 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerFAScript : MonoBehaviour {
-	// THIS IS USED FOR CONTROLLING AURA COLOR
-	// HAS MANUALLY PLACED OBJECTS, 
-	// PLAYERMANAGER HANDLES INPUT TO HERE.
+public class Adap_AuraColor : MonoBehaviour {
 
-
-
-
-
+	public GameObject DataHolder;
+	int playerNumber =0;
 	public Gradient FAColorSlide = new Gradient();
 	public Color PlayerColor;
+
 
 	public GameObject PlayerBridgeSides;
 	public GameObject PlayerAura;
@@ -27,22 +23,24 @@ public class PlayerFAScript : MonoBehaviour {
 	float auraV;
 
 
-
 	// Use this for initialization
 	void Start () {
-
-	
+		DataHolder = GameObject.Find ("Data Holder");
 		GradientColorKey[] gck = new GradientColorKey[2];
 		GradientAlphaKey[] gak = new GradientAlphaKey[2];
-
-
-
-
+		playerNumber = GetComponent<PlayerManager> ().PlayerNumber;
 	}
 	
-	// Update is called once per frame
 	void FixedUpdate () {
+		if (playerNumber == 0) playerNumber = GetComponent<PlayerManager> ().PlayerNumber;
+		if (playerNumber == 1) {
+			PlayerFA_Display = DataHolder.GetComponent<SimulationData> ().P1FrontAs;
+		}
 
+		if (playerNumber == 2) {
+			PlayerFA_Display = DataHolder.GetComponent<SimulationData> ().P2FrontAs;
+
+		}
 
 
 
@@ -59,16 +57,16 @@ public class PlayerFAScript : MonoBehaviour {
 
 
 
-        for (int i = 0; i < PlayerLights.Length; i++) {
-			
+		for (int i = 0; i < PlayerLights.Length; i++) {
+
 			Light l = PlayerLights[i].GetComponent<Light> ();
 			l.color = PlayerColor;
 			l.intensity = 0.2f + PlayerFA_Display*1.5f;
-			}
+		}
 
 		PlayerBridgeSides.GetComponent<Renderer> ().material.color = PlayerColor;
-        PlayerBridgeSides.GetComponent<Renderer>().material.SetFloat("_Threshold", 1.0f - PlayerFA_Display);
+		PlayerBridgeSides.GetComponent<Renderer>().material.SetFloat("_Threshold", 1.0f - PlayerFA_Display);
 
 
-    }
+	}
 }
