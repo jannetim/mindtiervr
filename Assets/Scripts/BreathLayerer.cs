@@ -55,6 +55,7 @@ public class BreathLayerer : MonoBehaviour {
     IEnumerator FadeOut()
     {
         isFadingOut = true;
+        yield return new WaitForSeconds(1.5f);
         //print("out");
         System.Array.Reverse(planes);
         foreach (GameObject o in planes)
@@ -62,7 +63,7 @@ public class BreathLayerer : MonoBehaviour {
             Color color = o.GetComponent<Renderer>().material.color;
             //Debug.Log(color.a);
             //float origAlpha = color.a;
-            for (float f = origAlpha; f >= 0; f -= 0.03f)
+            for (float f = origAlpha; f >= 0; f -= 0.005f)
             {
                 color.a = f;
                 o.GetComponent<Renderer>().material.SetColor("_Color", color);
@@ -91,7 +92,7 @@ public class BreathLayerer : MonoBehaviour {
             Color color = o.GetComponent<Renderer>().material.color;
             //Debug.Log(color.a);
             //float origAlpha = color.a;
-            for (float f = 0; f <= origAlpha; f += 0.07f)
+            for (float f = 0; f <= origAlpha; f += 0.05f)
             {
                 color.a = f;
                 o.GetComponent<Renderer>().material.SetColor("_Color", color);
