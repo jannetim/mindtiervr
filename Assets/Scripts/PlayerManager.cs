@@ -6,6 +6,7 @@ public class PlayerManager : MonoBehaviour {
 
 	public GameObject AuraExpander;
 	public GameObject AuraController;
+	public GameObject BridgeBars;
 	float PlayerFA;
 	GameObject SessionManager;
 	GameObject DataHolder;
@@ -44,9 +45,11 @@ public class PlayerManager : MonoBehaviour {
 			if (PlayerNumber == 1) {
 				AuraController = GameObject.Find ("Player1_Manager");
 				AuraExpander = GameObject.Find ("Aura_player1Expander");
+				BridgeBars = GameObject.Find ("Player1_BridgeLayers");
 			} else {
 				AuraController = GameObject.Find ("Player2_Manager");
 				AuraExpander = GameObject.Find ("Aura_player2Expander");
+				BridgeBars = GameObject.Find ("Player2_BridgeLayers");
 			}
 
 		}
@@ -134,6 +137,7 @@ public class PlayerManager : MonoBehaviour {
 		if ((breatheNow >= breathePast) && (inBreathContinues == false)) {
 			//outbreathing is over, send a wave.
 			GetComponent<Adap_WaveSend>().SendWave (PlayerNumber);
+			BridgeBars.GetComponent<BreathLayerer>().InitBreatheBar();
 
 		//	Debug.Log ("Player " + PlayerNumber + " breathing in");
 		//	Debug.Log (PlayerNumber + ": " + breathePast + " " + breatheNow);

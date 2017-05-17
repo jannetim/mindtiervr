@@ -63,7 +63,7 @@ public class PlayerFAScript : MonoBehaviour {
 			
 			Light l = PlayerLights[i].GetComponent<Light> ();
 			l.color = PlayerColor;
-			l.intensity = 0.2f + PlayerFA_Display*1.5f;
+			l.intensity = 0.05f + PlayerFA_Display*1.1f;
 			}
 
 		PlayerBridgeSides.GetComponent<Renderer> ().material.color = PlayerColor;

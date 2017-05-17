@@ -48,10 +48,12 @@ public class SessionManager : MonoBehaviour {
 					SimPlayer.GetComponent<PlayerManager> ().PlayerNumber = 1;
 					SimPlayer.GetComponent<PlayerManager> ().AuraController = GameObject.Find ("Player1_Manager");
 					SimPlayer.GetComponent<PlayerManager> ().AuraExpander = GameObject.Find ("Aura_player1Expander");
+					SimPlayer.GetComponent<PlayerManager> ().BridgeBars = GameObject.Find ("Player1_BridgeLayers");
 				} else {
 					SimPlayer.GetComponent<PlayerManager> ().PlayerNumber = 2;
 					SimPlayer.GetComponent<PlayerManager> ().AuraController = GameObject.Find ("Player2_Manager");
 					SimPlayer.GetComponent<PlayerManager> ().AuraExpander = GameObject.Find ("Aura_player2Expander");
+					SimPlayer.GetComponent<PlayerManager> ().BridgeBars = GameObject.Find ("Player2_BridgeLayers");
 					}
 					otherInitialized = true;
 
