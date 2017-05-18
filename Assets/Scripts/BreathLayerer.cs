@@ -6,7 +6,8 @@ public class BreathLayerer : MonoBehaviour {
     //public GameObject Plane, Plane2, Plane3, Plane4;
     public GameObject[] planes;
     private Color planeColor;
-    public GameObject player;
+    private GameObject player;
+    private GameObject otherPlayerLayers;
     [Range(0, 1)]
     public float PlaneTransparency = 0.2f;
     private float origAlpha;
@@ -18,12 +19,14 @@ public class BreathLayerer : MonoBehaviour {
         if (gameObject.name == "Player1_BridgeLayers")
         {
             player = GameObject.Find("Player1_Manager");
+            otherPlayerLayers = GameObject.Find("Player2_BridgeLayers/planes");
         } else if (gameObject.name == "Player2_BridgeLayers")
         {
             player = GameObject.Find("Player2_Manager");
+            otherPlayerLayers = GameObject.Find("Player1_BridgeLayers/planes");
         }
 
-        origAlpha = 0.2f;
+        origAlpha = PlaneTransparency;
        // InvokeRepeating("InitBreatheBar", 2.0f, 5.0f);
 	}
 	
@@ -99,5 +102,6 @@ public class BreathLayerer : MonoBehaviour {
                 yield return null;
             }
         }
+        
     }
 }

@@ -28,8 +28,8 @@ public class PlayerFAScript : MonoBehaviour
     float auraH;
     float auraS;
     float auraV;
-
-
+    float glowS;
+    float glowVMod;
 
     // Use this for initialization
     void Start()
@@ -40,7 +40,10 @@ public class PlayerFAScript : MonoBehaviour
     //    GradientAlphaKey[] gak = new GradientAlphaKey[2];
 
         UseSyncGlow = true;
+        glowS = 1.0f;
 
+        // dynamic modifier for glow HDR
+        glowVMod = 0.5f;
 
     }
 
@@ -87,39 +90,37 @@ public class PlayerFAScript : MonoBehaviour
             // When falls out of sync, incrementally rise saturation to maximum
             if (fasync < 0.1)
             {
-                auraS = Mathf.Clamp01(1.5f - (PlayerFA_Display + OtherFA) / 2);
-                // visual debugging purposes :)
-                //GameObject.Find("ParticlePillar").GetComponent<ParticleSystem>().Play();
+                if (glowS > 0.5f)
+                {
+                    glowS -= 0.001f;
+                }
+                // emission brightness correlates with FA-sync
+                auraV = glowVMod - fasync;
+                if (glowVMod < 2.0f)
+                {
+                    glowVMod += 0.005f;
+                }
+                //glowS = Mathf.Clamp01(1.5f - (PlayerFA_Display + OtherFA) / 2);
             } else
             {
-                // visual debugging purposes :)
-                //GameObject.Find("ParticlePillar").GetComponent<ParticleSystem>().Pause();
-                if (auraS < 1)
+                auraV = 0.5f - fasync * 2f;
+                if (auraV <= 0f)
                 {
-                    auraS += 0.05f;
+                    auraV = 0f;
+                }
+                if (glowS < 1)
+                {
+                    glowS += 0.05f;
+                }
+                if (glowVMod > 0.5f)
+                {
+                    glowVMod -= 0.05f;
                 }
             }
 
-            /*if (PlayerFA_Display > 0.9f && OtherFA > 0.9f && fasync < 0.1f)
-            {
-                auraS = (PlayerFA_Display + OtherFA) / 4;
-            } else if (PlayerFA_Display > 0.8f && OtherFA > 0.8f && fasync < 0.1f)
-            {
-                auraS = (PlayerFA_Display + OtherFA) / 3;
-            } else if (PlayerFA_Display > 0.7f && OtherFA > 0.7f && fasync < 0.1f)
-            {
-                auraS = (PlayerFA_Display + OtherFA) / 2;
-            } else
-            {
-                auraS = 1.0f;
-            }*/
 
-            // emission brightness correlates with FA-sync
-            auraV = 0.5f - fasync*2f;
-			if (auraV <= 0f) auraV = 0f;
-            
-            Color emissionColor = Color.HSVToRGB(auraH, auraS, auraV);
-		   PlayerBridgeSides.GetComponent<Renderer>().material.SetColor("_EmissionColor", emissionColor);
+            Color emissionColor = Color.HSVToRGB(auraH, glowS, auraV);
+		    PlayerBridgeSides.GetComponent<Renderer>().material.SetColor("_EmissionColor", emissionColor);
         }
         // used with gradient shader
         //PlayerBridgeSides.GetComponent<Renderer>().material.SetFloat("_Threshold", 1.0f - PlayerFA_Display);
