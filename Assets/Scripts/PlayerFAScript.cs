@@ -81,7 +81,7 @@ public class PlayerFAScript : MonoBehaviour
         { 
             // calculates the sync, 0 -> sync and 1 -> !sync 
             float fasync = Mathf.Abs(PlayerFA_Display - OtherFA);
-            print("FA-sync: " + fasync + "own FA: " + PlayerFA_Display + ", other FA: " + OtherFA);
+      //      print("FA-sync: " + fasync + "own FA: " + PlayerFA_Display + ", other FA: " + OtherFA);
 
             // Lower emission saturation according to FA-level when FA-levels in sync
             // When falls out of sync, incrementally rise saturation to maximum

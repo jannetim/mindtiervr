@@ -142,6 +142,7 @@ public class PlayerManager : MonoBehaviour {
 	//		Debug.Log ("Player " + PlayerNumber + " breathing out");
 	//		Debug.Log (PlayerNumber + ": " + breathePast + " " + breatheNow);
 			StatueAnimator.GetComponent<Animator>().SetTrigger ("StartOut");
+			//Debug.Log ("breath out animtrigger sent");
 			outBreathContinues = true;
 
 			inBreathContinues = false;
