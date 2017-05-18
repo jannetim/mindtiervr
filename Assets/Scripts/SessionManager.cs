@@ -4,9 +4,20 @@ using UnityEngine;
 
 public class SessionManager : MonoBehaviour
 {
+
+
+
+	[Header("Session Parameters")]
     public bool SingleUserSession = true;
     public bool SimulateSelf = true;
     public bool SimulateOther = true;
+
+	[Header("AdaptationControls")]
+	public bool Waves = false;
+	public bool BridgeMeter = true;
+
+
+
     public GameObject SimPlayer;
     public GameObject[] activePlayers;
     bool otherInitialized = false;
@@ -54,6 +65,7 @@ public class SessionManager : MonoBehaviour
                     SimPlayer.GetComponent<PlayerManager>().AuraController = GameObject.Find("Player1_Manager");
                     SimPlayer.GetComponent<PlayerManager>().AuraExpander = GameObject.Find("Aura_player1Expander");
                     SimPlayer.GetComponent<PlayerManager>().BridgeBars = GameObject.Find("Player1_BridgeLayers");
+					SimPlayer.GetComponent<PlayerManager>().StatueAnimator = GameObject.Find ("Statue_Player1");
                 }
                 else
                 {
@@ -61,6 +73,7 @@ public class SessionManager : MonoBehaviour
                     SimPlayer.GetComponent<PlayerManager>().AuraController = GameObject.Find("Player2_Manager");
                     SimPlayer.GetComponent<PlayerManager>().AuraExpander = GameObject.Find("Aura_player2Expander");
                     SimPlayer.GetComponent<PlayerManager>().BridgeBars = GameObject.Find("Player2_BridgeLayers");
+					SimPlayer.GetComponent<PlayerManager>().StatueAnimator = GameObject.Find ("Statue_Player2");
                 }
                 otherInitialized = true;
 

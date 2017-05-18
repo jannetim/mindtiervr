@@ -38,9 +38,9 @@ public class BreatheOut : MonoBehaviour {
 
 		Player1WaveSpawn = GameObject.Find("Player1_WaveSpawn");
 		GameObject newWave = Instantiate(avatar1, Player1WaveSpawn.transform.position, avatar1.transform.rotation);
-		MoveWave mWave = newWave.GetComponent<MoveWave>();
+//		MoveWave mWave = newWave.GetComponent<MoveWave>();
 	//	DestroyWave dWave = newWave.GetComponent<DestroyWave>();
-		mWave.enabled = true;
+//		mWave.enabled = true;
 	//	dWave.enabled = true;
 
 		float auraH, auraS, auraV;
@@ -80,9 +80,9 @@ public class BreatheOut : MonoBehaviour {
 		Player2WaveSpawn = GameObject.Find("Player2_WaveSpawn");
 		 
 		newWave = Instantiate(avatar2, Player2WaveSpawn.transform.position, avatar2.transform.rotation);
-		MoveWave2 mWave2 = newWave.GetComponent<MoveWave2>();
+//		MoveWave2 mWave2 = newWave.GetComponent<MoveWave2>();
 	//	dWave = newWave.GetComponent<DestroyWave>();
-		mWave2.enabled = true;
+//		mWave2.enabled = true;
 	//	dWave.enabled = true;
 
 		auraColor = GameObject.Find ("Player2_Manager").GetComponent<PlayerFAScript> ().PlayerColor;

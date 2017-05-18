@@ -7,7 +7,8 @@ public class PlayerManager : MonoBehaviour {
 	public GameObject AuraExpander;
 	public GameObject AuraController;
 	public GameObject BridgeBars;
-	float PlayerFA;
+	public GameObject StatueAnimator;
+	public float PlayerFA;
 	GameObject SessionManager;
 	GameObject DataHolder;
 	GameObject SpawnPoint1;
@@ -50,11 +51,13 @@ public class PlayerManager : MonoBehaviour {
 		        AuraController = GameObject.Find ("Player1_Manager");
 		        AuraExpander = GameObject.Find ("Aura_player1Expander");
 		        BridgeBars = GameObject.Find ("Player1_BridgeLayers");
+				StatueAnimator = GameObject.Find ("Statue_Player1");
 		    } else
             {
 			    AuraController = GameObject.Find ("Player2_Manager");
 			    AuraExpander = GameObject.Find ("Aura_player2Expander");
 			    BridgeBars = GameObject.Find ("Player2_BridgeLayers");
+				StatueAnimator = GameObject.Find ("Statue_Player2");
 		    }
 
 		}
@@ -138,7 +141,7 @@ public class PlayerManager : MonoBehaviour {
 
 	//		Debug.Log ("Player " + PlayerNumber + " breathing out");
 	//		Debug.Log (PlayerNumber + ": " + breathePast + " " + breatheNow);
-		
+			StatueAnimator.GetComponent<Animator>().SetTrigger ("StartOut");
 			outBreathContinues = true;
 
 			inBreathContinues = false;
@@ -156,8 +159,11 @@ public class PlayerManager : MonoBehaviour {
 
 		if ((breatheNow >= breathePast) && (inBreathContinues == false)) {
 			//outbreathing is over, send a wave.
-			GetComponent<Adap_WaveSend>().SendWave (PlayerNumber);
+			if (SessionManager.GetComponent<SessionManager> ().Waves) { 
+				GetComponent<Adap_WaveSend> ().SendWave (PlayerNumber);
+			}
 			BridgeBars.GetComponent<BreathLayerer>().InitBreatheBar();
+			StatueAnimator.GetComponent<Animator>().SetTrigger ("StartIn");
 
 		//	Debug.Log ("Player " + PlayerNumber + " breathing in");
 		//	Debug.Log (PlayerNumber + ": " + breathePast + " " + breatheNow);

@@ -36,8 +36,8 @@ public class PlayerFAScript : MonoBehaviour
     {
 
 
-        GradientColorKey[] gck = new GradientColorKey[2];
-        GradientAlphaKey[] gak = new GradientAlphaKey[2];
+    //    GradientColorKey[] gck = new GradientColorKey[2];
+    //    GradientAlphaKey[] gak = new GradientAlphaKey[2];
 
         UseSyncGlow = true;
 
@@ -72,13 +72,17 @@ public class PlayerFAScript : MonoBehaviour
             l.intensity = 0.05f + PlayerFA_Display * 1.1f;
         }
 
-        PlayerBridgeSides.GetComponent<Renderer>().material.color = PlayerColor;
+		Color BridgeSideColor = PlayerColor;
+		BridgeSideColor.a = 0.4f;
+		PlayerBridgeSides.GetComponent<Renderer>().material.color = BridgeSideColor;
+      //  PlayerBridgeSides.GetComponent<Renderer>().material.color = PlayerColor;
 
         if (UseSyncGlow)
         { 
             // calculates the sync, 0 -> sync and 1 -> !sync 
             float fasync = Mathf.Abs(PlayerFA_Display - OtherFA);
             print("FA-sync: " + fasync + "own FA: " + PlayerFA_Display + ", other FA: " + OtherFA);
+
             // Lower emission saturation according to FA-level when FA-levels in sync
             // When falls out of sync, incrementally rise saturation to maximum
             if (fasync < 0.1)
@@ -111,10 +115,11 @@ public class PlayerFAScript : MonoBehaviour
             }*/
 
             // emission brightness correlates with FA-sync
-            auraV = 2.0f - fasync;
+            auraV = 0.5f - fasync*2f;
+			if (auraV <= 0f) auraV = 0f;
             
             Color emissionColor = Color.HSVToRGB(auraH, auraS, auraV);
-            PlayerBridgeSides.GetComponent<Renderer>().material.SetColor("_EmissionColor", emissionColor);
+		   PlayerBridgeSides.GetComponent<Renderer>().material.SetColor("_EmissionColor", emissionColor);
         }
         // used with gradient shader
         //PlayerBridgeSides.GetComponent<Renderer>().material.SetFloat("_Threshold", 1.0f - PlayerFA_Display);
