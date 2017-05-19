@@ -30,7 +30,8 @@ public class PlayerFAScript : MonoBehaviour
     float auraV;
     float glowS;
     float glowVMod;
-
+    bool flickerS;
+    bool flickerV;
     // Use this for initialization
     void Start()
     {
@@ -50,10 +51,6 @@ public class PlayerFAScript : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-
-
-
-
         PlayerColor = FAColorSlide.Evaluate(PlayerFA_Display);
 
         Color.RGBToHSV(PlayerColor, out auraH, out auraS, out auraV);
@@ -64,8 +61,6 @@ public class PlayerFAScript : MonoBehaviour
         PlayerAura.GetComponent<Renderer>().material.SetColor("_TintColor", AuraColor);
         AuraColor.a = AuraColor.a * 0.4f;
         PlayerAura2.GetComponent<Renderer>().material.SetColor("_TintColor", AuraColor);
-
-
 
         for (int i = 0; i < PlayerLights.Length; i++)
         {
@@ -87,18 +82,38 @@ public class PlayerFAScript : MonoBehaviour
       //      print("FA-sync: " + fasync + "own FA: " + PlayerFA_Display + ", other FA: " + OtherFA);
 
             // Lower emission saturation according to FA-level when FA-levels in sync
-            // When falls out of sync, incrementally rise saturation to maximum
+
             if (fasync < 0.1)
             {
-                if (glowS > 0.5f)
+                if (glowS > 0.75f && !flickerS)
                 {
                     glowS -= 0.001f;
+                } else
+                {
+                    flickerS = true;
+                }
+                if (glowS < 0.9 && flickerS)
+                {
+                    glowS += 0.001f;
+                } else
+                {
+                    flickerS = false;
                 }
                 // emission brightness correlates with FA-sync
                 auraV = glowVMod - fasync;
-                if (glowVMod < 2.0f)
+                if (glowVMod < 2.0f && !flickerV)
                 {
-                    glowVMod += 0.005f;
+                    glowVMod += 0.001f;
+                } else
+                {
+                    flickerV = true;
+                }
+                if (glowVMod > 1.0f && flickerV)
+                {
+                    glowVMod -= 0.001f;
+                } else
+                {
+                    flickerV = false;
                 }
                 //glowS = Mathf.Clamp01(1.5f - (PlayerFA_Display + OtherFA) / 2);
             } else
@@ -108,6 +123,7 @@ public class PlayerFAScript : MonoBehaviour
                 {
                     auraV = 0f;
                 }
+                // When falls out of sync, incrementally rise saturation to maximum
                 if (glowS < 1)
                 {
                     glowS += 0.05f;
