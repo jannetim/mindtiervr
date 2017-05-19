@@ -7,7 +7,7 @@ public class BreathLayerer : MonoBehaviour {
     public GameObject[] planes;
     private Color planeColor;
     private GameObject player;
-    private GameObject otherPlane, otherPlane2;
+    private GameObject otherPlane;
     private GameObject plane, plane2;
     [Range(0, 1)]
     public float PlaneTransparency = 0.2f;
@@ -16,6 +16,8 @@ public class BreathLayerer : MonoBehaviour {
     private bool isFadingOut;
     private float ownH, ownS, ownV;
     private float otherH, otherS, otherV;
+    private float ownOrigV, otherOrigV;
+    private BreathLayerer otherScript;
     // Use this for initialization
     void Start () {
         System.Array.Reverse(planes);
@@ -25,14 +27,14 @@ public class BreathLayerer : MonoBehaviour {
             plane = GameObject.Find("Player1_BridgeLayers/Plane5");
             plane2 = GameObject.Find("Player1_BridgeLayers/Plane4");
             otherPlane = GameObject.Find("Player2_BridgeLayers/Plane5");
-            otherPlane2 = GameObject.Find("Player2_BridgeLayers/Plane4");
+            otherScript = GameObject.Find("Player2_BridgeLayers").GetComponent<BreathLayerer>();
         } else if (gameObject.name == "Player2_BridgeLayers")
         {
             player = GameObject.Find("Player2_Manager");
             plane = GameObject.Find("Player2_BridgeLayers/Plane5");
             plane2 = GameObject.Find("Player2_BridgeLayers/Plane4");
             otherPlane = GameObject.Find("Player1_BridgeLayers/Plane5");
-            otherPlane2 = GameObject.Find("Player1_BridgeLayers/Plane4");
+            otherScript = GameObject.Find("Player1_BridgeLayers").GetComponent<BreathLayerer>();
         }
         origAlpha = PlaneTransparency;
 
@@ -64,6 +66,7 @@ public class BreathLayerer : MonoBehaviour {
         if (otherPlane.activeInHierarchy && otherPlane.GetComponent<Renderer>().material.color.a > 0.1f)
         {
             StartCoroutine("SyncGlow");
+            otherScript.StartSyncGlow();
         }
         yield return StartCoroutine("FadeOut");
         isFadingOut = false;
@@ -110,6 +113,11 @@ public class BreathLayerer : MonoBehaviour {
         }
     }
 
+    public void StartSyncGlow()
+    {
+        StartCoroutine("SyncGlow");
+    }
+
     IEnumerator SyncGlow()
     {
         yield return StartCoroutine("SyncGlowIn");
@@ -119,7 +127,7 @@ public class BreathLayerer : MonoBehaviour {
     IEnumerator SyncGlowIn()
     {
         Color colorOwn = plane.GetComponent<Renderer>().material.color;
-        Color colorOther = otherPlane.GetComponent<Renderer>().material.color;
+        Color color2 = plane2.GetComponent<Renderer>().material.color;
 
         /*float alpha = colorOwn.a;
         for (float f = alpha; f < alpha+0.4f; f += 0.001f)
@@ -134,10 +142,14 @@ public class BreathLayerer : MonoBehaviour {
             otherPlane.GetComponent<Renderer>().material.SetColor("_Color", colorOther);
         }*/
         Color.RGBToHSV(colorOwn, out ownH, out ownS, out ownV);
-        Color.RGBToHSV(colorOther, out otherH, out otherS, out otherV);
-        for (float f = 0; f < 1.0f; f += 0.01f ) {
-            plane.GetComponent<Renderer>().material.SetColor("_Color", Color.HSVToRGB(ownH, ownS, ownV + f));
-            otherPlane.GetComponent<Renderer>().material.SetColor("_Color", Color.HSVToRGB(otherH, otherS, otherV + f));
+        ownOrigV = ownV;
+        for (float f = 0; f < 1.0f; f += 0.03f ) {
+            Color color = Color.HSVToRGB(ownH, ownS, ownV + f);
+            color.a = origAlpha + f/3;
+            color2.a = origAlpha + f/4;
+            plane.GetComponent<Renderer>().material.SetColor("_Color", color);
+            plane2.GetComponent<Renderer>().material.SetColor("_Color", color2);
+            //otherPlane.GetComponent<Renderer>().material.SetColor("_Color", Color.HSVToRGB(otherH, otherS, otherV + f));
             yield return null;
         }
     }
@@ -145,8 +157,7 @@ public class BreathLayerer : MonoBehaviour {
     IEnumerator SyncGlowOut()
     {
         Color colorOwn = plane.GetComponent<Renderer>().material.color;
-        Color colorOther = otherPlane.GetComponent<Renderer>().material.color;
-
+        Color color2 = plane2.GetComponent<Renderer>().material.color;
         /*float alpha = colorOwn.a;
         for (float f = colorOwn.a; f >= origAlpha; f -= 0.001f)
         {
@@ -158,13 +169,16 @@ public class BreathLayerer : MonoBehaviour {
             colorOther.a = f;
             otherPlane.GetComponent<Renderer>().material.SetColor("_Color", colorOther);
         }*/
-
+        colorOwn.a = 0.0f;
         Color.RGBToHSV(colorOwn, out ownH, out ownS, out ownV);
-        Color.RGBToHSV(colorOther, out otherH, out otherS, out otherV);
-        for (float f = 1.0f; f >= 0; f -= 0.01f)
+        for (float f = 1; f > 0; f -= 0.02f)
         {
-            plane.GetComponent<Renderer>().material.SetColor("_Color", Color.HSVToRGB(ownH, ownS, ownV - f));
-            otherPlane.GetComponent<Renderer>().material.SetColor("_Color", Color.HSVToRGB(otherH, otherS, otherV - f));
+            Color color = Color.HSVToRGB(ownH, ownS, ownOrigV + f);
+            color.a = origAlpha + f/3;
+            color2.a = origAlpha + f/4;
+            plane.GetComponent<Renderer>().material.SetColor("_Color", color );
+            plane2.GetComponent<Renderer>().material.SetColor("_Color", color2);
+            //otherPlane.GetComponent<Renderer>().material.SetColor("_Color", Color.HSVToRGB(otherH, otherS, otherOrigV + f));
             yield return null;
         }
     }
