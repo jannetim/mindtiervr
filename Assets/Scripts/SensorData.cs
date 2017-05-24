@@ -6,6 +6,9 @@ public class SensorData : MonoBehaviour // removed static from this, possible is
 
 
 {
+
+	public float ShowRespOut;
+	public float ShowFaOut;
 	private static string m_globalVar = "";
 	private static float m_eeg = 1f;
 	//	private static int m_state = 0;
@@ -43,11 +46,17 @@ public class SensorData : MonoBehaviour // removed static from this, possible is
 	}
 */
 
-
+	void Update()
+	{
+		ShowRespOut = RespOut;
+		ShowFaOut = FAOut;
+	}
 
 
 
 }
+
+
 
 
 

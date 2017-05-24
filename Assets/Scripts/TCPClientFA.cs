@@ -27,8 +27,8 @@ public class TCPClientFA : MonoBehaviour
         myThread.Start();
 
         //  GlobalClass.EDA = 1;
-        SensorData.RespOut = 0;
-        SensorData.FAOut = 0;
+        SensorData.RespOut = 0f;
+        SensorData.FAOut = 0f;
 
     }
 
@@ -40,6 +40,8 @@ public class TCPClientFA : MonoBehaviour
         {
             //Debug.Log("Eyecoordinates are: " + GlobalClass.eyeCoordinate_x + " " + GlobalClass.eyeCoordinate_y);
             doit = false;
+			SensorData.RespOut = 1f;
+			SensorData.FAOut = 1f;
         }
     }
     void OnApplicationQuit()
@@ -76,7 +78,7 @@ public class TCPClientThreadFA
     float faRange = 0.01f;
 
 
-    string StaticIP = "130.233.50.206";
+	string StaticIP = "127.0.0.1";
 
 
     public TCPClientThreadFA(TCPClientFA c)
@@ -93,30 +95,34 @@ public class TCPClientThreadFA
         faMax = -1;
     }
 
+
+
     public void myTCPClient()
     {
-        if (PlayerPrefs.HasKey("StaticIPStored"))
+  /*      if (PlayerPrefs.HasKey("StaticIPStored"))
         {
             StaticIP = PlayerPrefs.GetString("StaticIPStored");
             Debug.Log(StaticIP + "from save");
-        }
+        }*/
 
 
 
 
-        float tmp_EDA = 0f;
+      //  float tmp_EDA = 0f;
         string input, stringData;
         byte[] message = new byte[128];
         int bytesRead;
 
         myClient = null;
-        Debug.Log("running tcp client");
+        Debug.Log("running the tcp client function");
 
 
         myClient = new TcpClient();
+		Debug.Log ("new client object created");
+
         //myClient.Connect("localhost", 9995);
         myClient.Connect(StaticIP, 9995);
-        Debug.Log("running tcp client2");
+        Debug.Log("running tcp client2 - connecting");
 
         NetworkStream myClientStream = myClient.GetStream();
 

@@ -8,6 +8,7 @@ public class PlayerManager : MonoBehaviour {
 	public GameObject AuraController;
 	public GameObject BridgeBars;
 	public GameObject StatueAnimator;
+	public bool IsSimNPC = false;
 	public float PlayerFA;
 	GameObject SessionManager;
 	GameObject DataHolder;
@@ -74,7 +75,7 @@ public class PlayerManager : MonoBehaviour {
 
 
 		// are we simulating everything?
-		if (SessionManager.GetComponent<SessionManager> ().SimulateSelf == true) {
+		if (((SessionManager.GetComponent<SessionManager> ().SimulateSelf == true) && (IsSimNPC == false)) || ((IsSimNPC == true))) {
 
 			if (PlayerNumber == 1)
             {
@@ -89,7 +90,10 @@ public class PlayerManager : MonoBehaviour {
 
 			}
 
-		} else
+		}
+
+
+		else
         {  //this is the adaptation coming from sensors.
 			if (PlayerNumber == 1)
             {

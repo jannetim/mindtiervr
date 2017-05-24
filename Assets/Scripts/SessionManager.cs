@@ -66,6 +66,8 @@ public class SessionManager : MonoBehaviour
                     SimPlayer.GetComponent<PlayerManager>().AuraExpander = GameObject.Find("Aura_player1Expander");
                     SimPlayer.GetComponent<PlayerManager>().BridgeBars = GameObject.Find("Player1_BridgeLayers");
 					SimPlayer.GetComponent<PlayerManager>().StatueAnimator = GameObject.Find ("Statue_Player1");
+					SimPlayer.GetComponent<PlayerManager> ().IsSimNPC = true;
+
                 }
                 else
                 {
@@ -74,6 +76,7 @@ public class SessionManager : MonoBehaviour
                     SimPlayer.GetComponent<PlayerManager>().AuraExpander = GameObject.Find("Aura_player2Expander");
                     SimPlayer.GetComponent<PlayerManager>().BridgeBars = GameObject.Find("Player2_BridgeLayers");
 					SimPlayer.GetComponent<PlayerManager>().StatueAnimator = GameObject.Find ("Statue_Player2");
+					SimPlayer.GetComponent<PlayerManager> ().IsSimNPC = true;
                 }
                 otherInitialized = true;
 
