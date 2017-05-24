@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class PlayerManager : MonoBehaviour {
 
@@ -20,11 +21,19 @@ public class PlayerManager : MonoBehaviour {
 	bool inBreathContinues = false;
 	bool outBreathContinues = false;
     private GameObject otherPlayerManager;
+    public float[] respArray = new float[10];
+    //private Queue<float> respQueue = new Queue< float > (10);
+   public Queue<float> respQueue = new Queue<float>(new float[10]);
+    public bool RespChanged = true;
 
-	// Use this for initialization
-	void Start () {
 
-		SessionManager = GameObject.Find ("Session Manager");
+
+    // Use this for initialization
+    void Start () {
+
+         
+
+    SessionManager = GameObject.Find ("Session Manager");
 		DataHolder = GameObject.Find ("Data Holder");
 
 		SpawnPoint1 = GameObject.Find ("Spawn Point 1");
@@ -70,6 +79,11 @@ public class PlayerManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
+
+        if (breathePast - breatheNow != 0) {
+            RespChanged = true;
+        }
+
 		breathePast = breatheNow;
 
 
@@ -80,33 +94,76 @@ public class PlayerManager : MonoBehaviour {
 			if (PlayerNumber == 1)
             {
 				PlayerFA = DataHolder.GetComponent<SimulationData> ().P1FrontAs;
-				breatheNow = DataHolder.GetComponent<SimulationData> ().P1Breathing;
-			}
+
+
+               
+                breatheNow = DataHolder.GetComponent<SimulationData> ().P1Breathing;
+
+            }
 
 			if (PlayerNumber == 2)
             {
 				PlayerFA = DataHolder.GetComponent<SimulationData> ().P2FrontAs;
-				breatheNow = DataHolder.GetComponent<SimulationData> ().P2Breathing;
+               
 
-			}
+                breatheNow = DataHolder.GetComponent<SimulationData> ().P2Breathing;
+
+            }
 
 		}
 
 
 		else
         {  //this is the adaptation coming from sensors.
-			if (PlayerNumber == 1)
+            if (PlayerNumber == 1)
             {
-				PlayerFA = SensorData.FAOut;
-				breatheNow = SensorData.RespOut;
+
+                if (RespChanged) { 
+                if (respQueue.Count == 10)
+                {
+                    respQueue.Dequeue();
+                }
+                respQueue.Enqueue(SensorData.RespOut);
+                respArray = respQueue.ToArray();
+                breatheNow = respArray.Average();
+                respArray = respQueue.ToArray();
+                //breatheNow = respQueue.Average();
+
+
+
+                PlayerFA = SensorData.FAOut;
+                    //breatheNow = SensorData.RespOut;
+                    Debug.Log("new resp calculated");
+                    RespChanged = false;
+                    
+                }
 			}
 
-			if (PlayerNumber == 2)
+            if (PlayerNumber == 2)
             {
-				PlayerFA = SensorData.FAOut;
-				breatheNow = SensorData.RespOut;
+                if (RespChanged)
+                {
+                    if (respQueue.Count == 10)
+                    {
+                        respQueue.Dequeue();
+                    }
+                    respQueue.Enqueue(SensorData.RespOut);
+                    respArray = respQueue.ToArray();
+                    breatheNow = respArray.Average();
+                    respArray = respQueue.ToArray();
+                    //breatheNow = respQueue.Average();
 
-			}
+
+
+                    PlayerFA = SensorData.FAOut;
+                    //breatheNow = SensorData.RespOut;
+                    Debug.Log("new resp calculated");
+                    RespChanged = false;
+        
+                }
+
+
+            }
 
 		}
 

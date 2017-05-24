@@ -171,7 +171,7 @@ public class TCPClientThreadFA
 
                 frontalAss = Mathf.Log(alphaRight) - Mathf.Log(alphaLeft);
 
-                Debug.Log("Relax: " + SensorData.RespOut);
+                Debug.Log("Breathing value: " + SensorData.RespOut);
 
 
                 if (frontalAss < faMin)
@@ -185,15 +185,16 @@ public class TCPClientThreadFA
                     faMax = frontalAss;
                 }
 
-                faRange = faMax - faMin;
+                faRange = Math.Max(faMax - faMin, 0.1f);
+                //faRange = faMax - faMin + 0.1f;
 
 
                 Debug.Log(" Toimii kuin junan vessa");
 
-                Debug.Log("AlphaMin: " + faMin);
-                Debug.Log("AlphaMax: " + faMax);
+                Debug.Log("faMin: " + faMin);
+                Debug.Log("faMax: " + faMax);
                 Debug.Log("frontalAss: " + frontalAss);
-                Debug.Log("AlphaRange: " + faRange);
+                Debug.Log("faRange: " + faRange);
 
                 if (initSteps > 0)
                 {
@@ -202,13 +203,13 @@ public class TCPClientThreadFA
                 }
                 else
                 {
-                    SensorData.FAOut = (frontalAss - faMin) / faRange; //- 0.2f;
+                    SensorData.FAOut = (frontalAss - faMin) / faRange;
                     SensorData.RespOut = respiration - prevRespiration;
                 }
 
                 if (initSteps == 1)
                 {
-                    faRange = faMax - faMin;
+                    faRange = Math.Max(faMax - faMin, 0.1f);
                     prevRespiration = respiration;
                     Debug.Log("AlphaRange: " + faRange);
                     Debug.Log("BaselineLength: " + initSteps);
