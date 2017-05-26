@@ -25,6 +25,7 @@ public class PlayerManager : MonoBehaviour {
     //private Queue<float> respQueue = new Queue< float > (10);
    public Queue<float> respQueue = new Queue<float>(new float[10]);
     public bool RespChanged = true;
+	float RespDataOld = 0f;
 
 
 
@@ -80,8 +81,10 @@ public class PlayerManager : MonoBehaviour {
 	// Update is called once per frame
 	void FixedUpdate () {
 
-        if (breathePast - breatheNow != 0) {
+		if (RespDataOld - SensorData.RespOut != 0) {
+			RespDataOld = SensorData.RespOut;
             RespChanged = true;
+
         }
 
 		breathePast = breatheNow;
