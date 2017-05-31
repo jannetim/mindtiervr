@@ -1,25 +1,35 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking;
+using System.Linq;
 
-public class PlayerManager : NetworkBehaviour
+public class PlayerManager : MonoBehaviour
 {
+
     public GameObject AuraExpander;
     public GameObject AuraController;
     public GameObject BridgeBars;
     public GameObject StatueAnimator;
+    public bool IsSimNPC = false;
     public float PlayerFA;
     GameObject SessionManager;
     GameObject DataHolder;
     GameObject SpawnPoint1;
     GameObject SpawnPoint2;
     public int PlayerNumber = 0;
-    private float breatheNow = 0f;
-    private float breathePast = 0f;
+    private float breatheNow = 9f;
+    private float breathePast = 10f;
     bool inBreathContinues = false;
     bool outBreathContinues = false;
     private GameObject otherPlayerManager;
+    public float[] respArray = new float[10];
+    //private Queue<float> respQueue = new Queue< float > (10);
+    public Queue<float> respQueue = new Queue<float>(new float[10]);
+    public bool RespChanged = true;
+    float RespDataOld = 0f;
+
+    bool firstwaveset = false;
+
 
 
     // Use this for initialization
@@ -33,6 +43,7 @@ public class PlayerManager : NetworkBehaviour
             }
         }
 
+
         SessionManager = GameObject.Find("Session Manager");
         DataHolder = GameObject.Find("Data Holder");
 
@@ -40,7 +51,7 @@ public class PlayerManager : NetworkBehaviour
         SpawnPoint2 = GameObject.Find("Spawn Point 2");
 
         //find out which player this one is, if it has not been set yet.
-        Debug.Log(Network.connections.Length);
+
         if (PlayerNumber == 0)
         {
             float dist1 = Vector3.Distance(this.transform.position, SpawnPoint1.transform.position);
@@ -71,8 +82,12 @@ public class PlayerManager : NetworkBehaviour
                 BridgeBars = GameObject.Find("Player2_BridgeLayers");
                 StatueAnimator = GameObject.Find("Statue_Player2");
             }
+
         }
     }
+
+
+
 
 
     // Update is called once per frame
@@ -85,40 +100,97 @@ public class PlayerManager : NetworkBehaviour
                 return;
             }
         }
+
+        if (RespDataOld - SensorData.RespOut != 0)
+        {
+            RespDataOld = SensorData.RespOut;
+            RespChanged = true;
+
+        }
+
         breathePast = breatheNow;
 
+
+
         // are we simulating everything?
-        if (SessionManager.GetComponent<SessionManager>().SimulateSelf == true)
+        if (((SessionManager.GetComponent<SessionManager>().SimulateSelf == true) && (IsSimNPC == false)) || ((IsSimNPC == true)))
         {
 
             if (PlayerNumber == 1)
             {
                 PlayerFA = DataHolder.GetComponent<SimulationData>().P1FrontAs;
+
+
+
                 breatheNow = DataHolder.GetComponent<SimulationData>().P1Breathing;
+
             }
 
             if (PlayerNumber == 2)
             {
                 PlayerFA = DataHolder.GetComponent<SimulationData>().P2FrontAs;
+
+
                 breatheNow = DataHolder.GetComponent<SimulationData>().P2Breathing;
 
             }
 
         }
+
+
         else
         {  //this is the adaptation coming from sensors.
             if (PlayerNumber == 1)
             {
-                PlayerFA = SensorData.FAOut;
-                breatheNow = SensorData.RespOut;
+
+                if (RespChanged)
+                {
+                    if (respQueue.Count == 10)
+                    {
+                        respQueue.Dequeue();
+                    }
+                    respQueue.Enqueue(SensorData.RespOut);
+                    respArray = respQueue.ToArray();
+                    breatheNow = respArray.Average();
+                    respArray = respQueue.ToArray();
+                    //breatheNow = respQueue.Average();
+
+
+
+                    PlayerFA = SensorData.FAOut;
+                    //breatheNow = SensorData.RespOut;
+                    Debug.Log("new resp calculated");
+                    RespChanged = false;
+
+                }
             }
 
             if (PlayerNumber == 2)
             {
-                PlayerFA = SensorData.FAOut;
-                breatheNow = SensorData.RespOut;
+                if (RespChanged)
+                {
+                    if (respQueue.Count == 10)
+                    {
+                        respQueue.Dequeue();
+                    }
+                    respQueue.Enqueue(SensorData.RespOut);
+                    respArray = respQueue.ToArray();
+                    breatheNow = respArray.Average();
+                    respArray = respQueue.ToArray();
+                    //breatheNow = respQueue.Average();
+
+
+
+                    PlayerFA = SensorData.FAOut;
+                    //breatheNow = SensorData.RespOut;
+                    Debug.Log("new resp calculated");
+                    RespChanged = false;
+
+                }
+
 
             }
+
         }
 
         if (PlayerNumber == 1)
@@ -139,18 +211,31 @@ public class PlayerManager : NetworkBehaviour
         //print(PlayerFA + "  " + otherPlayerFA + "   " + fasync);
 
 
+
+
+
+
         // RESPIRATION CONTROLS
 
+
+
+
+
+
+
         // first breathe out
-        if ((breatheNow < breathePast) && (!outBreathContinues))
+        if ((breatheNow < breathePast) && (outBreathContinues == false))
         {
 
             //		Debug.Log ("Player " + PlayerNumber + " breathing out");
             //		Debug.Log (PlayerNumber + ": " + breathePast + " " + breatheNow);
             StatueAnimator.GetComponent<Animator>().SetTrigger("StartOut");
             //Debug.Log ("breath out animtrigger sent");
-            outBreathContinues = false;
+            outBreathContinues = true;
+
             inBreathContinues = false;
+
+
         }
 
         //breathing out continues
@@ -160,6 +245,8 @@ public class PlayerManager : NetworkBehaviour
 
         }
 
+
+
         if ((breatheNow >= breathePast) && (inBreathContinues == false))
         {
             //outbreathing is over, send a wave.
@@ -167,8 +254,11 @@ public class PlayerManager : NetworkBehaviour
             {
                 GetComponent<Adap_WaveSend>().SendWave(PlayerNumber);
             }
-
-            BridgeBars.GetComponent<BreathLayerer>().InitBreatheBar();
+            if (firstwaveset)
+            {
+                BridgeBars.GetComponent<BreathLayerer>().InitBreatheBar();
+            }
+            else firstwaveset = true;
             StatueAnimator.GetComponent<Animator>().SetTrigger("StartIn");
 
             //	Debug.Log ("Player " + PlayerNumber + " breathing in");
@@ -189,5 +279,11 @@ public class PlayerManager : NetworkBehaviour
 
 
         }
+
+
+
+
+
+
     }
 }

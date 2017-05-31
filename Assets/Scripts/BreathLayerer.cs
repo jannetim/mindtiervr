@@ -4,7 +4,8 @@ using System;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class BreathLayerer : NetworkBehaviour {
+public class BreathLayerer : NetworkBehaviour
+{
     //public GameObject Plane, Plane2, Plane3, Plane4;
     public GameObject[] planes;
     private Color planeColor;
@@ -21,7 +22,8 @@ public class BreathLayerer : NetworkBehaviour {
     private float ownOrigV, otherOrigV;
     public BreathLayerer OtherScript;
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
         System.Array.Reverse(planes);
         origAlpha = PlaneTransparency;
         // InvokeRepeating("InitBreatheBar", 2.0f, 5.0f);
@@ -34,7 +36,8 @@ public class BreathLayerer : NetworkBehaviour {
     }
 
     // Update is called once per frame
-    void FixedUpdate () {
+    void FixedUpdate()
+    {
         planeColor = Player.GetComponent<PlayerFAScript>().PlayerColor;
     }
 
@@ -43,7 +46,8 @@ public class BreathLayerer : NetworkBehaviour {
         if (isFadingIn)
         {
             StopCoroutine("FadeIn");
-        } else if (isFadingOut)
+        }
+        else if (isFadingOut)
         {
             StopCoroutine("FadeOut");
         }
@@ -122,7 +126,7 @@ public class BreathLayerer : NetworkBehaviour {
         yield return new WaitForSeconds(1.5f);
         System.Array.Reverse(planes);
         foreach (GameObject o in planes)
-        { 
+        {
             Color color = o.GetComponent<Renderer>().material.color;
             for (float f = origAlpha; f >= 0; f -= 0.005f)
             {
@@ -168,10 +172,11 @@ public class BreathLayerer : NetworkBehaviour {
 
         Color.RGBToHSV(colorOwn, out ownH, out ownS, out ownV);
         ownOrigV = ownV;
-        for (float f = 0; f < 1.0f; f += 0.03f ) {
+        for (float f = 0; f < 1.0f; f += 0.03f)
+        {
             Color color = Color.HSVToRGB(ownH, ownS, ownV + f);
-            color.a = origAlpha + f/3;
-            color2.a = origAlpha + f/4;
+            color.a = origAlpha + f / 3;
+            color2.a = origAlpha + f / 4;
             if (NetworkServer.active)
             {
                 RpcSetSyncColor(color, color2);
@@ -195,8 +200,8 @@ public class BreathLayerer : NetworkBehaviour {
         for (float f = 1; f > 0; f -= 0.02f)
         {
             Color color = Color.HSVToRGB(ownH, ownS, ownOrigV + f);
-            color.a = origAlpha + f/3;
-            color2.a = origAlpha + f/4;
+            color.a = origAlpha + f / 3;
+            color2.a = origAlpha + f / 4;
             if (NetworkServer.active)
             {
                 RpcSetSyncColor(color, color2);
@@ -250,8 +255,8 @@ public class BreathLayerer : NetworkBehaviour {
     [ClientRpc]
     void RpcSetSyncColor(Color color, Color color2)
     {
-            Plane.GetComponent<Renderer>().material.SetColor("_Color", color);
-            Plane2.GetComponent<Renderer>().material.SetColor("_Color", color2);
+        Plane.GetComponent<Renderer>().material.SetColor("_Color", color);
+        Plane2.GetComponent<Renderer>().material.SetColor("_Color", color2);
     }
 
     [Command]

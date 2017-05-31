@@ -27,8 +27,8 @@ public class TCPClientFA : MonoBehaviour
         myThread.Start();
 
         //  GlobalClass.EDA = 1;
-        SensorData.RespOut = 0;
-        SensorData.FAOut = 0;
+        SensorData.RespOut = 0f;
+        SensorData.FAOut = 0f;
 
     }
 
@@ -40,12 +40,16 @@ public class TCPClientFA : MonoBehaviour
         {
             //Debug.Log("Eyecoordinates are: " + GlobalClass.eyeCoordinate_x + " " + GlobalClass.eyeCoordinate_y);
             doit = false;
+			SensorData.RespOut = 1f;
+			SensorData.FAOut = 1f;
         }
     }
     void OnApplicationQuit()
     {
         Debug.Log("Application quit");
         running = false;
+
+        // remember to destroy the tcpthread after everything else is fixed
     }
     void OnDestroy()
     {
@@ -76,7 +80,7 @@ public class TCPClientThreadFA
     float faRange = 0.01f;
 
 
-    string StaticIP = "130.233.50.206";
+	string StaticIP = "127.0.0.1";
 
 
     public TCPClientThreadFA(TCPClientFA c)
@@ -93,30 +97,34 @@ public class TCPClientThreadFA
         faMax = -1;
     }
 
+
+
     public void myTCPClient()
     {
-        if (PlayerPrefs.HasKey("StaticIPStored"))
+  /*      if (PlayerPrefs.HasKey("StaticIPStored"))
         {
             StaticIP = PlayerPrefs.GetString("StaticIPStored");
             Debug.Log(StaticIP + "from save");
-        }
+        }*/
 
 
 
 
-        float tmp_EDA = 0f;
+      //  float tmp_EDA = 0f;
         string input, stringData;
         byte[] message = new byte[128];
         int bytesRead;
 
         myClient = null;
-        Debug.Log("running tcp client");
+        Debug.Log("running the tcp client function");
 
 
         myClient = new TcpClient();
+		Debug.Log ("new client object created");
+
         //myClient.Connect("localhost", 9995);
         myClient.Connect(StaticIP, 9995);
-        Debug.Log("running tcp client2");
+        Debug.Log("running tcp client2 - connecting");
 
         NetworkStream myClientStream = myClient.GetStream();
 
@@ -165,7 +173,7 @@ public class TCPClientThreadFA
 
                 frontalAss = Mathf.Log(alphaRight) - Mathf.Log(alphaLeft);
 
-                Debug.Log("Relax: " + SensorData.RespOut);
+                Debug.Log("Breathing value: " + SensorData.RespOut);
 
 
                 if (frontalAss < faMin)
@@ -179,15 +187,16 @@ public class TCPClientThreadFA
                     faMax = frontalAss;
                 }
 
-                faRange = faMax - faMin;
+                faRange = Math.Max(faMax - faMin, 0.1f);
+                //faRange = faMax - faMin + 0.1f;
 
 
                 Debug.Log(" Toimii kuin junan vessa");
 
-                Debug.Log("AlphaMin: " + faMin);
-                Debug.Log("AlphaMax: " + faMax);
+                Debug.Log("faMin: " + faMin);
+                Debug.Log("faMax: " + faMax);
                 Debug.Log("frontalAss: " + frontalAss);
-                Debug.Log("AlphaRange: " + faRange);
+                Debug.Log("faRange: " + faRange);
 
                 if (initSteps > 0)
                 {
@@ -196,13 +205,15 @@ public class TCPClientThreadFA
                 }
                 else
                 {
-                    SensorData.FAOut = (frontalAss - faMin) / faRange; //- 0.2f;
-                    SensorData.RespOut = respiration - prevRespiration;
+
+                    //SensorData.FAOut = 1f;
+                    SensorData.FAOut = (frontalAss - faMin) / faRange;
+                    SensorData.RespOut = respiration;// - prevRespiration;
                 }
 
                 if (initSteps == 1)
                 {
-                    faRange = faMax - faMin;
+                    faRange = Math.Max(faMax - faMin, 0.1f);
                     prevRespiration = respiration;
                     Debug.Log("AlphaRange: " + faRange);
                     Debug.Log("BaselineLength: " + initSteps);
