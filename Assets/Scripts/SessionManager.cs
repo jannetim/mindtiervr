@@ -49,10 +49,7 @@ public class SessionManager : MonoBehaviour
             if (activePlayers.Length == 0)
             {
                 activePlayers = GameObject.FindGameObjectsWithTag("Player");
-            }
-
-
-            else
+            } else
             {
 
                 activePlayer = activePlayers[0];

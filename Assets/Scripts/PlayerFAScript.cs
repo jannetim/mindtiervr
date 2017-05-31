@@ -1,23 +1,20 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class PlayerFAScript : MonoBehaviour
+public class PlayerFAScript : NetworkBehaviour
 {
     // THIS IS USED FOR CONTROLLING AURA COLOR
     // HAS MANUALLY PLACED OBJECTS, 
     // PLAYERMANAGER HANDLES INPUT TO HERE.
 
 
-
-
-
     public Gradient FAColorSlide = new Gradient();
     public Color PlayerColor;
-
     public GameObject PlayerBridgeSides;
     public GameObject PlayerAura;
-    public GameObject PlayerAura2;
+    public GameObject PlayerAura2;    
     public GameObject[] PlayerLights;
     public GameObject PlayerStatue;
     public float PlayerFA_Display = 0.0f;
@@ -32,13 +29,12 @@ public class PlayerFAScript : MonoBehaviour
     float glowVMod;
     bool flickerS;
     bool flickerV;
+
     // Use this for initialization
     void Start()
     {
-
-
-    //    GradientColorKey[] gck = new GradientColorKey[2];
-    //    GradientAlphaKey[] gak = new GradientAlphaKey[2];
+        //    GradientColorKey[] gck = new GradientColorKey[2];
+        //    GradientAlphaKey[] gak = new GradientAlphaKey[2];
 
         UseSyncGlow = true;
         glowS = 1.0f;
@@ -52,28 +48,58 @@ public class PlayerFAScript : MonoBehaviour
     void FixedUpdate()
     {
         PlayerColor = FAColorSlide.Evaluate(PlayerFA_Display);
-
+        if (NetworkServer.active)
+        {
+            RpcSetPlayerColor();
+        }
+        else if (NetworkClient.active)
+        {
+            CmdSetPlayerColor();
+        }
         Color.RGBToHSV(PlayerColor, out auraH, out auraS, out auraV);
         auraS = 0.72f;
         auraV = 0.35f;
         AuraColor = Color.HSVToRGB(auraH, auraS, auraV);
         AuraColor.a = 0.05f + PlayerFA_Display * 0.7f;
-        PlayerAura.GetComponent<Renderer>().material.SetColor("_TintColor", AuraColor);
-        AuraColor.a = AuraColor.a * 0.4f;
-        PlayerAura2.GetComponent<Renderer>().material.SetColor("_TintColor", AuraColor);
 
-        for (int i = 0; i < PlayerLights.Length; i++)
+        Color BridgeSideColor = PlayerColor;
+        BridgeSideColor.a = 0.4f;
+
+        if (NetworkServer.active)
+        {
+            RpcSetColors(AuraColor, BridgeSideColor);
+        }
+        else if (NetworkClient.active)
+        {
+            CmdSetColors(AuraColor, BridgeSideColor);
+        }
+
+        // old single player logic
+        //PlayerAura.GetComponent<Renderer>().material.SetColor("_TintColor", AuraColor);
+        //AuraColor.a = AuraColor.a * 0.4f;
+        //PlayerAura2.GetComponent<Renderer>().material.SetColor("_TintColor", AuraColor);
+        if (NetworkServer.active)
+        {
+            RpcPlayerLights();
+        }
+        else if (NetworkClient.active)
+        {
+            CmdPlayerLights();
+        }
+
+        // old logic
+        /*for (int i = 0; i < PlayerLights.Length; i++)
         {
 
             Light l = PlayerLights[i].GetComponent<Light>();
             l.color = PlayerColor;
             l.intensity = 0.05f + PlayerFA_Display * 1.1f;
-        }
+        }*/
 
-		Color BridgeSideColor = PlayerColor;
-		BridgeSideColor.a = 0.4f;
-		PlayerBridgeSides.GetComponent<Renderer>().material.color = BridgeSideColor;
-      //  PlayerBridgeSides.GetComponent<Renderer>().material.color = PlayerColor;
+        //PlayerBridgeSides.GetComponent<Renderer>().material.color = BridgeSideColor;
+
+
+        //  PlayerBridgeSides.GetComponent<Renderer>().material.color = PlayerColor;
 
         if (UseSyncGlow)
         { 
@@ -136,11 +162,74 @@ public class PlayerFAScript : MonoBehaviour
 
 
             Color emissionColor = Color.HSVToRGB(auraH, glowS, auraV);
-		    PlayerBridgeSides.GetComponent<Renderer>().material.SetColor("_EmissionColor", emissionColor);
+            if (NetworkServer.active)
+            {
+                RpcEmission(emissionColor);
+            }
+            else if (NetworkClient.active)
+            {
+                CmdEmission(emissionColor);
+            }
+            //PlayerBridgeSides.GetComponent<Renderer>().material.SetColor("_EmissionColor", emissionColor);
         }
         // used with gradient shader
         //PlayerBridgeSides.GetComponent<Renderer>().material.SetFloat("_Threshold", 1.0f - PlayerFA_Display);
+    }
 
+    [Command]
+    void CmdSetPlayerColor()
+    {
+        RpcSetPlayerColor();
+    }
 
+    [ClientRpc]
+    void RpcSetPlayerColor()
+    {
+        PlayerColor = FAColorSlide.Evaluate(PlayerFA_Display);
+    }
+
+    [Command]
+    void CmdPlayerLights()
+    {
+        RpcPlayerLights();
+    }
+
+    [ClientRpc]
+    void RpcPlayerLights()
+    {
+        for (int i = 0; i < PlayerLights.Length; i++)
+        {
+            Light l = PlayerLights[i].GetComponent<Light>();
+            l.color = PlayerColor;
+            l.intensity = 0.05f + PlayerFA_Display * 1.1f;
+        }
+    }
+
+    [Command]
+    void CmdEmission(Color emissionColor)
+    {
+        RpcEmission(emissionColor);
+    }
+
+    [ClientRpc]
+    void RpcEmission(Color emissionColor)
+    {
+        PlayerBridgeSides.GetComponent<Renderer>().material.SetColor("_EmissionColor", emissionColor);
+    }
+
+    [Command]
+    void CmdSetColors(Color AuraColor, Color BridgeSideColor)
+    {
+        RpcSetColors(AuraColor, BridgeSideColor);
+    }
+
+    [ClientRpc]
+    void RpcSetColors(Color AuraColor, Color BridgeSideColor)
+    {
+        PlayerAura.GetComponent<Renderer>().material.SetColor("_TintColor", AuraColor);
+        AuraColor.a = AuraColor.a * 0.4f;
+        PlayerAura2.GetComponent<Renderer>().material.SetColor("_TintColor", AuraColor);
+
+        PlayerBridgeSides.GetComponent<Renderer>().material.color = BridgeSideColor;
     }
 }

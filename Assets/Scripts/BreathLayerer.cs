@@ -1,14 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class BreathLayerer : MonoBehaviour {
+public class BreathLayerer : NetworkBehaviour {
     //public GameObject Plane, Plane2, Plane3, Plane4;
     public GameObject[] planes;
     private Color planeColor;
-    private GameObject player;
-    private GameObject otherPlane;
-    private GameObject plane, plane2;
+    public GameObject Player;
+    public GameObject OtherPlane;
+    public GameObject Plane, Plane2;
     [Range(0, 1)]
     public float PlaneTransparency = 0.2f;
     private float origAlpha;
@@ -17,38 +19,23 @@ public class BreathLayerer : MonoBehaviour {
     private float ownH, ownS, ownV;
     private float otherH, otherS, otherV;
     private float ownOrigV, otherOrigV;
-    private BreathLayerer otherScript;
+    public BreathLayerer OtherScript;
     // Use this for initialization
     void Start () {
         System.Array.Reverse(planes);
-        if (gameObject.name == "Player1_BridgeLayers")
-        {
-            player = GameObject.Find("Player1_Manager");
-            plane = GameObject.Find("Player1_BridgeLayers/Plane5");
-            plane2 = GameObject.Find("Player1_BridgeLayers/Plane4");
-            otherPlane = GameObject.Find("Player2_BridgeLayers/Plane5");
-            otherScript = GameObject.Find("Player2_BridgeLayers").GetComponent<BreathLayerer>();
-        } else if (gameObject.name == "Player2_BridgeLayers")
-        {
-            player = GameObject.Find("Player2_Manager");
-            plane = GameObject.Find("Player2_BridgeLayers/Plane5");
-            plane2 = GameObject.Find("Player2_BridgeLayers/Plane4");
-            otherPlane = GameObject.Find("Player1_BridgeLayers/Plane5");
-            otherScript = GameObject.Find("Player1_BridgeLayers").GetComponent<BreathLayerer>();
-        }
         origAlpha = PlaneTransparency;
-
         // InvokeRepeating("InitBreatheBar", 2.0f, 5.0f);
-    }
-	
-	// Update is called once per frame
-	void Update () {
-        planeColor = player.GetComponent<PlayerFAScript>().PlayerColor;
     }
 
     public void InitBreatheBar()
     {
         StartCoroutine("Fades");
+
+    }
+
+    // Update is called once per frame
+    void FixedUpdate () {
+        planeColor = Player.GetComponent<PlayerFAScript>().PlayerColor;
     }
 
     IEnumerator Fades()
@@ -63,11 +50,13 @@ public class BreathLayerer : MonoBehaviour {
         yield return StartCoroutine("FadeIn");
         isFadingIn = false;
 
-        if (otherPlane.activeInHierarchy && otherPlane.GetComponent<Renderer>().material.color.a > 0.1f)
+        if (OtherPlane.activeInHierarchy && OtherPlane.GetComponent<Renderer>().material.color.a > 0.1f)
         {
             StartCoroutine("SyncGlow");
-            otherScript.StartSyncGlow();
+            OtherScript.StartSyncGlow();
         }
+
+
         yield return StartCoroutine("FadeOut");
         isFadingOut = false;
     }
@@ -75,21 +64,53 @@ public class BreathLayerer : MonoBehaviour {
     IEnumerator FadeIn()
     {
         isFadingIn = true;
-        foreach (GameObject o in planes)
+
+        /*
+        if (NetworkServer.active)
+        {
+            RpcInitColor();
+        }
+        else if (NetworkClient.active)
+        {
+            CmdInitColor();
+        }*/
+
+        //old logic
+        /*foreach (GameObject o in planes)
         {
             planeColor.a = 0;
-            o.GetComponent<Renderer>().material.SetColor("_Color", planeColor);
-            o.SetActive(false);
-        }
+            //o.GetComponent<Renderer>().material.SetColor("_Color", planeColor);
+            //o.SetActive(false);
+        }*/
+
         System.Array.Reverse(planes);
         foreach (GameObject o in planes)
         {
-            o.SetActive(true);
+            if (NetworkServer.active)
+            {
+                RpcSetState(o, true);
+            }
+            else if (NetworkClient.active)
+            {
+                CmdSetState(o, true);
+            }
+
+            //o.SetActive(true);
+
             Color color = o.GetComponent<Renderer>().material.color;
             for (float f = 0; f <= origAlpha; f += 0.05f)
             {
+
                 color.a = f;
-                o.GetComponent<Renderer>().material.SetColor("_Color", color);
+                //o.GetComponent<Renderer>().material.SetColor("_Color", color);
+                if (NetworkServer.active)
+                {
+                    RpcSetColor(o, color);
+                }
+                else if (NetworkClient.active)
+                {
+                    CmdSetColor(o, color);
+                }
                 yield return null;
             }
         }
@@ -106,10 +127,26 @@ public class BreathLayerer : MonoBehaviour {
             for (float f = origAlpha; f >= 0; f -= 0.005f)
             {
                 color.a = f;
-                o.GetComponent<Renderer>().material.SetColor("_Color", color);
+                //o.GetComponent<Renderer>().material.SetColor("_Color", color);
+                if (NetworkServer.active)
+                {
+                    RpcSetColor(o, color);
+                }
+                else if (NetworkClient.active)
+                {
+                    CmdSetColor(o, color);
+                }
                 yield return null;
             }
-            o.SetActive(false);
+            if (NetworkServer.active)
+            {
+                RpcSetState(o, false);
+            }
+            else if (NetworkClient.active)
+            {
+                CmdSetState(o, false);
+            }
+            //o.SetActive(false);
         }
     }
 
@@ -126,49 +163,33 @@ public class BreathLayerer : MonoBehaviour {
 
     IEnumerator SyncGlowIn()
     {
-        Color colorOwn = plane.GetComponent<Renderer>().material.color;
-        Color color2 = plane2.GetComponent<Renderer>().material.color;
+        Color colorOwn = Plane.GetComponent<Renderer>().material.color;
+        Color color2 = Plane2.GetComponent<Renderer>().material.color;
 
-        /*float alpha = colorOwn.a;
-        for (float f = alpha; f < alpha+0.4f; f += 0.001f)
-        {
-            colorOwn.a = f;
-            plane.GetComponent<Renderer>().material.SetColor("_Color", colorOwn);
-        }
-        alpha = colorOther.a;
-        for (float f = alpha; f < alpha + 0.4f; f += 0.001f)
-        {
-            colorOther.a = f;
-            otherPlane.GetComponent<Renderer>().material.SetColor("_Color", colorOther);
-        }*/
         Color.RGBToHSV(colorOwn, out ownH, out ownS, out ownV);
         ownOrigV = ownV;
         for (float f = 0; f < 1.0f; f += 0.03f ) {
             Color color = Color.HSVToRGB(ownH, ownS, ownV + f);
             color.a = origAlpha + f/3;
             color2.a = origAlpha + f/4;
-            plane.GetComponent<Renderer>().material.SetColor("_Color", color);
-            plane2.GetComponent<Renderer>().material.SetColor("_Color", color2);
-            //otherPlane.GetComponent<Renderer>().material.SetColor("_Color", Color.HSVToRGB(otherH, otherS, otherV + f));
+            if (NetworkServer.active)
+            {
+                RpcSetSyncColor(color, color2);
+            }
+            else if (NetworkClient.active)
+            {
+                CmdSetSyncColor(color, color2);
+            }
+            //plane.GetComponent<Renderer>().material.SetColor("_Color", color);
+            //plane2.GetComponent<Renderer>().material.SetColor("_Color", color2);
             yield return null;
         }
     }
 
     IEnumerator SyncGlowOut()
     {
-        Color colorOwn = plane.GetComponent<Renderer>().material.color;
-        Color color2 = plane2.GetComponent<Renderer>().material.color;
-        /*float alpha = colorOwn.a;
-        for (float f = colorOwn.a; f >= origAlpha; f -= 0.001f)
-        {
-            colorOwn.a = f;
-            plane.GetComponent<Renderer>().material.SetColor("_Color", colorOwn);
-        }
-        for (float f = colorOther.a; f >= origAlpha; f -= 0.001f)
-        {
-            colorOther.a = f;
-            otherPlane.GetComponent<Renderer>().material.SetColor("_Color", colorOther);
-        }*/
+        Color colorOwn = Plane.GetComponent<Renderer>().material.color;
+        Color color2 = Plane2.GetComponent<Renderer>().material.color;
         colorOwn.a = 0.0f;
         Color.RGBToHSV(colorOwn, out ownH, out ownS, out ownV);
         for (float f = 1; f > 0; f -= 0.02f)
@@ -176,10 +197,72 @@ public class BreathLayerer : MonoBehaviour {
             Color color = Color.HSVToRGB(ownH, ownS, ownOrigV + f);
             color.a = origAlpha + f/3;
             color2.a = origAlpha + f/4;
-            plane.GetComponent<Renderer>().material.SetColor("_Color", color );
-            plane2.GetComponent<Renderer>().material.SetColor("_Color", color2);
-            //otherPlane.GetComponent<Renderer>().material.SetColor("_Color", Color.HSVToRGB(otherH, otherS, otherOrigV + f));
+            if (NetworkServer.active)
+            {
+                RpcSetSyncColor(color, color2);
+            }
+            else if (NetworkClient.active)
+            {
+                CmdSetSyncColor(color, color2);
+            }
+            //plane.GetComponent<Renderer>().material.SetColor("_Color", color );
+            //plane2.GetComponent<Renderer>().material.SetColor("_Color", color2);
             yield return null;
         }
+    }
+
+
+    [Command]
+    void CmdInitColor()
+    {
+        RpcInitColor();
+    }
+
+    [ClientRpc]
+    void RpcInitColor()
+    {
+        foreach (GameObject o in planes)
+        {
+            planeColor.a = 0;
+            o.GetComponent<Renderer>().material.SetColor("_Color", planeColor);
+            o.SetActive(false);
+        }
+    }
+
+    [Command]
+    void CmdSetColor(GameObject o, Color color)
+    {
+        RpcSetColor(o, color);
+    }
+
+    [ClientRpc]
+    void RpcSetColor(GameObject o, Color color)
+    {
+        o.GetComponent<Renderer>().material.SetColor("_Color", color);
+    }
+
+    [Command]
+    void CmdSetSyncColor(Color color, Color color2)
+    {
+        RpcSetSyncColor(color, color2);
+    }
+
+    [ClientRpc]
+    void RpcSetSyncColor(Color color, Color color2)
+    {
+            Plane.GetComponent<Renderer>().material.SetColor("_Color", color);
+            Plane2.GetComponent<Renderer>().material.SetColor("_Color", color2);
+    }
+
+    [Command]
+    void CmdSetState(GameObject o, bool state)
+    {
+        RpcSetState(o, state);
+    }
+
+    [ClientRpc]
+    void RpcSetState(GameObject o, bool state)
+    {
+        o.SetActive(state);
     }
 }

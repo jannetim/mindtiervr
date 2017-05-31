@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class AuraScaler : MonoBehaviour {
+public class AuraScaler : NetworkBehaviour {
 	public float ExpandSpeed = 0.1f;
 	public float maxSize = 0.55f;
 	public float minSize = 0.4f;
@@ -23,18 +24,44 @@ public class AuraScaler : MonoBehaviour {
 
 		if ((expand == true) && (scalefactor <= maxSize)) {
 			scalefactor += Time.deltaTime * ExpandSpeed;
-			this.transform.localScale = new Vector3 ( scalefactor, scalefactor, scalefactor) ;
-		
-		}
+			//this.transform.localScale = new Vector3 ( scalefactor, scalefactor, scalefactor) ;
+            if (NetworkServer.active)
+            {
+                RpcScale();
+            }
+            else if (NetworkClient.active)
+            {
+                CmdScale();
+            }
+        }
 		if ((expand == false) && (scalefactor >= minSize)){
-				scalefactor -= Time.deltaTime * ExpandSpeed;
-			this.transform.localScale = new Vector3 ( scalefactor, scalefactor, scalefactor) ;
-
-		} 
+		    scalefactor -= Time.deltaTime * ExpandSpeed;
+			//this.transform.localScale = new Vector3 ( scalefactor, scalefactor, scalefactor) ;
+            if (NetworkServer.active)
+            {
+                RpcScale();
+            }
+            else if (NetworkClient.active)
+            {
+                CmdScale();
+            }
+        } 
 
 
 
 
 		
 	}
+
+    [Command]
+    void CmdScale()
+    {
+        RpcScale();
+    }
+
+    [ClientRpc]
+    void RpcScale()
+    {
+        this.transform.localScale = new Vector3(scalefactor, scalefactor, scalefactor);
+    }
 }
