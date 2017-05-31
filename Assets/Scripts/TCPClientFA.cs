@@ -48,6 +48,8 @@ public class TCPClientFA : MonoBehaviour
     {
         Debug.Log("Application quit");
         running = false;
+
+        // remember to destroy the tcpthread after everything else is fixed
     }
     void OnDestroy()
     {
@@ -203,8 +205,10 @@ public class TCPClientThreadFA
                 }
                 else
                 {
+
+                    //SensorData.FAOut = 1f;
                     SensorData.FAOut = (frontalAss - faMin) / faRange;
-                    SensorData.RespOut = respiration - prevRespiration;
+                    SensorData.RespOut = respiration;// - prevRespiration;
                 }
 
                 if (initSteps == 1)

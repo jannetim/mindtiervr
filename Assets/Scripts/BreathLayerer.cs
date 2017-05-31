@@ -72,6 +72,7 @@ public class BreathLayerer : MonoBehaviour {
         isFadingOut = false;
     }
 
+    
     IEnumerator FadeIn()
     {
         isFadingIn = true;
@@ -94,6 +95,58 @@ public class BreathLayerer : MonoBehaviour {
             }
         }
     }
+
+   /* IEnumerator FadeIn()
+    {
+        isFadingIn = true;
+        foreach (GameObject o in planes)
+        {
+            planeColor.a = 0;
+            if (NetworkServer.active)
+            {
+                RpcSetColor(o, planeColor);
+                RpcSetState(o, false);
+            }
+            else if (NetworkClient.active)
+            {
+                CmdSetColor(o, planeColor);
+                CmdSetState(o, false);
+            }
+
+            //old logic
+            //o.GetComponent<Renderer>().material.SetColor("_Color", planeColor);
+            //o.SetActive(false);
+        }
+        System.Array.Reverse(planes);
+        foreach (GameObject o in planes)
+        {
+            if (NetworkServer.active)
+            {
+                RpcSetState(o, true);
+            }
+            else if (NetworkClient.active)
+            {
+                CmdSetState(o, true);
+            }
+
+            //o.SetActive(true);
+            Color color = o.GetComponent<Renderer>().material.color;
+            for (float f = 0; f <= origAlpha; f += 0.05f)
+            {
+                color.a = f;
+                //o.GetComponent<Renderer>().material.SetColor("_Color", color);
+                if (NetworkServer.active)
+                {
+                    RpcSetColor(o, color);
+                }
+                else if (NetworkClient.active)
+                {
+                    CmdSetColor(o, color);
+                }
+                yield return null;
+            }
+        }
+    }*/
 
     IEnumerator FadeOut()
     {

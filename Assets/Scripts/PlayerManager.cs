@@ -16,8 +16,8 @@ public class PlayerManager : MonoBehaviour {
 	GameObject SpawnPoint1;
 	GameObject SpawnPoint2;
 	public int PlayerNumber = 0;
-	private float breatheNow = 0f;
-	private float breathePast = 0f;
+	private float breatheNow = 9f;
+	private float breathePast = 10f;
 	bool inBreathContinues = false;
 	bool outBreathContinues = false;
     private GameObject otherPlayerManager;
@@ -26,6 +26,8 @@ public class PlayerManager : MonoBehaviour {
    public Queue<float> respQueue = new Queue<float>(new float[10]);
     public bool RespChanged = true;
 	float RespDataOld = 0f;
+
+    bool firstwaveset = false;
 
 
 
@@ -222,12 +224,14 @@ public class PlayerManager : MonoBehaviour {
 
 
 
-		if ((breatheNow >= breathePast) && (inBreathContinues == false)) {
-			//outbreathing is over, send a wave.
-			if (SessionManager.GetComponent<SessionManager> ().Waves) { 
-				GetComponent<Adap_WaveSend> ().SendWave (PlayerNumber);
-			}
-			BridgeBars.GetComponent<BreathLayerer>().InitBreatheBar();
+        if ((breatheNow >= breathePast) && (inBreathContinues == false)) {
+            //outbreathing is over, send a wave.
+            if (SessionManager.GetComponent<SessionManager>().Waves) {
+                GetComponent<Adap_WaveSend>().SendWave(PlayerNumber);
+            }
+            if (firstwaveset) { 
+            BridgeBars.GetComponent<BreathLayerer>().InitBreatheBar(); }
+        else firstwaveset = true;
 			StatueAnimator.GetComponent<Animator>().SetTrigger ("StartIn");
 
 		//	Debug.Log ("Player " + PlayerNumber + " breathing in");
