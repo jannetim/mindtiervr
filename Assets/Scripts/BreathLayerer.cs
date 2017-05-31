@@ -31,6 +31,7 @@ public class BreathLayerer : NetworkBehaviour
 
     public void InitBreatheBar()
     {
+
         StartCoroutine("Fades");
 
     }
@@ -89,7 +90,7 @@ public class BreathLayerer : NetworkBehaviour
 
         System.Array.Reverse(planes);
         foreach (GameObject o in planes)
-        {
+        {/*
             if (NetworkServer.active)
             {
                 RpcSetState(o, true);
@@ -97,7 +98,7 @@ public class BreathLayerer : NetworkBehaviour
             else if (NetworkClient.active)
             {
                 CmdSetState(o, true);
-            }
+            }*/
 
             //o.SetActive(true);
 
@@ -142,14 +143,14 @@ public class BreathLayerer : NetworkBehaviour
                 }
                 yield return null;
             }
-            if (NetworkServer.active)
+            /*if (NetworkServer.active)
             {
                 RpcSetState(o, false);
             }
             else if (NetworkClient.active)
             {
                 CmdSetState(o, false);
-            }
+            }*/
             //o.SetActive(false);
         }
     }
@@ -258,7 +259,7 @@ public class BreathLayerer : NetworkBehaviour
         Plane.GetComponent<Renderer>().material.SetColor("_Color", color);
         Plane2.GetComponent<Renderer>().material.SetColor("_Color", color2);
     }
-
+    /*
     [Command]
     void CmdSetState(GameObject o, bool state)
     {
@@ -269,5 +270,5 @@ public class BreathLayerer : NetworkBehaviour
     void RpcSetState(GameObject o, bool state)
     {
         o.SetActive(state);
-    }
+    }*/
 }
