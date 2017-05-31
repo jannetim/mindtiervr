@@ -70,25 +70,27 @@ public class BreathLayerer : NetworkBehaviour
     {
         isFadingIn = true;
 
-        /*
-        if (NetworkServer.active)
-        {
-            RpcInitColor();
-        }
-        else if (NetworkClient.active)
-        {
-            CmdInitColor();
-        }*/
+
+
 
         //old logic
-        /*foreach (GameObject o in planes)
+        foreach (GameObject o in planes)
         {
-            planeColor.a = 0;
+            if (NetworkServer.active)
+            {
+                RpcInitColor();
+            }
+            else if (NetworkClient.active)
+            {
+                CmdInitColor();
+            }
+            //planeColor.a = 0;
             //o.GetComponent<Renderer>().material.SetColor("_Color", planeColor);
             //o.SetActive(false);
-        }*/
-
-        System.Array.Reverse(planes);
+        }
+        if (planes[0].name == "Plane5") { 
+            System.Array.Reverse(planes);
+        }
         foreach (GameObject o in planes)
         {/*
             if (NetworkServer.active)
@@ -231,7 +233,6 @@ public class BreathLayerer : NetworkBehaviour
         {
             planeColor.a = 0;
             o.GetComponent<Renderer>().material.SetColor("_Color", planeColor);
-            o.SetActive(false);
         }
     }
 
