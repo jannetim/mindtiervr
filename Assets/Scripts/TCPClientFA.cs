@@ -172,7 +172,8 @@ public class TCPClientThreadFA
                 respiration = (float)Convert.ToDouble(words[2]);
 
                 frontalAss = Mathf.Log(alphaRight) - Mathf.Log(alphaLeft);
-
+                Debug.Log("frontal assymmetry: " + frontalAss + ", alphaRight: " + alphaRight + ", alphaLeft: " + alphaLeft);
+                Debug.Log("Log right " + Mathf.Log(alphaRight) + ", log left: " + Mathf.Log(alphaLeft));
                 Debug.Log("Breathing value: " + SensorData.RespOut);
 
 
@@ -206,8 +207,8 @@ public class TCPClientThreadFA
                 else
                 {
 
-                    //SensorData.FAOut = 1f;
-                    SensorData.FAOut = (frontalAss - faMin) / faRange;
+                    SensorData.FAOut = 1f;
+                    //SensorData.FAOut = (frontalAss - faMin) / faRange;
                     SensorData.RespOut = respiration;// - prevRespiration;
                 }
 

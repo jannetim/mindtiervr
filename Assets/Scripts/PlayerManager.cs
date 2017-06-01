@@ -20,17 +20,27 @@ public class PlayerManager : NetworkBehaviour
     public int PlayerNumber = 0;
     private float breatheNow = 9f;
     private float breathePast = 10f;
+    private float respThreshold = 0f;
+    private float respMax = -1f;
+    private float respMin = 10000f;
     bool inBreathContinues = false;
     bool outBreathContinues = false;
     private GameObject otherPlayerManager;
-    public float[] respArray = new float[10];
+    public float[] respArray = new float[6];
+    public float[] faArray = new float[20];
     //private Queue<float> respQueue = new Queue< float > (10);
-    public Queue<float> respQueue = new Queue<float>(new float[10]);
+
+    public Queue<float> respMinQueue = new Queue<float>(new float[3]);
+    public Queue<float> respMaxQueue = new Queue<float>(new float[3]);
+    public Queue<float> respQueue = new Queue<float>(new float[6]);
+    public Queue<float> faQueue = new Queue<float>(new float[20]);
+
     public bool RespChanged = true;
     float RespDataOld = 0f;
 
     bool firstwaveset = false;
-
+    bool breatheCooldown = false;
+    bool breatheQueueCooldown = false;
 
 
     // Use this for initialization
@@ -146,7 +156,7 @@ public class PlayerManager : NetworkBehaviour
 
                 if (RespChanged)
                 {
-                    if (respQueue.Count == 10)
+                    if (respQueue.Count == 6)
                     {
                         respQueue.Dequeue();
                     }
@@ -156,9 +166,53 @@ public class PlayerManager : NetworkBehaviour
                     respArray = respQueue.ToArray();
                     //breatheNow = respQueue.Average();
 
+                    if (!breatheQueueCooldown)
+                    {
+                        breatheQueueCooldown = true;
+                        if (respMaxQueue.Count > 0)
+                        {
+                            respMaxQueue.Dequeue();
+                        }
+                        if (respMinQueue.Count > 0)
+                        {
+                            respMinQueue.Dequeue();
+                        }
+                        StartCoroutine("RespQueCoolDown");
+                    }
 
 
-                    PlayerFA = SensorData.FAOut;
+                    if (respQueue.Max() > respMax)
+                    {
+                        if (respMaxQueue.Count == 3)
+                        {
+                            respMaxQueue.Dequeue();
+                        }
+                        respMaxQueue.Enqueue(respQueue.Max());
+                        respMax = respMaxQueue.Average();
+                    }
+                    if (respQueue.Min() < respMin)
+                    {
+                        if (respMinQueue.Count == 3)
+                        {
+                            respMinQueue.Dequeue();
+                        }
+                        respMinQueue.Enqueue(respQueue.Min());
+                        respMin = respMinQueue.Average();
+                    }
+
+                    respThreshold = (respMax - respMin) * 0.02f;
+
+
+                    if (faQueue.Count == 20)
+                    {
+                        faQueue.Dequeue();
+                    }
+                    faQueue.Enqueue(SensorData.FAOut);
+                    faArray = faQueue.ToArray();
+                    PlayerFA = faArray.Average();
+                    faArray = faQueue.ToArray();
+
+                    //PlayerFA = SensorData.FAOut;
                     //breatheNow = SensorData.RespOut;
                     Debug.Log("new resp calculated");
                     RespChanged = false;
@@ -170,7 +224,7 @@ public class PlayerManager : NetworkBehaviour
             {
                 if (RespChanged)
                 {
-                    if (respQueue.Count == 10)
+                    if (respQueue.Count == 6)
                     {
                         respQueue.Dequeue();
                     }
@@ -180,9 +234,45 @@ public class PlayerManager : NetworkBehaviour
                     respArray = respQueue.ToArray();
                     //breatheNow = respQueue.Average();
 
+                    if (!breatheQueueCooldown)
+                    {
+                        breatheQueueCooldown = true;
+                        if (respMaxQueue.Count > 0)
+                        {
+                            respMaxQueue.Dequeue();
+                        }
+                        if (respMinQueue.Count > 0)
+                        {
+                            respMinQueue.Dequeue();
+                        }
+                        StartCoroutine("RespQueCoolDown");
+                    }
+
+                    
+                    if (respQueue.Max() > respMax)
+                    {                        
+                        respMaxQueue.Enqueue(respQueue.Max());
+                        respMax = respMaxQueue.Average();
+                    }
+                    if (respQueue.Min() < respMin)
+                    {                        
+                        respMinQueue.Enqueue(respQueue.Min());
+                        respMin = respMinQueue.Average();
+                    }
 
 
-                    PlayerFA = SensorData.FAOut;
+                    respThreshold = (respMax - respMin) * 0.02f;
+
+                    if (faQueue.Count == 20)
+                    {
+                        faQueue.Dequeue();
+                    }
+                    faQueue.Enqueue(SensorData.FAOut);
+                    faArray = faQueue.ToArray();
+                    PlayerFA = faArray.Average();
+                    faArray = faQueue.ToArray();
+
+                    //PlayerFA = SensorData.FAOut;
                     //breatheNow = SensorData.RespOut;
                     Debug.Log("new resp calculated");
                     RespChanged = false;
@@ -212,26 +302,40 @@ public class PlayerManager : NetworkBehaviour
         //print(PlayerFA + "  " + otherPlayerFA + "   " + fasync);
 
 
-
-
-
-
         // RESPIRATION CONTROLS
 
-
-
-
-
-
-
         // first breathe out
-        if ((breatheNow < breathePast) && (outBreathContinues == false))
+        if ((breatheNow < breathePast - respThreshold) && (outBreathContinues == false))
         {
 
             //		Debug.Log ("Player " + PlayerNumber + " breathing out");
             //		Debug.Log (PlayerNumber + ": " + breathePast + " " + breatheNow);
             StatueAnimator.GetComponent<Animator>().SetTrigger("StartOut");
             //Debug.Log ("breath out animtrigger sent");
+
+
+            // send a wave.
+            if (SessionManager.GetComponent<SessionManager>().Waves)
+            {
+                GetComponent<Adap_WaveSend>().SendWave(PlayerNumber);
+            }
+            if (firstwaveset && !breatheCooldown)
+            {
+                breatheCooldown = true;
+                Debug.Log("user breathing wave sent");
+                BridgeBars.GetComponent<BreathLayerer>().InitBreatheBar();
+                StartCoroutine("CoolDown");
+
+            }
+            else firstwaveset = true;
+           
+
+            //	Debug.Log ("Player " + PlayerNumber + " breathing in");
+            //	Debug.Log (PlayerNumber + ": " + breathePast + " " + breatheNow);
+
+
+
+
             outBreathContinues = true;
 
             inBreathContinues = false;
@@ -248,23 +352,9 @@ public class PlayerManager : NetworkBehaviour
 
 
 
-        if ((breatheNow >= breathePast) && (inBreathContinues == false))
+        if ((breatheNow >= breathePast + respThreshold) && (inBreathContinues == false))
         {
-            //outbreathing is over, send a wave.
-            if (SessionManager.GetComponent<SessionManager>().Waves)
-            {
-                GetComponent<Adap_WaveSend>().SendWave(PlayerNumber);
-            }
-            if (firstwaveset)
-            {
-                BridgeBars.GetComponent<BreathLayerer>().InitBreatheBar();
-            }
-            else firstwaveset = true;
             StatueAnimator.GetComponent<Animator>().SetTrigger("StartIn");
-
-            //	Debug.Log ("Player " + PlayerNumber + " breathing in");
-            //	Debug.Log (PlayerNumber + ": " + breathePast + " " + breatheNow);
-
 
             outBreathContinues = false;
 
@@ -280,11 +370,18 @@ public class PlayerManager : NetworkBehaviour
 
 
         }
-
-
-
-
-
-
     }
+
+    IEnumerator CoolDown()
+    {
+        yield return new WaitForSeconds(1.0f);
+        breatheCooldown = false;
+    }
+
+    IEnumerator RespQueCoolDown()
+    {
+        yield return new WaitForSeconds(4.0f);
+        breatheQueueCooldown = false;
+    }
+
 }
