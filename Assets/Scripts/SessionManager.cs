@@ -24,7 +24,18 @@ public class SessionManager : MonoBehaviour
     public GameObject activePlayer;
 
     // Use this for initialization
-    void Start() { }
+
+
+    void Start() { 
+		if (PlayerPrefs.HasKey ("Param_SingleUserSession")) {
+			SingleUserSession = PlayerPrefsX.GetBool ("Param_SingleUserSession");		
+			if (SingleUserSession) { Debug.Log( "single user session");
+			} else { Debug.Log ("multi user session");
+		}
+
+	
+	}
+	}
 
 
 
