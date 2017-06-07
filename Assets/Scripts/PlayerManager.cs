@@ -11,7 +11,7 @@ public class PlayerManager : NetworkBehaviour
     public GameObject AuraController;
     public GameObject BridgeBars;
     public GameObject StatueAnimator;
-    public bool IsSimNPC = false;
+    public bool IsNPC = false;
     public float PlayerFA;
     GameObject SessionManager;
     GameObject DataHolder;
@@ -51,6 +51,7 @@ public class PlayerManager : NetworkBehaviour
             if (!isLocalPlayer)
             {
                 return;
+				IsNPC = true;
             }
         }
 
@@ -103,14 +104,21 @@ public class PlayerManager : NetworkBehaviour
 
     // Update is called once per frame
     void FixedUpdate()
-    {
+
+
+	{
         if (!GameObject.Find("Session Manager").GetComponent<SessionManager>().SingleUserSession)
         {
             if (!isLocalPlayer)
             {
+			//	IsNPC = true;
                 return;
             }
         }
+
+
+	
+		// Handling respiration Data.
 
         if (RespDataOld - SensorData.RespOut != 0)
         {
@@ -118,21 +126,18 @@ public class PlayerManager : NetworkBehaviour
             RespChanged = true;
 
         }
-
-        breathePast = breatheNow;
-
+		 breathePast = breatheNow;
 
 
-        // are we simulating everything?
-        if (((SessionManager.GetComponent<SessionManager>().SimulateSelf == true) && (IsSimNPC == false)) || ((IsSimNPC == true)))
+       
+		//check if we need to run simulations? Not relevant as we won't be running simulations.
+
+		if (((SessionManager.GetComponent<SessionManager>().SimulateSelf == true) && (IsNPC == false)) || ((IsNPC == true) && (SessionManager.GetComponent<SessionManager>().SimulateOther == true)))
         {
 
             if (PlayerNumber == 1)
             {
                 PlayerFA = DataHolder.GetComponent<SimulationData>().P1FrontAs;
-
-
-
                 breatheNow = DataHolder.GetComponent<SimulationData>().P1Breathing;
 
             }
@@ -140,17 +145,18 @@ public class PlayerManager : NetworkBehaviour
             if (PlayerNumber == 2)
             {
                 PlayerFA = DataHolder.GetComponent<SimulationData>().P2FrontAs;
-
-
                 breatheNow = DataHolder.GetComponent<SimulationData>().P2Breathing;
 
             }
 
-        }
+        }   else
+
+		
 
 
-        else
-        {  //this is the adaptation coming from sensors.
+
+		//we are using adaptations coming from sensors. Repated for the both user cases.
+        { 
             if (PlayerNumber == 1)
             {
 
@@ -284,56 +290,101 @@ public class PlayerManager : NetworkBehaviour
 
         }
 
-        if (PlayerNumber == 1)
-        {
-            otherPlayerManager = GameObject.Find("Player2_Manager");
-        }
 
-        if (PlayerNumber == 2)
-        {
-            otherPlayerManager = GameObject.Find("Player1_Manager");
-        }
-        float otherPlayerFA = otherPlayerManager.GetComponent<PlayerFAScript>().PlayerFA_Display;
+		// define which asset sets we are using. (woudln't need to be in fixed update, but well...)
+		if (PlayerNumber == 1)
+		{
+			otherPlayerManager = GameObject.Find("Player2_Manager");
+		}
 
-        AuraController.GetComponent<PlayerFAScript>().PlayerFA_Display = PlayerFA;
-        AuraController.GetComponent<PlayerFAScript>().OtherFA = otherPlayerFA;
+		if (PlayerNumber == 2)
+		{
+			otherPlayerManager = GameObject.Find("Player1_Manager");
+		}
 
-        float fasync = Mathf.Abs(PlayerFA - otherPlayerFA);
+		float otherPlayerFA = otherPlayerManager.GetComponent<PlayerFAScript>().PlayerFA_Display;
+		AuraController.GetComponent<PlayerFAScript>().PlayerFA_Display = PlayerFA;
+		AuraController.GetComponent<PlayerFAScript>().OtherFA = otherPlayerFA;
+
+
+
+
+		// calculate the synchronicity of FA.
+		float fasync = Mathf.Abs(PlayerFA - otherPlayerFA);  
         //print(PlayerFA + "  " + otherPlayerFA + "   " + fasync);
 
 
-        // RESPIRATION CONTROLS
 
-        // first breathe out
+
+// RESPIRATION CONTROLS START HERE
+        
+// RESP.PHASE1 - FIRST BREATHE OUT
         if ((breatheNow < breathePast - respThreshold) && (outBreathContinues == false))
         {
-
-            //		Debug.Log ("Player " + PlayerNumber + " breathing out");
+	        //		Debug.Log ("Player " + PlayerNumber + " breathing out");
             //		Debug.Log (PlayerNumber + ": " + breathePast + " " + breatheNow);
-            StatueAnimator.GetComponent<Animator>().SetTrigger("StartOut");
-            //Debug.Log ("breath out animtrigger sent");
+
+			// STATUE BREATHEING OUT
+			// jos olen pelaaja, katson onko selfresp käytössä, ja sit käynnistän patsaan 
+			// jos en ole pelaaja, katson onko respother käytässä, ja näytän patsaan hengitysanimaation.
+			if (!IsNPC) {
+				
+				if (SessionManager.GetComponent<SessionManager> ().RespSelf) {
+					StatueAnimator.GetComponent<Animator> ().SetTrigger ("StartOut");
+					//Debug.Log ("Player " + PlayerNumber + " breathing out");
+				}
+			} else
+			{
+				if (SessionManager.GetComponent<SessionManager> ().RespOther) {
+					StatueAnimator.GetComponent<Animator> ().SetTrigger ("StartOut");
+					//Debug.Log ("NPC " + PlayerNumber + " breathing out");
+				}
+			}	
+            
 
 
-            // send a wave.
+            // WAVE EFFECT
             if (SessionManager.GetComponent<SessionManager>().Waves)
             {
                 GetComponent<Adap_WaveSend>().SendWave(PlayerNumber);
             }
-            if (firstwaveset && !breatheCooldown)
-            {
-                breatheCooldown = true;
-                Debug.Log("user breathing wave sent");
-                BridgeBars.GetComponent<BreathLayerer>().InitBreatheBar();
-                StartCoroutine("CoolDown");
-
-            }
-            else firstwaveset = true;
-           
-
-            //	Debug.Log ("Player " + PlayerNumber + " breathing in");
-            //	Debug.Log (PlayerNumber + ": " + breathePast + " " + breatheNow);
 
 
+
+			// BRIDGE BREATHING EFFECT
+
+			if (!IsNPC) {
+
+					if (SessionManager.GetComponent<SessionManager> ().RespSelf) {
+						//if ((SessionManager.GetComponent<SessionManager> ().BridgeMeterSelf)) {
+
+						if (firstwaveset && !breatheCooldown) {
+							breatheCooldown = true;
+							Debug.Log ("user breathing wave sent");
+							BridgeBars.GetComponent<BreathLayerer> ().InitBreatheBar ();
+								Debug.Log ("Player " + PlayerNumber + " breathing bar sent");
+							//	Debug.Log (PlayerNumber + ": " + breathePast + " " + breatheNow);
+							StartCoroutine ("CoolDown");
+
+						} else
+							firstwaveset = true;
+					}
+				} else {
+					if (SessionManager.GetComponent<SessionManager> ().RespOther) {
+						//if ((SessionManager.GetComponent<SessionManager> ().BridgeMeterSelf)) {
+
+						if (firstwaveset && !breatheCooldown) {
+							breatheCooldown = true;
+							Debug.Log ("user breathing wave sent");
+							BridgeBars.GetComponent<BreathLayerer> ().InitBreatheBar ();
+								Debug.Log ("NPC " + PlayerNumber + " breathing bar sent");
+							//	Debug.Log (PlayerNumber + ": " + breathePast + " " + breatheNow);
+							StartCoroutine ("CoolDown");
+
+						} else
+							firstwaveset = true;
+					}
+				}
 
 
             outBreathContinues = true;
@@ -343,34 +394,80 @@ public class PlayerManager : NetworkBehaviour
 
         }
 
-        //breathing out continues
-        if (outBreathContinues == true)
-        {
-            AuraExpander.GetComponent<AuraScaler>().expand = false;
+// RESP.PHASE2 - BREATHING OUT CONTINUES
 
-        }
+			if (outBreathContinues == true) {
+				// RESPIRATION AURA SCALING EFFECT 
+				if (!IsNPC) {
+
+					if ((SessionManager.GetComponent<SessionManager> ().RespSelf)) {//if auraefekti on päällä
+						AuraExpander.GetComponent<AuraScaler> ().expand = false;
+					}
+
+				} else {
+
+					if ((SessionManager.GetComponent<SessionManager> ().RespOther)) {//if auraefekti on päällä
+						AuraExpander.GetComponent<AuraScaler> ().expand = false;
+					}
+
+				}
+			}
 
 
+// RESP.PHASE 3 - FIRST BREATHE IN
 
         if ((breatheNow >= breathePast + respThreshold) && (inBreathContinues == false))
         {
-            StatueAnimator.GetComponent<Animator>().SetTrigger("StartIn");
 
-            outBreathContinues = false;
+			//STATUE BREATHING EFFECT
 
-            inBreathContinues = true;
+				if (!IsNPC) {
+
+					if (SessionManager.GetComponent<SessionManager> ().RespSelf) {
+						StatueAnimator.GetComponent<Animator> ().SetTrigger ("StartIn");
+						//Debug.Log ("breath out animtrigger sent");
+					}
+				} else {
+					if (SessionManager.GetComponent<SessionManager> ().RespOther) {
+						StatueAnimator.GetComponent<Animator> ().SetTrigger ("StartIn");
+					}
+
+				}
+
+					outBreathContinues = false;
+					inBreathContinues = true;
+
+	//		if (SessionManager.GetComponent<SessionManager>().StatueBreathingSelf){
+	//			StatueAnimator.GetComponent<Animator>().SetTrigger("StartIn");}
+
+          
         }
 
 
 
-        //breathing in continues
+// RESP.PHASE 4 - BREATHING IN CONTINUES
         if (inBreathContinues == true)
         {
-            AuraExpander.GetComponent<AuraScaler>().expand = true;
+					// RESPIRATION AURA SCALING EFFECT 
+					if (!IsNPC) {
+
+						if ((SessionManager.GetComponent<SessionManager> ().RespSelf)) {//if auraefekti on päällä
+							AuraExpander.GetComponent<AuraScaler> ().expand = true;
+						}
+
+					} else {
+
+						if ((SessionManager.GetComponent<SessionManager> ().RespOther)) {//if auraefekti on päällä
+							AuraExpander.GetComponent<AuraScaler> ().expand = true;
+						}
+
+       					}
+    	}
+	}
 
 
-        }
-    }
+
+
 
     IEnumerator CoolDown()
     {

@@ -8,17 +8,52 @@ public class SessionManager : MonoBehaviour
 
 
 	[Header("Session Parameters")]
+	public float StartDelay = 30f;
     public bool SingleUserSession = true;
     public bool SimulateSelf = true;
     public bool SimulateOther = true;
 
+	/*
+	public bool SimulateSelfFA = true;
+	public bool SimulateSelfResp = true;
+	public bool SimulateOtherFA = true;
+	public bool SimulateOtherResp = true;
+	*/
+
+
 	[Header("AdaptationControls")]
+
+	public bool RespSelf = true;
+	public bool EegSelf = true;
+	public bool EegOther = true;
+	public bool RespOther = true;
+	[Header("OldControls")]
 	public bool Waves = false;
 	public bool BridgeMeter = true;
+
+	/*
+	public bool BridgeMeterSelf = true;
+	public bool BridgeSidesSelf = true;
+
+	public bool AuraVisibleSelf = true;
+	//public bool AuraColorSelf = true;
+	public bool AuraScalingSelf = true;
+	public bool PlayerLightsSelf = true;
+	public bool StatueBreathingSelf = true;
+
+	public bool BridgeMeterOth = true;
+	public bool BridgeSidesOth = true;
+	public bool AuraColorOth = true;
+	public bool AuraVisibleOth = true;
+	public bool AuraScalingOth = true;
+	public bool PlayerLightsOth = true;
+	*/
+
 
 
 
     public GameObject SimPlayer;
+
     public GameObject[] activePlayers;
     bool otherInitialized = false;
     public GameObject activePlayer;
@@ -26,15 +61,42 @@ public class SessionManager : MonoBehaviour
     // Use this for initialization
 
 
-    void Start() { 
+    void Awake() { 
+
+		//Loading parameters from the playerrefs.
 		if (PlayerPrefs.HasKey ("Param_SingleUserSession")) {
 			SingleUserSession = PlayerPrefsX.GetBool ("Param_SingleUserSession");		
-			if (SingleUserSession) { Debug.Log( "single user session");
-			} else { Debug.Log ("multi user session");
+			//if (SingleUserSession) { Debug.Log( "single user session");
+			//} else { Debug.Log ("multi user session");
 		}
 
+		if (PlayerPrefs.HasKey ("Param_RespSelf")) {
+			RespSelf = PlayerPrefsX.GetBool ("Param_RespSelf");		
+			//if (SingleUserSession) { Debug.Log( "single user session");
+			//} else { Debug.Log ("multi user session");
+		}
+			
+		if (PlayerPrefs.HasKey ("Param_RespOther")) {
+				RespOther = PlayerPrefsX.GetBool ("Param_RespOther");		
+				//if (SingleUserSession) { Debug.Log( "single user session");
+				//} else { Debug.Log ("multi user session");
+			}
+
+		if (PlayerPrefs.HasKey ("Param_RespOther")) {
+				RespOther = PlayerPrefsX.GetBool ("Param_RespOther");		
+				//if (SingleUserSession) { Debug.Log( "single user session");
+				//} else { Debug.Log ("multi user session");
+			}
+
+		if (PlayerPrefs.HasKey ("Param_EegOther")) {
+					EegOther = PlayerPrefsX.GetBool ("Param_EegOther");		
+					//if (SingleUserSession) { Debug.Log( "single user session");
+					//} else { Debug.Log ("multi user session");
+				}
+
+
 	
-	}
+	
 	}
 
 
@@ -74,7 +136,7 @@ public class SessionManager : MonoBehaviour
                     SimPlayer.GetComponent<PlayerManager>().AuraExpander = GameObject.Find("Aura_player1Expander");
                     SimPlayer.GetComponent<PlayerManager>().BridgeBars = GameObject.Find("Player1_BridgeLayers");
 					SimPlayer.GetComponent<PlayerManager>().StatueAnimator = GameObject.Find ("Statue_Player1");
-					SimPlayer.GetComponent<PlayerManager> ().IsSimNPC = true;
+					SimPlayer.GetComponent<PlayerManager> ().IsNPC = true;
 
                 }
                 else
@@ -84,7 +146,7 @@ public class SessionManager : MonoBehaviour
                     SimPlayer.GetComponent<PlayerManager>().AuraExpander = GameObject.Find("Aura_player2Expander");
                     SimPlayer.GetComponent<PlayerManager>().BridgeBars = GameObject.Find("Player2_BridgeLayers");
 					SimPlayer.GetComponent<PlayerManager>().StatueAnimator = GameObject.Find ("Statue_Player2");
-					SimPlayer.GetComponent<PlayerManager> ().IsSimNPC = true;
+					SimPlayer.GetComponent<PlayerManager> ().IsNPC = true;
                 }
                 otherInitialized = true;
 
