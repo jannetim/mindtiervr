@@ -12,6 +12,8 @@ public class SessionManager : MonoBehaviour
     public bool SingleUserSession = true;
     public bool SimulateSelf = true;
     public bool SimulateOther = true;
+	public Color NeutralEEGColor;
+	public float SessionLength = 600f;
 
 	/*
 	public bool SimulateSelfFA = true;

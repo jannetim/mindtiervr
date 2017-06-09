@@ -6,7 +6,7 @@ using UnityEngine.Networking;
 
 public class PlayerManager : NetworkBehaviour
 {
-
+	
     public GameObject AuraExpander;
     public GameObject AuraController;
     public GameObject BridgeBars;
@@ -302,9 +302,36 @@ public class PlayerManager : NetworkBehaviour
 			otherPlayerManager = GameObject.Find("Player1_Manager");
 		}
 
+
+		//defining player FA colors.
+		// put conditions here. 
+	
+
+
+
+		//FA COLOR definitions.
+
+		if (!IsNPC) {
+
+			if (SessionManager.GetComponent<SessionManager> ().EegSelf) {
+				AuraController.GetComponent<PlayerFAScript> ().PlayerFA_Display = PlayerFA;
+			
+			} else {
+				AuraController.GetComponent<PlayerFAScript> ().PlayerFA_Display = 0.2f;
+			}
+		} else {
+			if (SessionManager.GetComponent<SessionManager> ().EegOther) {
+				AuraController.GetComponent<PlayerFAScript> ().PlayerFA_Display = PlayerFA;
+			} else {
+				AuraController.GetComponent<PlayerFAScript> ().PlayerFA_Display = 0.2f;
+			}
+
+		}
+
 		float otherPlayerFA = otherPlayerManager.GetComponent<PlayerFAScript>().PlayerFA_Display;
-		AuraController.GetComponent<PlayerFAScript>().PlayerFA_Display = PlayerFA;
 		AuraController.GetComponent<PlayerFAScript>().OtherFA = otherPlayerFA;
+		//AuraController.GetComponent<PlayerFAScript>().PlayerFA_Display = PlayerFA;
+
 
 
 
