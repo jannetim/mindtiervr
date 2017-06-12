@@ -104,241 +104,210 @@ public class PlayerManager : NetworkBehaviour
 
     // Update is called once per frame
     void FixedUpdate()
-
-
 	{
-        if (!GameObject.Find("Session Manager").GetComponent<SessionManager>().SingleUserSession)
-        {
-            if (!isLocalPlayer)
-            {
-			//	IsNPC = true;
-                return;
-            }
-        }
+		if (!GameObject.Find ("Session Manager").GetComponent<SessionManager> ().SingleUserSession) {
+			if (!isLocalPlayer) {
+				//	IsNPC = true;
+				return;
+			}
+		}
 
 
 	
 		// Handling respiration Data.
 
-        if (RespDataOld - SensorData.RespOut != 0)
-        {
-            RespDataOld = SensorData.RespOut;
-            RespChanged = true;
+		if (RespDataOld - SensorData.RespOut != 0) {
+			RespDataOld = SensorData.RespOut;
+			RespChanged = true;
 
-        }
-		 breathePast = breatheNow;
+		}
+		breathePast = breatheNow;
 
-
+		if (GameObject.Find ("Session Manager").GetComponent<SessionManager> ().StartTimerDone) {
        
-		//check if we need to run simulations? Not relevant as we won't be running simulations.
+			//check if we need to run simulations? Not relevant as we won't be running simulations.
 
-		if (((SessionManager.GetComponent<SessionManager>().SimulateSelf == true) && (IsNPC == false)) || ((IsNPC == true) && (SessionManager.GetComponent<SessionManager>().SimulateOther == true)))
-        {
+			if (((SessionManager.GetComponent<SessionManager> ().SimulateSelf == true) && (IsNPC == false)) || ((IsNPC == true) && (SessionManager.GetComponent<SessionManager> ().SimulateOther == true))) {
 
-            if (PlayerNumber == 1)
-            {
-                PlayerFA = DataHolder.GetComponent<SimulationData>().P1FrontAs;
-                breatheNow = DataHolder.GetComponent<SimulationData>().P1Breathing;
+				if (PlayerNumber == 1) {
+					PlayerFA = DataHolder.GetComponent<SimulationData> ().P1FrontAs;
+					breatheNow = DataHolder.GetComponent<SimulationData> ().P1Breathing;
 
-            }
+				}
 
-            if (PlayerNumber == 2)
-            {
-                PlayerFA = DataHolder.GetComponent<SimulationData>().P2FrontAs;
-                breatheNow = DataHolder.GetComponent<SimulationData>().P2Breathing;
+				if (PlayerNumber == 2) {
+					PlayerFA = DataHolder.GetComponent<SimulationData> ().P2FrontAs;
+					breatheNow = DataHolder.GetComponent<SimulationData> ().P2Breathing;
 
-            }
+				}
 
-        }   else
+			} else
 
 		
 
 
 
-		//we are using adaptations coming from sensors. Repated for the both user cases.
-        { 
-            if (PlayerNumber == 1)
-            {
+ {		//we are using adaptations coming from sensors. Repated for the both user cases.
+				if (PlayerNumber == 1) {
 
-                if (RespChanged)
-                {
-                    if (respQueue.Count == 6)
-                    {
-                        respQueue.Dequeue();
-                    }
-                    respQueue.Enqueue(SensorData.RespOut);
-                    respArray = respQueue.ToArray();
-                    breatheNow = respArray.Average();
-                    respArray = respQueue.ToArray();
-                    //breatheNow = respQueue.Average();
+					if (RespChanged) {
+						if (respQueue.Count == 6) {
+							respQueue.Dequeue ();
+						}
+						respQueue.Enqueue (SensorData.RespOut);
+						respArray = respQueue.ToArray ();
+						breatheNow = respArray.Average ();
+						respArray = respQueue.ToArray ();
+						//breatheNow = respQueue.Average();
 
-                    if (!breatheQueueCooldown)
-                    {
-                        breatheQueueCooldown = true;
-                        if (respMaxQueue.Count > 0)
-                        {
-                            respMaxQueue.Dequeue();
-                        }
-                        if (respMinQueue.Count > 0)
-                        {
-                            respMinQueue.Dequeue();
-                        }
-                        StartCoroutine("RespQueCoolDown");
-                    }
+						if (!breatheQueueCooldown) {
+							breatheQueueCooldown = true;
+							if (respMaxQueue.Count > 0) {
+								respMaxQueue.Dequeue ();
+							}
+							if (respMinQueue.Count > 0) {
+								respMinQueue.Dequeue ();
+							}
+							StartCoroutine ("RespQueCoolDown");
+						}
 
 
-                    if (respQueue.Max() > respMax)
-                    {
-                        if (respMaxQueue.Count == 3)
-                        {
-                            respMaxQueue.Dequeue();
-                        }
-                        respMaxQueue.Enqueue(respQueue.Max());
-                        respMax = respMaxQueue.Average();
-                    }
-                    if (respQueue.Min() < respMin)
-                    {
-                        if (respMinQueue.Count == 3)
-                        {
-                            respMinQueue.Dequeue();
-                        }
-                        respMinQueue.Enqueue(respQueue.Min());
-                        respMin = respMinQueue.Average();
-                    }
+						if (respQueue.Max () > respMax) {
+							if (respMaxQueue.Count == 3) {
+								respMaxQueue.Dequeue ();
+							}
+							respMaxQueue.Enqueue (respQueue.Max ());
+							respMax = respMaxQueue.Average ();
+						}
+						if (respQueue.Min () < respMin) {
+							if (respMinQueue.Count == 3) {
+								respMinQueue.Dequeue ();
+							}
+							respMinQueue.Enqueue (respQueue.Min ());
+							respMin = respMinQueue.Average ();
+						}
 
-                    respThreshold = (respMax - respMin) * 0.02f;
+						respThreshold = (respMax - respMin) * 0.02f;
 
 
-                    if (faQueue.Count == 20)
-                    {
-                        faQueue.Dequeue();
-                    }
-                    faQueue.Enqueue(SensorData.FAOut);
-                    faArray = faQueue.ToArray();
-                    PlayerFA = faArray.Average();
-                    faArray = faQueue.ToArray();
+						if (faQueue.Count == 20) {
+							faQueue.Dequeue ();
+						}
+						faQueue.Enqueue (SensorData.FAOut);
+						faArray = faQueue.ToArray ();
+						PlayerFA = faArray.Average ();
+						faArray = faQueue.ToArray ();
 
-                    //PlayerFA = SensorData.FAOut;
-                    //breatheNow = SensorData.RespOut;
-                    Debug.Log("new resp calculated");
-                    RespChanged = false;
+						//PlayerFA = SensorData.FAOut;
+						//breatheNow = SensorData.RespOut;
+						Debug.Log ("new resp calculated");
+						RespChanged = false;
 
-                }
-            }
+					}
+				}
 
-            if (PlayerNumber == 2)
-            {
-                if (RespChanged)
-                {
-                    if (respQueue.Count == 6)
-                    {
-                        respQueue.Dequeue();
-                    }
-                    respQueue.Enqueue(SensorData.RespOut);
-                    respArray = respQueue.ToArray();
-                    breatheNow = respArray.Average();
-                    respArray = respQueue.ToArray();
-                    //breatheNow = respQueue.Average();
+				if (PlayerNumber == 2) {
+					if (RespChanged) {
+						if (respQueue.Count == 6) {
+							respQueue.Dequeue ();
+						}
+						respQueue.Enqueue (SensorData.RespOut);
+						respArray = respQueue.ToArray ();
+						breatheNow = respArray.Average ();
+						respArray = respQueue.ToArray ();
+						//breatheNow = respQueue.Average();
 
-                    if (!breatheQueueCooldown)
-                    {
-                        breatheQueueCooldown = true;
-                        if (respMaxQueue.Count > 0)
-                        {
-                            respMaxQueue.Dequeue();
-                        }
-                        if (respMinQueue.Count > 0)
-                        {
-                            respMinQueue.Dequeue();
-                        }
-                        StartCoroutine("RespQueCoolDown");
-                    }
+						if (!breatheQueueCooldown) {
+							breatheQueueCooldown = true;
+							if (respMaxQueue.Count > 0) {
+								respMaxQueue.Dequeue ();
+							}
+							if (respMinQueue.Count > 0) {
+								respMinQueue.Dequeue ();
+							}
+							StartCoroutine ("RespQueCoolDown");
+						}
 
                     
-                    if (respQueue.Max() > respMax)
-                    {                        
-                        respMaxQueue.Enqueue(respQueue.Max());
-                        respMax = respMaxQueue.Average();
-                    }
-                    if (respQueue.Min() < respMin)
-                    {                        
-                        respMinQueue.Enqueue(respQueue.Min());
-                        respMin = respMinQueue.Average();
-                    }
+						if (respQueue.Max () > respMax) {                        
+							respMaxQueue.Enqueue (respQueue.Max ());
+							respMax = respMaxQueue.Average ();
+						}
+						if (respQueue.Min () < respMin) {                        
+							respMinQueue.Enqueue (respQueue.Min ());
+							respMin = respMinQueue.Average ();
+						}
 
 
-                    respThreshold = (respMax - respMin) * 0.02f;
+						respThreshold = (respMax - respMin) * 0.02f;
 
-                    if (faQueue.Count == 20)
-                    {
-                        faQueue.Dequeue();
-                    }
-                    faQueue.Enqueue(SensorData.FAOut);
-                    faArray = faQueue.ToArray();
-                    PlayerFA = faArray.Average();
-                    faArray = faQueue.ToArray();
+						if (faQueue.Count == 20) {
+							faQueue.Dequeue ();
+						}
+						faQueue.Enqueue (SensorData.FAOut);
+						faArray = faQueue.ToArray ();
+						PlayerFA = faArray.Average ();
+						faArray = faQueue.ToArray ();
 
-                    //PlayerFA = SensorData.FAOut;
-                    //breatheNow = SensorData.RespOut;
-                    Debug.Log("new resp calculated");
-                    RespChanged = false;
+						//PlayerFA = SensorData.FAOut;
+						//breatheNow = SensorData.RespOut;
+						Debug.Log ("new resp calculated");
+						RespChanged = false;
 
-                }
-
-
-            }
-
-        }
+					}
 
 
-		// define which asset sets we are using. (woudln't need to be in fixed update, but well...)
-		if (PlayerNumber == 1)
-		{
-			otherPlayerManager = GameObject.Find("Player2_Manager");
-		}
+				}
 
-		if (PlayerNumber == 2)
-		{
-			otherPlayerManager = GameObject.Find("Player1_Manager");
-		}
+			}
 
 
-		//defining player FA colors.
-		// put conditions here. 
+			// define which asset sets we are using. (woudln't need to be in fixed update, but well...)
+			if (PlayerNumber == 1) {
+				otherPlayerManager = GameObject.Find ("Player2_Manager");
+			}
+
+			if (PlayerNumber == 2) {
+				otherPlayerManager = GameObject.Find ("Player1_Manager");
+			}
+
+
+			//defining player FA colors.
+			// put conditions here. 
 	
 
 
 
-		//FA COLOR definitions.
+			//FA COLOR definitions.
 
-		if (!IsNPC) {
+			if (!IsNPC) {
 
-			if (SessionManager.GetComponent<SessionManager> ().EegSelf) {
-				AuraController.GetComponent<PlayerFAScript> ().PlayerFA_Display = PlayerFA;
+				if (SessionManager.GetComponent<SessionManager> ().EegSelf) {
+					AuraController.GetComponent<PlayerFAScript> ().PlayerFA_Display = PlayerFA;
 			
+				} else {
+					AuraController.GetComponent<PlayerFAScript> ().PlayerFA_Display = 0.2f;
+				}
 			} else {
-				AuraController.GetComponent<PlayerFAScript> ().PlayerFA_Display = 0.2f;
+				if (SessionManager.GetComponent<SessionManager> ().EegOther) {
+					AuraController.GetComponent<PlayerFAScript> ().PlayerFA_Display = PlayerFA;
+				} else {
+					AuraController.GetComponent<PlayerFAScript> ().PlayerFA_Display = 0.2f;
+				}
+
 			}
-		} else {
-			if (SessionManager.GetComponent<SessionManager> ().EegOther) {
-				AuraController.GetComponent<PlayerFAScript> ().PlayerFA_Display = PlayerFA;
-			} else {
-				AuraController.GetComponent<PlayerFAScript> ().PlayerFA_Display = 0.2f;
-			}
 
-		}
-
-		float otherPlayerFA = otherPlayerManager.GetComponent<PlayerFAScript>().PlayerFA_Display;
-		AuraController.GetComponent<PlayerFAScript>().OtherFA = otherPlayerFA;
-		//AuraController.GetComponent<PlayerFAScript>().PlayerFA_Display = PlayerFA;
+			float otherPlayerFA = otherPlayerManager.GetComponent<PlayerFAScript> ().PlayerFA_Display;
+			AuraController.GetComponent<PlayerFAScript> ().OtherFA = otherPlayerFA;
+			//AuraController.GetComponent<PlayerFAScript>().PlayerFA_Display = PlayerFA;
 
 
 
 
 
-		// calculate the synchronicity of FA.
-		float fasync = Mathf.Abs(PlayerFA - otherPlayerFA);  
-        //print(PlayerFA + "  " + otherPlayerFA + "   " + fasync);
+			// calculate the synchronicity of FA.
+			float fasync = Mathf.Abs (PlayerFA - otherPlayerFA);  
+			//print(PlayerFA + "  " + otherPlayerFA + "   " + fasync);
 
 
 
@@ -346,41 +315,38 @@ public class PlayerManager : NetworkBehaviour
 // RESPIRATION CONTROLS START HERE
         
 // RESP.PHASE1 - FIRST BREATHE OUT
-        if ((breatheNow < breathePast - respThreshold) && (outBreathContinues == false))
-        {
-	        //		Debug.Log ("Player " + PlayerNumber + " breathing out");
-            //		Debug.Log (PlayerNumber + ": " + breathePast + " " + breatheNow);
+			if ((breatheNow < breathePast - respThreshold) && (outBreathContinues == false)) {
+				//		Debug.Log ("Player " + PlayerNumber + " breathing out");
+				//		Debug.Log (PlayerNumber + ": " + breathePast + " " + breatheNow);
 
-			// STATUE BREATHEING OUT
-			// jos olen pelaaja, katson onko selfresp käytössä, ja sit käynnistän patsaan 
-			// jos en ole pelaaja, katson onko respother käytässä, ja näytän patsaan hengitysanimaation.
-			if (!IsNPC) {
+				// STATUE BREATHEING OUT
+				// jos olen pelaaja, katson onko selfresp käytössä, ja sit käynnistän patsaan 
+				// jos en ole pelaaja, katson onko respother käytässä, ja näytän patsaan hengitysanimaation.
+				if (!IsNPC) {
 				
-				if (SessionManager.GetComponent<SessionManager> ().RespSelf) {
-					StatueAnimator.GetComponent<Animator> ().SetTrigger ("StartOut");
-					//Debug.Log ("Player " + PlayerNumber + " breathing out");
-				}
-			} else
-			{
-				if (SessionManager.GetComponent<SessionManager> ().RespOther) {
-					StatueAnimator.GetComponent<Animator> ().SetTrigger ("StartOut");
-					//Debug.Log ("NPC " + PlayerNumber + " breathing out");
-				}
-			}	
+					if (SessionManager.GetComponent<SessionManager> ().RespSelf) {
+						StatueAnimator.GetComponent<Animator> ().SetTrigger ("StartOut");
+						//Debug.Log ("Player " + PlayerNumber + " breathing out");
+					}
+				} else {
+					if (SessionManager.GetComponent<SessionManager> ().RespOther) {
+						StatueAnimator.GetComponent<Animator> ().SetTrigger ("StartOut");
+						//Debug.Log ("NPC " + PlayerNumber + " breathing out");
+					}
+				}	
             
 
 
-            // WAVE EFFECT
-            if (SessionManager.GetComponent<SessionManager>().Waves)
-            {
-                GetComponent<Adap_WaveSend>().SendWave(PlayerNumber);
-            }
+				// WAVE EFFECT
+				if (SessionManager.GetComponent<SessionManager> ().Waves) {
+					GetComponent<Adap_WaveSend> ().SendWave (PlayerNumber);
+				}
 
 
 
-			// BRIDGE BREATHING EFFECT
+				// BRIDGE BREATHING EFFECT
 
-			if (!IsNPC) {
+				if (!IsNPC) {
 
 					if (SessionManager.GetComponent<SessionManager> ().RespSelf) {
 						//if ((SessionManager.GetComponent<SessionManager> ().BridgeMeterSelf)) {
@@ -389,7 +355,7 @@ public class PlayerManager : NetworkBehaviour
 							breatheCooldown = true;
 							Debug.Log ("user breathing wave sent");
 							BridgeBars.GetComponent<BreathLayerer> ().InitBreatheBar ();
-								Debug.Log ("Player " + PlayerNumber + " breathing bar sent");
+							Debug.Log ("Player " + PlayerNumber + " breathing bar sent");
 							//	Debug.Log (PlayerNumber + ": " + breathePast + " " + breatheNow);
 							StartCoroutine ("CoolDown");
 
@@ -404,7 +370,7 @@ public class PlayerManager : NetworkBehaviour
 							breatheCooldown = true;
 							Debug.Log ("user breathing wave sent");
 							BridgeBars.GetComponent<BreathLayerer> ().InitBreatheBar ();
-								Debug.Log ("NPC " + PlayerNumber + " breathing bar sent");
+							Debug.Log ("NPC " + PlayerNumber + " breathing bar sent");
 							//	Debug.Log (PlayerNumber + ": " + breathePast + " " + breatheNow);
 							StartCoroutine ("CoolDown");
 
@@ -414,12 +380,12 @@ public class PlayerManager : NetworkBehaviour
 				}
 
 
-            outBreathContinues = true;
+				outBreathContinues = true;
 
-            inBreathContinues = false;
+				inBreathContinues = false;
 
 
-        }
+			}
 
 // RESP.PHASE2 - BREATHING OUT CONTINUES
 
@@ -443,10 +409,9 @@ public class PlayerManager : NetworkBehaviour
 
 // RESP.PHASE 3 - FIRST BREATHE IN
 
-        if ((breatheNow >= breathePast + respThreshold) && (inBreathContinues == false))
-        {
+			if ((breatheNow >= breathePast + respThreshold) && (inBreathContinues == false)) {
 
-			//STATUE BREATHING EFFECT
+				//STATUE BREATHING EFFECT
 
 				if (!IsNPC) {
 
@@ -461,35 +426,35 @@ public class PlayerManager : NetworkBehaviour
 
 				}
 
-					outBreathContinues = false;
-					inBreathContinues = true;
+				outBreathContinues = false;
+				inBreathContinues = true;
 
-	//		if (SessionManager.GetComponent<SessionManager>().StatueBreathingSelf){
-	//			StatueAnimator.GetComponent<Animator>().SetTrigger("StartIn");}
+				//		if (SessionManager.GetComponent<SessionManager>().StatueBreathingSelf){
+				//			StatueAnimator.GetComponent<Animator>().SetTrigger("StartIn");}
 
           
-        }
+			}
 
 
 
 // RESP.PHASE 4 - BREATHING IN CONTINUES
-        if (inBreathContinues == true)
-        {
-					// RESPIRATION AURA SCALING EFFECT 
-					if (!IsNPC) {
+			if (inBreathContinues == true) {
+				// RESPIRATION AURA SCALING EFFECT 
+				if (!IsNPC) {
 
-						if ((SessionManager.GetComponent<SessionManager> ().RespSelf)) {//if auraefekti on päällä
-							AuraExpander.GetComponent<AuraScaler> ().expand = true;
-						}
+					if ((SessionManager.GetComponent<SessionManager> ().RespSelf)) {//if auraefekti on päällä
+						AuraExpander.GetComponent<AuraScaler> ().expand = true;
+					}
 
-					} else {
+				} else {
 
-						if ((SessionManager.GetComponent<SessionManager> ().RespOther)) {//if auraefekti on päällä
-							AuraExpander.GetComponent<AuraScaler> ().expand = true;
-						}
+					if ((SessionManager.GetComponent<SessionManager> ().RespOther)) {//if auraefekti on päällä
+						AuraExpander.GetComponent<AuraScaler> ().expand = true;
+					}
 
-       					}
-    	}
+				}
+			}
+		}
 	}
 
 

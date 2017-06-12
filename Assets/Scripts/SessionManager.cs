@@ -13,7 +13,10 @@ public class SessionManager : MonoBehaviour
     public bool SimulateSelf = true;
     public bool SimulateOther = true;
 	public Color NeutralEEGColor;
-	public float SessionLength = 600f;
+	public float SessionLength = 200f;
+	public float StartTimerLength = 10f;
+	public bool StartTimerDone = false;
+	public bool FileWriting = false;
 
 	/*
 	public bool SimulateSelfFA = true;
@@ -97,12 +100,15 @@ public class SessionManager : MonoBehaviour
 				}
 
 
-	
+
 	
 	}
 
 
-
+	void Start(){
+		StartCoroutine ("SessionTimer");
+		StartCoroutine ("StartTimer");
+	}
 
 
 
@@ -160,4 +166,21 @@ public class SessionManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.I)) { SimPlayer.SetActive(true); }
     }
+
+	IEnumerator SessionTimer()
+	{
+		//Debug.Log ("Session Timer Launched");
+		yield return new WaitForSeconds(SessionLength);
+		//Debug.Log ("return to main menu");
+		Application.LoadLevel (0);
+	}
+
+	IEnumerator StartTimer()
+	{
+		//Debug.Log ("Session Timer Launched");
+		yield return new WaitForSeconds(StartTimerLength);
+		StartTimerDone = true;
+	}
+
+
 }
