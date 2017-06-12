@@ -6,16 +6,18 @@ using UnityEngine.Networking;
 
 public class PlayerFunctions : NetworkBehaviour {
     public Camera Cam;
+    public AudioListener AudioListener;
     GameObject bridge;
     // Use this for initialization
     void Start () {
         //bridge = GameObject.Find("sceneholder2/Environment assets/Bridge");
-        if (GameObject.Find("Session Manager").GetComponent<SessionManager>().SingleUserSession == true)
+        if (GameObject.Find("Session Manager").GetComponent<SessionManager>().SingleUserSession)
         {
             // if real player then camera enabled
             if (gameObject.name != "PlayerSim")
             {
                 Cam.enabled = true;
+                AudioListener.enabled = true;
             }
 
         }
@@ -26,6 +28,7 @@ public class PlayerFunctions : NetworkBehaviour {
         else
         {
             Cam.enabled = true;
+            AudioListener.enabled = true;
         }
     }
 	

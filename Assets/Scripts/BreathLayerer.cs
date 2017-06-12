@@ -8,7 +8,8 @@ public class BreathLayerer : NetworkBehaviour
 {
     //public GameObject Plane, Plane2, Plane3, Plane4;
     public GameObject[] planes;
-    private Color planeColor;
+    [SyncVar]
+    public Color planeColor;
     public GameObject Player;
     public GameObject OtherPlane;
     public GameObject Plane, Plane2;
@@ -21,9 +22,69 @@ public class BreathLayerer : NetworkBehaviour
     private float otherH, otherS, otherV;
     private float ownOrigV, otherOrigV;
     public BreathLayerer OtherScript;
+    private NetworkIdentity objNetId;
     // Use this for initialization
     void Start()
     {
+        if (transform.name == "Player(Clone)")
+        {
+            if (!isLocalPlayer)
+            {
+                //return;
+            }
+            planes = new GameObject[5];
+
+            int counter = 0;
+            if (Player.GetComponent<PlayerManager>().PlayerNumber == 2)
+            {
+                foreach (Transform child in GameObject.Find("Player2_BridgeLayers").transform)
+                {
+                    planes[counter] = child.gameObject;
+                    if (child.name.Equals("Plane5"))
+                    {
+                        Plane = child.gameObject;
+                    }
+                    if (child.name.Equals("Plane4"))
+                    {
+                        Plane2 = child.gameObject;
+                    }
+                    counter++;
+                }
+                foreach (Transform child in GameObject.Find("Player1_BridgeLayers").transform)
+                {
+                    if (child.name.Equals("Plane5"))
+                    {
+                        OtherPlane = child.gameObject;
+                    }
+                    counter++;
+                }
+            }
+            else
+            {
+                foreach (Transform child in GameObject.Find("Player1_BridgeLayers").transform)
+                {
+                    planes[counter] = child.gameObject;
+                    if (child.name.Equals("Plane5"))
+                    {
+                        Plane = child.gameObject;
+                    }
+                    if (child.name.Equals("Plane4"))
+                    {
+                        Plane2 = child.gameObject;
+                    }
+                    counter++;
+                }
+                foreach (Transform child in GameObject.Find("Player2_BridgeLayers").transform)
+                {
+                    if (child.name.Equals("Plane5"))
+                    {
+                        OtherPlane = child.gameObject;
+                    }
+                    counter++;
+                }
+            }
+        }
+        
         System.Array.Reverse(planes);
         origAlpha = PlaneTransparency;
         // InvokeRepeating("InitBreatheBar", 2.0f, 5.0f);
@@ -31,14 +92,19 @@ public class BreathLayerer : NetworkBehaviour
 
     public void InitBreatheBar()
     {
-
         StartCoroutine("Fades");
-
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
+        if (transform.name == "Player(Clone)")
+        {
+            if (!isLocalPlayer)
+            {
+                return;
+            }
+        }
         planeColor = Player.GetComponent<PlayerFAScript>().PlayerColor;
     }
 
@@ -58,9 +124,8 @@ public class BreathLayerer : NetworkBehaviour
         if (OtherPlane.activeInHierarchy && OtherPlane.GetComponent<Renderer>().material.color.a > 0.1f)
         {
             StartCoroutine("SyncGlow");
-            OtherScript.StartSyncGlow();
+            //OtherScript.StartSyncGlow();
         }
-
 
         yield return StartCoroutine("FadeOut");
         isFadingOut = false;
@@ -69,30 +134,23 @@ public class BreathLayerer : NetworkBehaviour
     IEnumerator FadeIn()
     {
         isFadingIn = true;
-
-
-
-
-        //old logic
-        foreach (GameObject o in planes)
+        if (NetworkServer.active)
         {
-            if (NetworkServer.active)
-            {
-                RpcInitColor();
-            }
-            else if (NetworkClient.active)
-            {
-                CmdInitColor();
-            }
-            //planeColor.a = 0;
-            //o.GetComponent<Renderer>().material.SetColor("_Color", planeColor);
-            //o.SetActive(false);
+            RpcInitColor();
         }
+        else if (NetworkClient.active)
+        {
+            CmdInitColor();
+        }
+        // fixes client/server problem with material properties of the first plane
+        yield return new WaitForSeconds(0.05f);
         if (planes[0].name == "Plane5") { 
             System.Array.Reverse(planes);
         }
+
+        
         foreach (GameObject o in planes)
-        {/*
+        {
             if (NetworkServer.active)
             {
                 RpcSetState(o, true);
@@ -100,16 +158,12 @@ public class BreathLayerer : NetworkBehaviour
             else if (NetworkClient.active)
             {
                 CmdSetState(o, true);
-            }*/
-
-            //o.SetActive(true);
+            }
 
             Color color = o.GetComponent<Renderer>().material.color;
             for (float f = 0; f <= origAlpha; f += 0.05f)
             {
-
                 color.a = f;
-                //o.GetComponent<Renderer>().material.SetColor("_Color", color);
                 if (NetworkServer.active)
                 {
                     RpcSetColor(o, color);
@@ -128,13 +182,13 @@ public class BreathLayerer : NetworkBehaviour
         isFadingOut = true;
         yield return new WaitForSeconds(1.5f);
         System.Array.Reverse(planes);
+
         foreach (GameObject o in planes)
         {
             Color color = o.GetComponent<Renderer>().material.color;
             for (float f = origAlpha; f >= 0; f -= 0.005f)
             {
                 color.a = f;
-                //o.GetComponent<Renderer>().material.SetColor("_Color", color);
                 if (NetworkServer.active)
                 {
                     RpcSetColor(o, color);
@@ -145,17 +199,20 @@ public class BreathLayerer : NetworkBehaviour
                 }
                 yield return null;
             }
-            /*if (NetworkServer.active)
+            if (NetworkServer.active)
             {
                 RpcSetState(o, false);
             }
             else if (NetworkClient.active)
             {
                 CmdSetState(o, false);
-            }*/
-            //o.SetActive(false);
+            }
         }
     }
+
+
+
+
 
     public void StartSyncGlow()
     {
@@ -183,10 +240,12 @@ public class BreathLayerer : NetworkBehaviour
             if (NetworkServer.active)
             {
                 RpcSetSyncColor(color, color2);
+                RpcSetSyncColorOther(color, color2);
             }
             else if (NetworkClient.active)
             {
                 CmdSetSyncColor(color, color2);
+                CmdSetSyncColorOther(color, color2);
             }
             //plane.GetComponent<Renderer>().material.SetColor("_Color", color);
             //plane2.GetComponent<Renderer>().material.SetColor("_Color", color2);
@@ -205,6 +264,7 @@ public class BreathLayerer : NetworkBehaviour
             Color color = Color.HSVToRGB(ownH, ownS, ownOrigV + f);
             color.a = origAlpha + f / 3;
             color2.a = origAlpha + f / 4;
+
             if (NetworkServer.active)
             {
                 RpcSetSyncColor(color, color2);
@@ -229,12 +289,13 @@ public class BreathLayerer : NetworkBehaviour
     [ClientRpc]
     void RpcInitColor()
     {
-        foreach (GameObject o in planes)
-        {
+        foreach(GameObject o in planes) { 
             planeColor.a = 0;
             o.GetComponent<Renderer>().material.SetColor("_Color", planeColor);
         }
     }
+
+
 
     [Command]
     void CmdSetColor(GameObject o, Color color)
@@ -245,13 +306,25 @@ public class BreathLayerer : NetworkBehaviour
     [ClientRpc]
     void RpcSetColor(GameObject o, Color color)
     {
-        o.GetComponent<Renderer>().material.SetColor("_Color", color);
+        try
+        {
+            o.GetComponent<Renderer>().material.SetColor("_Color", color);
+        }
+        catch (NullReferenceException e)
+        {
+            Debug.Log("Problem in BreathLayerer RpcSetColor: " + e + ", exception source" + e.Source);
+        }
+        
     }
 
     [Command]
     void CmdSetSyncColor(Color color, Color color2)
     {
+        CmdAssignLocalAuthority(Plane);
+        CmdAssignLocalAuthority(Plane2);
         RpcSetSyncColor(color, color2);
+        CmdRemoveLocalAuthority(Plane);
+        CmdRemoveLocalAuthority(Plane2);
     }
 
     [ClientRpc]
@@ -260,16 +333,55 @@ public class BreathLayerer : NetworkBehaviour
         Plane.GetComponent<Renderer>().material.SetColor("_Color", color);
         Plane2.GetComponent<Renderer>().material.SetColor("_Color", color2);
     }
-    /*
+
+    [Command]
+    void CmdSetSyncColorOther(Color color, Color color2)
+    {
+        CmdAssignLocalAuthority(Plane);
+        CmdAssignLocalAuthority(Plane2);
+        RpcSetSyncColorOther(color, color2);
+        CmdRemoveLocalAuthority(Plane);
+        CmdRemoveLocalAuthority(Plane2);
+    }
+
+    [ClientRpc]
+    void RpcSetSyncColorOther(Color color, Color color2)
+    {
+        OtherPlane.GetComponent<Renderer>().material.SetColor("_Color", color);
+        //Plane2.GetComponent<Renderer>().material.SetColor("_Color", color2);
+    }
+
     [Command]
     void CmdSetState(GameObject o, bool state)
     {
+        CmdAssignLocalAuthority(o);
         RpcSetState(o, state);
+        CmdRemoveLocalAuthority(o);
     }
 
     [ClientRpc]
     void RpcSetState(GameObject o, bool state)
     {
-        o.SetActive(state);
-    }*/
+        try
+        {
+            o.SetActive(state);
+        } catch (NullReferenceException e)
+        {
+            Debug.Log("Problem in BreathLayerer RpcSetState: " + e + ", exception source: " + e.Source +", gameobject: ");
+        }
+    }
+
+    [Command]
+    void CmdAssignLocalAuthority(GameObject obj)
+    {
+        objNetId = obj.GetComponent<NetworkIdentity>();
+        objNetId.AssignClientAuthority(connectionToClient);
+    }
+
+    [Command]
+    void CmdRemoveLocalAuthority(GameObject obj)
+    {
+        objNetId = obj.GetComponent<NetworkIdentity>();
+        objNetId.RemoveClientAuthority(connectionToClient);
+    }
 }

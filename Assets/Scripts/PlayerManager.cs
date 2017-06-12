@@ -11,19 +11,25 @@ public class PlayerManager : NetworkBehaviour
     public GameObject AuraController;
     public GameObject BridgeBars;
     public GameObject StatueAnimator;
+    [SyncVar]
     public bool IsNPC = false;
+    [SyncVar]
     public float PlayerFA;
     GameObject SessionManager;
     GameObject DataHolder;
     GameObject SpawnPoint1;
     GameObject SpawnPoint2;
     public int PlayerNumber = 0;
+    [SyncVar]
     private float breatheNow = 9f;
+    [SyncVar]
     private float breathePast = 10f;
     private float respThreshold = 0f;
     private float respMax = -1f;
     private float respMin = 10000f;
+    [SyncVar]
     bool inBreathContinues = false;
+    [SyncVar]
     bool outBreathContinues = false;
     private GameObject otherPlayerManager;
     public float[] respArray = new float[6];
@@ -42,21 +48,21 @@ public class PlayerManager : NetworkBehaviour
     bool breatheCooldown = false;
     bool breatheQueueCooldown = false;
 
+    private NetworkIdentity objNetId;
 
     // Use this for initialization
     void Start()
     {
-        if (!GameObject.Find("Session Manager").GetComponent<SessionManager>().SingleUserSession)
+        SessionManager = GameObject.Find("Session Manager");
+        if (!SessionManager.GetComponent<SessionManager>().SingleUserSession)
         {
             if (!isLocalPlayer)
             {
-                return;
-				IsNPC = true;
+                IsNPC = true;
+                //return;
             }
         }
 
-
-        SessionManager = GameObject.Find("Session Manager");
         DataHolder = GameObject.Find("Data Holder");
 
         SpawnPoint1 = GameObject.Find("Spawn Point 1");
@@ -82,16 +88,20 @@ public class PlayerManager : NetworkBehaviour
 
             if (PlayerNumber == 1)
             {
-                AuraController = GameObject.Find("Player1_Manager");
+                //AuraController = GameObject.Find("Player1_Manager");
+                AuraController = gameObject;
                 AuraExpander = GameObject.Find("Aura_player1Expander");
-                BridgeBars = GameObject.Find("Player1_BridgeLayers");
+                //BridgeBars = GameObject.Find("Player1_BridgeLayers");
+                BridgeBars = gameObject;
                 StatueAnimator = GameObject.Find("Statue_Player1");
             }
             else
             {
-                AuraController = GameObject.Find("Player2_Manager");
+                //AuraController = GameObject.Find("Player2_Manager");
+                AuraController = gameObject;
                 AuraExpander = GameObject.Find("Aura_player2Expander");
-                BridgeBars = GameObject.Find("Player2_BridgeLayers");
+                //BridgeBars = GameObject.Find("Player2_BridgeLayers");
+                BridgeBars = gameObject;
                 StatueAnimator = GameObject.Find("Statue_Player2");
             }
 
@@ -105,18 +115,19 @@ public class PlayerManager : NetworkBehaviour
     // Update is called once per frame
     void FixedUpdate()
 	{
-		if (!GameObject.Find ("Session Manager").GetComponent<SessionManager> ().SingleUserSession) {
-			if (!isLocalPlayer) {
-				//	IsNPC = true;
-				return;
-			}
-		}
+        if (!SessionManager.GetComponent<SessionManager>().SingleUserSession)
+        {
+            if (!isLocalPlayer)
+            {
+                return;
+            }
+        }
 
 
-	
-		// Handling respiration Data.
 
-		if (RespDataOld - SensorData.RespOut != 0) {
+        // Handling respiration Data.
+
+        if (RespDataOld - SensorData.RespOut != 0) {
 			RespDataOld = SensorData.RespOut;
 			RespChanged = true;
 
@@ -272,15 +283,29 @@ public class PlayerManager : NetworkBehaviour
 			}
 
 
-			//defining player FA colors.
-			// put conditions here. 
-	
+            //defining player FA colors.
+            // put conditions here. 
 
 
 
-			//FA COLOR definitions.
 
-			if (!IsNPC) {
+            //FA COLOR definitions.
+            if ((!IsNPC && SessionManager.GetComponent<SessionManager>().RespSelf) || (SessionManager.GetComponent<SessionManager>().RespOther))
+            {
+                if (SessionManager.GetComponent<SessionManager>().EegSelf)
+                {
+                    AuraController.GetComponent<PlayerFAScript>().PlayerFA_Display = PlayerFA;
+
+                }
+                else
+                {
+                    AuraController.GetComponent<PlayerFAScript>().PlayerFA_Display = 0.2f;
+                }
+            }
+
+
+            /*
+            if (!IsNPC) {
 
 				if (SessionManager.GetComponent<SessionManager> ().EegSelf) {
 					AuraController.GetComponent<PlayerFAScript> ().PlayerFA_Display = PlayerFA;
@@ -295,7 +320,7 @@ public class PlayerManager : NetworkBehaviour
 					AuraController.GetComponent<PlayerFAScript> ().PlayerFA_Display = 0.2f;
 				}
 
-			}
+			}*/
 
 			float otherPlayerFA = otherPlayerManager.GetComponent<PlayerFAScript> ().PlayerFA_Display;
 			AuraController.GetComponent<PlayerFAScript> ().OtherFA = otherPlayerFA;
@@ -316,13 +341,26 @@ public class PlayerManager : NetworkBehaviour
         
 // RESP.PHASE1 - FIRST BREATHE OUT
 			if ((breatheNow < breathePast - respThreshold) && (outBreathContinues == false)) {
-				//		Debug.Log ("Player " + PlayerNumber + " breathing out");
-				//		Debug.Log (PlayerNumber + ": " + breathePast + " " + breatheNow);
+                //		Debug.Log ("Player " + PlayerNumber + " breathing out");
+                //		Debug.Log (PlayerNumber + ": " + breathePast + " " + breatheNow);
 
-				// STATUE BREATHEING OUT
-				// jos olen pelaaja, katson onko selfresp käytössä, ja sit käynnistän patsaan 
-				// jos en ole pelaaja, katson onko respother käytässä, ja näytän patsaan hengitysanimaation.
-				if (!IsNPC) {
+                // STATUE BREATHEING OUT
+                // jos olen pelaaja, katson onko selfresp käytössä, ja sit käynnistän patsaan 
+                // jos en ole pelaaja, katson onko respother käytässä, ja näytän patsaan hengitysanimaation.
+                if ((!IsNPC && SessionManager.GetComponent<SessionManager>().RespSelf) || (SessionManager.GetComponent<SessionManager>().RespOther))
+                {
+                    if (NetworkServer.active)
+                    {
+                        RpcAnimateStatue(false);
+                    }
+                    else if (NetworkClient.active)
+                    {
+                        CmdAnimateStatue(false);
+                    }
+                }
+
+                /*
+                if (!IsNPC) {
 				
 					if (SessionManager.GetComponent<SessionManager> ().RespSelf) {
 						StatueAnimator.GetComponent<Animator> ().SetTrigger ("StartOut");
@@ -333,7 +371,7 @@ public class PlayerManager : NetworkBehaviour
 						StatueAnimator.GetComponent<Animator> ().SetTrigger ("StartOut");
 						//Debug.Log ("NPC " + PlayerNumber + " breathing out");
 					}
-				}	
+				}	*/
             
 
 
@@ -344,9 +382,30 @@ public class PlayerManager : NetworkBehaviour
 
 
 
-				// BRIDGE BREATHING EFFECT
+                // BRIDGE BREATHING EFFECT
 
-				if (!IsNPC) {
+
+                if ((!IsNPC && SessionManager.GetComponent<SessionManager>().RespSelf) || (SessionManager.GetComponent<SessionManager>().RespOther))
+                {
+                    if (firstwaveset && !breatheCooldown)
+                    {
+                        breatheCooldown = true;
+                        Debug.Log("user breathing wave sent");
+                        BridgeBars.GetComponent<BreathLayerer>().InitBreatheBar();
+                        Debug.Log("Player " + PlayerNumber + " breathing bar sent");
+                        //	Debug.Log (PlayerNumber + ": " + breathePast + " " + breatheNow);
+                        StartCoroutine("CoolDown");
+
+                    }
+                    else
+                    {
+                        firstwaveset = true;
+                    }
+                        
+                }
+
+                /*
+                if (!IsNPC) {
 
 					if (SessionManager.GetComponent<SessionManager> ().RespSelf) {
 						//if ((SessionManager.GetComponent<SessionManager> ().BridgeMeterSelf)) {
@@ -377,7 +436,7 @@ public class PlayerManager : NetworkBehaviour
 						} else
 							firstwaveset = true;
 					}
-				}
+				}*/
 
 
 				outBreathContinues = true;
@@ -390,7 +449,20 @@ public class PlayerManager : NetworkBehaviour
 // RESP.PHASE2 - BREATHING OUT CONTINUES
 
 			if (outBreathContinues == true) {
-				// RESPIRATION AURA SCALING EFFECT 
+                // RESPIRATION AURA SCALING EFFECT 
+
+                if ((!IsNPC && SessionManager.GetComponent<SessionManager>().RespSelf) || (SessionManager.GetComponent<SessionManager>().RespOther))
+                {
+                    if (NetworkServer.active)
+                    {
+                        RpcScaleAuraExpand(false);
+                    }
+                    else if (NetworkClient.active)
+                    {
+                        CmdScaleAuraExpand(false);
+                    }
+                }
+                /*
 				if (!IsNPC) {
 
 					if ((SessionManager.GetComponent<SessionManager> ().RespSelf)) {//if auraefekti on päällä
@@ -403,17 +475,30 @@ public class PlayerManager : NetworkBehaviour
 						AuraExpander.GetComponent<AuraScaler> ().expand = false;
 					}
 
-				}
-			}
+				}*/
+            }
 
 
 // RESP.PHASE 3 - FIRST BREATHE IN
 
 			if ((breatheNow >= breathePast + respThreshold) && (inBreathContinues == false)) {
 
-				//STATUE BREATHING EFFECT
+                //STATUE BREATHING EFFECT
 
-				if (!IsNPC) {
+                if ((!IsNPC && SessionManager.GetComponent<SessionManager>().RespSelf) || (SessionManager.GetComponent<SessionManager>().RespOther))
+                {
+                    if (NetworkServer.active)
+                    {
+                        RpcAnimateStatue(true);
+                    }
+                    else if (NetworkClient.active)
+                    {
+                        CmdAnimateStatue(true);
+                    }
+                }
+
+                /*
+                if (!IsNPC) {
 
 					if (SessionManager.GetComponent<SessionManager> ().RespSelf) {
 						StatueAnimator.GetComponent<Animator> ().SetTrigger ("StartIn");
@@ -424,7 +509,7 @@ public class PlayerManager : NetworkBehaviour
 						StatueAnimator.GetComponent<Animator> ().SetTrigger ("StartIn");
 					}
 
-				}
+				}*/
 
 				outBreathContinues = false;
 				inBreathContinues = true;
@@ -440,19 +525,32 @@ public class PlayerManager : NetworkBehaviour
 // RESP.PHASE 4 - BREATHING IN CONTINUES
 			if (inBreathContinues == true) {
 				// RESPIRATION AURA SCALING EFFECT 
+                if ((!IsNPC && SessionManager.GetComponent<SessionManager>().RespSelf) || (SessionManager.GetComponent<SessionManager>().RespOther))
+                {
+                    if (NetworkServer.active)
+                    {
+                        RpcScaleAuraExpand(true);
+                    }
+                    else if (NetworkClient.active)
+                    {
+                        CmdScaleAuraExpand(true);
+                    }
+                }
+
+                /*
 				if (!IsNPC) {
 
 					if ((SessionManager.GetComponent<SessionManager> ().RespSelf)) {//if auraefekti on päällä
 						AuraExpander.GetComponent<AuraScaler> ().expand = true;
-					}
+                    }
 
 				} else {
 
 					if ((SessionManager.GetComponent<SessionManager> ().RespOther)) {//if auraefekti on päällä
-						AuraExpander.GetComponent<AuraScaler> ().expand = true;
+                        AuraExpander.GetComponent<AuraScaler> ().expand = true;
 					}
 
-				}
+				}*/
 			}
 		}
 	}
@@ -471,6 +569,78 @@ public class PlayerManager : NetworkBehaviour
     {
         yield return new WaitForSeconds(4.0f);
         breatheQueueCooldown = false;
+    }
+
+    [Command]
+    void CmdAnimateStatue(bool startIn)
+    {
+        RpcAnimateStatue(startIn);
+    }
+
+    [ClientRpc]
+    void RpcAnimateStatue(bool startIn)
+    {
+        Debug.Log("startin " + startIn);
+        if (startIn)
+        {
+            StatueAnimator.GetComponent<Animator>().SetTrigger("StartIn");
+        }
+        else
+        {
+            StatueAnimator.GetComponent<Animator>().SetTrigger("StartOut");
+        }
+
+
+    }
+
+
+
+    [Command]
+    void CmdScaleAuraExpand(bool expand)
+    {
+        RpcScaleAuraExpand(expand);
+    }
+
+    [ClientRpc]
+    void RpcScaleAuraExpand(bool expand)
+    {
+        if (expand)
+        {
+            try
+            {
+                AuraExpander.GetComponent<AuraScaler>().expand = true;
+            }
+            catch (UnassignedReferenceException e)
+            {
+                Debug.Log(e);
+            }
+        }
+        else
+        {
+            try
+            {
+                AuraExpander.GetComponent<AuraScaler>().expand = false;
+            }
+            catch (UnassignedReferenceException e)
+            {
+                Debug.Log(e);
+            }
+        }
+
+    }
+
+    [Command]
+    void CmdAssignLocalAuthority(GameObject obj)
+    {
+        objNetId = obj.GetComponent<NetworkIdentity>();
+        objNetId.AssignClientAuthority(connectionToClient);
+    }
+
+    [Command]
+    void CmdRemoveLocalAuthority(GameObject obj)
+    {
+        objNetId = obj.GetComponent<NetworkIdentity>();
+        objNetId.RemoveClientAuthority(connectionToClient);
     }
 
 }

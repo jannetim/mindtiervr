@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
-
+using System;
 public class PlayerFAScript : NetworkBehaviour
 {
     // THIS IS USED FOR CONTROLLING AURA COLOR
@@ -11,15 +11,18 @@ public class PlayerFAScript : NetworkBehaviour
 
 
     public Gradient FAColorSlide = new Gradient();
+    [SyncVar]
     public Color PlayerColor;
     public GameObject PlayerBridgeSides;
     public GameObject PlayerAura;
-    public GameObject PlayerAura2;    
+    public GameObject PlayerAura2;
     public GameObject[] PlayerLights;
-    public GameObject PlayerStatue;
+    //public GameObject PlayerStatue; 
+    [SyncVar]
     public float PlayerFA_Display = 0.0f;
-    public float PlayerFA_adjusted;
+    //public float PlayerFA_adjusted;
     public float OtherFA = 0.0f;
+    [SyncVar]
     public Color AuraColor;
     public bool UseSyncGlow;
     float auraH;
@@ -29,14 +32,52 @@ public class PlayerFAScript : NetworkBehaviour
     float glowVMod;
     bool flickerS;
     bool flickerV;
+    private NetworkIdentity objNetId;
+    [SyncVar]
+    private int playerNumber;
+
+    private GameObject BridgeLayers;
 
     // Use this for initialization
     void Start()
     {
-        //    GradientColorKey[] gck = new GradientColorKey[2];
-        //    GradientAlphaKey[] gak = new GradientAlphaKey[2];
-
-        UseSyncGlow = true;
+        if (transform.name == "Player(Clone)")
+        {
+            if (!isLocalPlayer)
+            {
+               // return;
+            }
+            GameObject SpawnPoint1 = GameObject.Find("Spawn Point 1");
+            GameObject SpawnPoint2 = GameObject.Find("Spawn Point 2");
+            float dist1 = Vector3.Distance(this.transform.position, SpawnPoint1.transform.position);
+            float dist2 = Vector3.Distance(this.transform.position, SpawnPoint2.transform.position);
+            if (dist1 < dist2)
+            {
+                playerNumber = 2;
+                PlayerBridgeSides = GameObject.Find("Player2_BridgeSides");
+                PlayerAura = GameObject.Find("Aura_player2");
+                PlayerAura2 = GameObject.Find("Aura_player2Expander");
+                PlayerLights[0] = GameObject.Find("Light_Player2");
+                PlayerLights[1] = GameObject.Find("Light_Player2 (2)");
+                PlayerLights[2] = GameObject.Find("Light_Player2 (1)");
+                PlayerLights[3] = GameObject.Find("Light_Player2 (3)");
+                BridgeLayers = GameObject.Find("Player2_BridgeLayers");
+            }
+            else
+            {
+                playerNumber = 1;
+                PlayerBridgeSides = GameObject.Find("Player1_BridgeSides");
+                PlayerAura = GameObject.Find("Aura_player1");
+                PlayerAura2 = GameObject.Find("Aura_player1Expander");
+                PlayerLights[0] = GameObject.Find("Light_Player1");
+                PlayerLights[1] = GameObject.Find("Light_Player1 (2)");
+                PlayerLights[2] = GameObject.Find("Light_Player1 (1)");
+                PlayerLights[3] = GameObject.Find("Light_Player1 (3)");
+                BridgeLayers = GameObject.Find("Player1_BridgeLayers");
+            }
+        }
+        Debug.Log("playernumne " + playerNumber);
+        //UseSyncGlow = false;
         glowS = 1.0f;
 
         // dynamic modifier for glow HDR
@@ -47,6 +88,14 @@ public class PlayerFAScript : NetworkBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
+        if (transform.name == "Player(Clone)")
+        {
+            if (!isLocalPlayer)
+            {
+                return;
+            }
+        }
+        
         PlayerColor = FAColorSlide.Evaluate(PlayerFA_Display);
         if (NetworkServer.active)
         {
@@ -74,38 +123,23 @@ public class PlayerFAScript : NetworkBehaviour
             CmdSetColors(AuraColor, BridgeSideColor);
         }
 
-        // old single player logic
-        //PlayerAura.GetComponent<Renderer>().material.SetColor("_TintColor", AuraColor);
-        //AuraColor.a = AuraColor.a * 0.4f;
-        //PlayerAura2.GetComponent<Renderer>().material.SetColor("_TintColor", AuraColor);
+
         if (NetworkServer.active)
         {
-            RpcPlayerLights();
+            RpcPlayerLight(PlayerColor, PlayerFA_Display);
+
         }
         else if (NetworkClient.active)
         {
-            CmdPlayerLights();
+            CmdPlayerLight(PlayerColor, PlayerFA_Display);
+
         }
-
-        // old logic
-        /*for (int i = 0; i < PlayerLights.Length; i++)
-        {
-
-            Light l = PlayerLights[i].GetComponent<Light>();
-            l.color = PlayerColor;
-            l.intensity = 0.05f + PlayerFA_Display * 1.1f;
-        }*/
-
-        //PlayerBridgeSides.GetComponent<Renderer>().material.color = BridgeSideColor;
-
-
-        //  PlayerBridgeSides.GetComponent<Renderer>().material.color = PlayerColor;
 
         if (UseSyncGlow)
         { 
             // calculates the sync, 0 -> sync and 1 -> !sync 
             float fasync = Mathf.Abs(PlayerFA_Display - OtherFA);
-      //      print("FA-sync: " + fasync + "own FA: " + PlayerFA_Display + ", other FA: " + OtherFA);
+
 
             // Lower emission saturation according to FA-level when FA-levels in sync
 
@@ -141,7 +175,6 @@ public class PlayerFAScript : NetworkBehaviour
                 {
                     flickerV = false;
                 }
-                //glowS = Mathf.Clamp01(1.5f - (PlayerFA_Display + OtherFA) / 2);
             } else
             {
                 auraV = 0.5f - fasync * 2f;
@@ -170,11 +203,11 @@ public class PlayerFAScript : NetworkBehaviour
             {
                 CmdEmission(emissionColor);
             }
-            //PlayerBridgeSides.GetComponent<Renderer>().material.SetColor("_EmissionColor", emissionColor);
         }
         // used with gradient shader
         //PlayerBridgeSides.GetComponent<Renderer>().material.SetFloat("_Threshold", 1.0f - PlayerFA_Display);
     }
+
 
     [Command]
     void CmdSetPlayerColor()
@@ -186,24 +219,42 @@ public class PlayerFAScript : NetworkBehaviour
     void RpcSetPlayerColor()
     {
         PlayerColor = FAColorSlide.Evaluate(PlayerFA_Display);
+       /* try { 
+            BridgeLayers.GetComponent<BreathLayerer>().planeColor = PlayerColor;
+        } catch (NullReferenceException e)
+        {
+            Debug.Log(e);
+        }*/
     }
+
+
 
     [Command]
-    void CmdPlayerLights()
-    {
-        RpcPlayerLights();
-    }
-
-    [ClientRpc]
-    void RpcPlayerLights()
+    void CmdPlayerLight(Color PlayerColor, float PlayerFA_Display)
     {
         for (int i = 0; i < PlayerLights.Length; i++)
         {
-            Light l = PlayerLights[i].GetComponent<Light>();
-            l.color = PlayerColor;
-            l.intensity = 0.05f + PlayerFA_Display * 1.1f;
+           // CmdAssignLocalAuthority(PlayerLights[i]);
+        }
+        RpcPlayerLight(PlayerColor, PlayerFA_Display);
+        
+        for (int i = 0; i < PlayerLights.Length; i++)
+        {
+           // CmdRemoveLocalAuthority(PlayerLights[i]);
         }
     }
+
+    [ClientRpc]
+    void RpcPlayerLight(Color PlayerColor, float PlayerFA_Display)
+    {
+        for (int i = 0; i < PlayerLights.Length; i++)
+        {
+            PlayerLights[i].GetComponent<Light>().color = PlayerColor;
+            PlayerLights[i].GetComponent<Light>().intensity = 0.05f + PlayerFA_Display * 1.1f;
+
+        }
+    }
+
 
     [Command]
     void CmdEmission(Color emissionColor)
@@ -214,22 +265,55 @@ public class PlayerFAScript : NetworkBehaviour
     [ClientRpc]
     void RpcEmission(Color emissionColor)
     {
-        PlayerBridgeSides.GetComponent<Renderer>().material.SetColor("_EmissionColor", emissionColor);
+        try
+        {
+            PlayerBridgeSides.GetComponent<Renderer>().material.SetColor("_EmissionColor", emissionColor);
+        }
+        catch (UnassignedReferenceException e)
+        {
+            Debug.Log(e);
+        }
     }
 
     [Command]
     void CmdSetColors(Color AuraColor, Color BridgeSideColor)
     {
+        CmdAssignLocalAuthority(PlayerBridgeSides);
+        CmdAssignLocalAuthority(PlayerAura);
+        CmdAssignLocalAuthority(PlayerAura2);
         RpcSetColors(AuraColor, BridgeSideColor);
+        CmdRemoveLocalAuthority(PlayerBridgeSides);
+        CmdRemoveLocalAuthority(PlayerAura);
+        CmdRemoveLocalAuthority(PlayerAura2);
     }
 
     [ClientRpc]
     void RpcSetColors(Color AuraColor, Color BridgeSideColor)
     {
-        PlayerAura.GetComponent<Renderer>().material.SetColor("_TintColor", AuraColor);
-        AuraColor.a = AuraColor.a * 0.4f;
-        PlayerAura2.GetComponent<Renderer>().material.SetColor("_TintColor", AuraColor);
+        try { 
+            PlayerAura.GetComponent<Renderer>().material.SetColor("_TintColor", AuraColor);
+            AuraColor.a = AuraColor.a * 0.4f;
+            PlayerAura2.GetComponent<Renderer>().material.SetColor("_TintColor", AuraColor);
 
-        PlayerBridgeSides.GetComponent<Renderer>().material.color = BridgeSideColor;
+            PlayerBridgeSides.GetComponent<Renderer>().material.color = BridgeSideColor;
+        } catch (UnassignedReferenceException e)
+        {
+            Debug.Log(e);
+        }
+    }
+
+
+    [Command]
+    void CmdAssignLocalAuthority(GameObject obj)
+    {
+        objNetId = obj.GetComponent<NetworkIdentity>();
+        objNetId.AssignClientAuthority(connectionToClient);
+    }
+
+    [Command]
+    void CmdRemoveLocalAuthority(GameObject obj)
+    {
+        objNetId = obj.GetComponent<NetworkIdentity>();
+        objNetId.RemoveClientAuthority(connectionToClient);
     }
 }
