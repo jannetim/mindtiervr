@@ -248,11 +248,17 @@ public class PlayerFAScript : NetworkBehaviour
     [ClientRpc]
     void RpcPlayerLight(Color PlayerColor, float PlayerFA_Display)
     {
-        for (int i = 0; i < PlayerLights.Length; i++)
-        {
-            PlayerLights[i].GetComponent<Light>().color = PlayerColor;
-            PlayerLights[i].GetComponent<Light>().intensity = 0.05f + PlayerFA_Display * 1.1f;
+        try
+        { 
+            for (int i = 0; i < PlayerLights.Length; i++)
+            {
+                PlayerLights[i].GetComponent<Light>().color = PlayerColor;
+                PlayerLights[i].GetComponent<Light>().intensity = 0.05f + PlayerFA_Display * 1.1f;
 
+            }
+        } catch (NullReferenceException e)
+        {
+            Debug.Log("Playerlights probably not initialized " + e);
         }
     }
 
