@@ -67,7 +67,7 @@ public class SessionManager : MonoBehaviour
 
 
     void Awake() { 
-
+        /*
 		//Loading parameters from the playerrefs.
 		if (PlayerPrefs.HasKey ("Param_SingleUserSession")) {
 			SingleUserSession = PlayerPrefsX.GetBool ("Param_SingleUserSession");		
@@ -99,7 +99,7 @@ public class SessionManager : MonoBehaviour
 					//} else { Debug.Log ("multi user session");
 				}
 
-
+    */
 
 	
 	}

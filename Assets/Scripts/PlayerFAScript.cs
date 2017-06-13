@@ -47,35 +47,36 @@ public class PlayerFAScript : NetworkBehaviour
             {
                // return;
             }
-            GameObject SpawnPoint1 = GameObject.Find("Spawn Point 1");
-            GameObject SpawnPoint2 = GameObject.Find("Spawn Point 2");
-            float dist1 = Vector3.Distance(this.transform.position, SpawnPoint1.transform.position);
-            float dist2 = Vector3.Distance(this.transform.position, SpawnPoint2.transform.position);
-            if (dist1 < dist2)
-            {
-                playerNumber = 2;
-                PlayerBridgeSides = GameObject.Find("Player2_BridgeSides");
-                PlayerAura = GameObject.Find("Aura_player2");
-                PlayerAura2 = GameObject.Find("Aura_player2Expander");
-                PlayerLights[0] = GameObject.Find("Light_Player2");
-                PlayerLights[1] = GameObject.Find("Light_Player2 (2)");
-                PlayerLights[2] = GameObject.Find("Light_Player2 (1)");
-                PlayerLights[3] = GameObject.Find("Light_Player2 (3)");
-                BridgeLayers = GameObject.Find("Player2_BridgeLayers");
-            }
-            else
-            {
-                playerNumber = 1;
-                PlayerBridgeSides = GameObject.Find("Player1_BridgeSides");
-                PlayerAura = GameObject.Find("Aura_player1");
-                PlayerAura2 = GameObject.Find("Aura_player1Expander");
-                PlayerLights[0] = GameObject.Find("Light_Player1");
-                PlayerLights[1] = GameObject.Find("Light_Player1 (2)");
-                PlayerLights[2] = GameObject.Find("Light_Player1 (1)");
-                PlayerLights[3] = GameObject.Find("Light_Player1 (3)");
-                BridgeLayers = GameObject.Find("Player1_BridgeLayers");
-            }
         }
+        GameObject SpawnPoint1 = GameObject.Find("Spawn Point 1");
+        GameObject SpawnPoint2 = GameObject.Find("Spawn Point 2");
+        float dist1 = Vector3.Distance(this.transform.position, SpawnPoint1.transform.position);
+        float dist2 = Vector3.Distance(this.transform.position, SpawnPoint2.transform.position);
+        if (dist1 < dist2)
+        {
+            playerNumber = 2;
+            PlayerBridgeSides = GameObject.Find("Player2_BridgeSides");
+            PlayerAura = GameObject.Find("Aura_player2");
+            PlayerAura2 = GameObject.Find("Aura_player2Expander");
+            PlayerLights[0] = GameObject.Find("Light_Player2");
+            PlayerLights[1] = GameObject.Find("Light_Player2 (2)");
+            PlayerLights[2] = GameObject.Find("Light_Player2 (1)");
+            PlayerLights[3] = GameObject.Find("Light_Player2 (3)");
+            BridgeLayers = GameObject.Find("Player2_BridgeLayers");
+        }
+        else
+        {
+            playerNumber = 1;
+            PlayerBridgeSides = GameObject.Find("Player1_BridgeSides");
+            PlayerAura = GameObject.Find("Aura_player1");
+            PlayerAura2 = GameObject.Find("Aura_player1Expander");
+            PlayerLights[0] = GameObject.Find("Light_Player1");
+            PlayerLights[1] = GameObject.Find("Light_Player1 (2)");
+            PlayerLights[2] = GameObject.Find("Light_Player1 (1)");
+            PlayerLights[3] = GameObject.Find("Light_Player1 (3)");
+            BridgeLayers = GameObject.Find("Player1_BridgeLayers");
+        }
+        
         Debug.Log("playernumne " + playerNumber);
         //UseSyncGlow = false;
         glowS = 1.0f;

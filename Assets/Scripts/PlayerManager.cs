@@ -57,12 +57,14 @@ public class PlayerManager : NetworkBehaviour
         if (!SessionManager.GetComponent<SessionManager>().SingleUserSession)
         {
             if (!isLocalPlayer)
-            {
-                IsNPC = true;
+            {   
                 //return;
             }
+        } else
+        {
+            IsNPC = true;
         }
-
+        
         DataHolder = GameObject.Find("Data Holder");
 
         SpawnPoint1 = GameObject.Find("Spawn Point 1");
