@@ -26,14 +26,13 @@ public class BreathLayerer : NetworkBehaviour
     // Use this for initialization
     void Start()
     {
-        if (transform.name == "Player(Clone)")
-        {
-            if (!isLocalPlayer)
-            {
-                //return;
-            }
-            planes = new GameObject[5];
+        //if (transform.name == "Player(Clone)")
 
+        planes = new GameObject[5];
+
+        /// network issues
+        try
+        { 
             int counter = 0;
             if (Player.GetComponent<PlayerManager>().PlayerNumber == 2)
             {
@@ -84,7 +83,11 @@ public class BreathLayerer : NetworkBehaviour
                 }
             }
         }
-        
+        catch (NullReferenceException e)
+        {
+            Debug.Log("BreatheLayerer problem " + e);
+        }
+
         System.Array.Reverse(planes);
         origAlpha = PlaneTransparency;
         // InvokeRepeating("InitBreatheBar", 2.0f, 5.0f);

@@ -41,13 +41,13 @@ public class PlayerFAScript : NetworkBehaviour
     // Use this for initialization
     void Start()
     {
-        if (transform.name == "Player(Clone)")
+        /*if (transform.name == "Player(Clone)")
         {
             if (!isLocalPlayer)
             {
                // return;
             }
-        }
+        }*/
         GameObject SpawnPoint1 = GameObject.Find("Spawn Point 1");
         GameObject SpawnPoint2 = GameObject.Find("Spawn Point 2");
         float dist1 = Vector3.Distance(this.transform.position, SpawnPoint1.transform.position);

@@ -54,13 +54,7 @@ public class PlayerManager : NetworkBehaviour
     void Start()
     {
         SessionManager = GameObject.Find("Session Manager");
-        if (!SessionManager.GetComponent<SessionManager>().SingleUserSession)
-        {
-            if (!isLocalPlayer)
-            {   
-                //return;
-            }
-        } else
+        if (SessionManager.GetComponent<SessionManager>().SingleUserSession)
         {
             IsNPC = true;
         }
