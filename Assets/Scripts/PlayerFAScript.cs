@@ -313,6 +313,7 @@ public class PlayerFAScript : NetworkBehaviour
     [Command]
     void CmdAssignLocalAuthority(GameObject obj)
     {
+        Debug.Log("plörts" + obj);
         objNetId = obj.GetComponent<NetworkIdentity>();
         objNetId.AssignClientAuthority(connectionToClient);
     }
