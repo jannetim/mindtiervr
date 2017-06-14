@@ -56,7 +56,7 @@ public class PlayerFAScript : NetworkBehaviour
         {
             playerNumber = 2;
             PlayerBridgeSides = GameObject.Find("Player2_BridgeSides");
-            PlayerAura = GameObject.Find("Aura_player2");
+            PlayerAura = GameObject.Find("AuraAnimated_p2");
             PlayerAura2 = GameObject.Find("Aura_player2Expander");
             PlayerLights[0] = GameObject.Find("Light_Player2");
             PlayerLights[1] = GameObject.Find("Light_Player2 (2)");
@@ -68,7 +68,7 @@ public class PlayerFAScript : NetworkBehaviour
         {
             playerNumber = 1;
             PlayerBridgeSides = GameObject.Find("Player1_BridgeSides");
-            PlayerAura = GameObject.Find("Aura_player1");
+            PlayerAura = GameObject.Find("AuraAnimated_p1");
             PlayerAura2 = GameObject.Find("Aura_player1Expander");
             PlayerLights[0] = GameObject.Find("Light_Player1");
             PlayerLights[1] = GameObject.Find("Light_Player1 (2)");

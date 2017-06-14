@@ -11,6 +11,8 @@ public class PlayerManager : NetworkBehaviour
     public GameObject AuraController;
     public GameObject BridgeBars;
     public GameObject StatueAnimator;
+	public GameObject AuraAnimator;
+
     [SyncVar]
     public bool IsNPC = false;
     [SyncVar]
@@ -90,6 +92,7 @@ public class PlayerManager : NetworkBehaviour
                 //BridgeBars = GameObject.Find("Player1_BridgeLayers");
                 BridgeBars = gameObject;
                 StatueAnimator = GameObject.Find("Statue_Player1");
+				AuraAnimator = GameObject.Find("AuraNew_Player1");
             }
             else
             {
@@ -99,6 +102,7 @@ public class PlayerManager : NetworkBehaviour
                 //BridgeBars = GameObject.Find("Player2_BridgeLayers");
                 BridgeBars = gameObject;
                 StatueAnimator = GameObject.Find("Statue_Player2");
+				AuraAnimator = GameObject.Find("AuraNew_Player2");
             }
 
         }
@@ -580,10 +584,12 @@ public class PlayerManager : NetworkBehaviour
         if (startIn)
         {
             StatueAnimator.GetComponent<Animator>().SetTrigger("StartIn");
+			AuraAnimator.GetComponent<Animator>().SetTrigger("StartOutAura");
         }
         else
         {
             StatueAnimator.GetComponent<Animator>().SetTrigger("StartOut");
+			AuraAnimator.GetComponent<Animator>().SetTrigger("StartInAura");
         }
 
 
@@ -599,7 +605,7 @@ public class PlayerManager : NetworkBehaviour
 
     [ClientRpc]
     void RpcScaleAuraExpand(bool expand)
-    {
+    {/*
         if (expand)
         {
             try
@@ -621,7 +627,7 @@ public class PlayerManager : NetworkBehaviour
             {
                 Debug.Log(e);
             }
-        }
+        }*/
 
     }
 
