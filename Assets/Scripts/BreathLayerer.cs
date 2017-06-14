@@ -311,7 +311,9 @@ public class BreathLayerer : NetworkBehaviour
     {
         try
         {
+            CmdAssignLocalAuthority(o);
             o.GetComponent<Renderer>().material.SetColor("_Color", color);
+            CmdRemoveLocalAuthority(o);
         }
         catch (NullReferenceException e)
         {
