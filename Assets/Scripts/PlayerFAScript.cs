@@ -56,7 +56,7 @@ public class PlayerFAScript : NetworkBehaviour
         {
             playerNumber = 2;
             PlayerBridgeSides = GameObject.Find("Player2_BridgeSides");
-            PlayerAura = GameObject.Find("AuraAnimated_p2");
+            PlayerAura = GameObject.Find("AuraAnimated_p1");
             PlayerAura2 = GameObject.Find("Aura_player2Expander");
             PlayerLights[0] = GameObject.Find("Light_Player2");
             PlayerLights[1] = GameObject.Find("Light_Player2 (2)");
@@ -68,7 +68,7 @@ public class PlayerFAScript : NetworkBehaviour
         {
             playerNumber = 1;
             PlayerBridgeSides = GameObject.Find("Player1_BridgeSides");
-            PlayerAura = GameObject.Find("AuraAnimated_p1");
+            PlayerAura = GameObject.Find("AuraAnimated_p2");
             PlayerAura2 = GameObject.Find("Aura_player1Expander");
             PlayerLights[0] = GameObject.Find("Light_Player1");
             PlayerLights[1] = GameObject.Find("Light_Player1 (2)");
@@ -299,6 +299,7 @@ public class PlayerFAScript : NetworkBehaviour
     {
         try { 
             PlayerAura.GetComponent<Renderer>().material.SetColor("_TintColor", AuraColor);
+			Debug.Log("Changing Player Aura Color - why it doesn't show?");
             AuraColor.a = AuraColor.a * 0.4f;
             PlayerAura2.GetComponent<Renderer>().material.SetColor("_TintColor", AuraColor);
 

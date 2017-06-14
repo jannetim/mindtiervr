@@ -580,7 +580,7 @@ public class PlayerManager : NetworkBehaviour
     [ClientRpc]
     void RpcAnimateStatue(bool startIn)
     {
-        Debug.Log("startin " + startIn);
+       // Debug.Log("startin " + startIn);
         if (startIn)
         {
             StatueAnimator.GetComponent<Animator>().SetTrigger("StartIn");
