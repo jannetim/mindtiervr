@@ -12,7 +12,7 @@ public class PlayerFAScript : NetworkBehaviour
 
     public Gradient FAColorSlide = new Gradient();
     [SyncVar]
-    public Color PlayerColor;
+	public Color PlayerColor = new Color(0.3f, 0.3f, 0.3f, 0.3f);
     public GameObject PlayerBridgeSides;
     public GameObject PlayerAura;
     public GameObject PlayerAura2;
@@ -41,6 +41,7 @@ public class PlayerFAScript : NetworkBehaviour
     // Use this for initialization
     void Start()
     {
+		PlayerColor = new Color(1f, 1f, 1f, 1f);
         /*if (transform.name == "Player(Clone)")
         {
             if (!isLocalPlayer)
@@ -56,7 +57,7 @@ public class PlayerFAScript : NetworkBehaviour
         {
             playerNumber = 2;
             PlayerBridgeSides = GameObject.Find("Player2_BridgeSides");
-            PlayerAura = GameObject.Find("AuraAnimated_p1");
+            PlayerAura = GameObject.Find("AuraAnimated_p2");
             PlayerAura2 = GameObject.Find("Aura_player2Expander");
             PlayerLights[0] = GameObject.Find("Light_Player2");
             PlayerLights[1] = GameObject.Find("Light_Player2 (2)");
@@ -68,7 +69,7 @@ public class PlayerFAScript : NetworkBehaviour
         {
             playerNumber = 1;
             PlayerBridgeSides = GameObject.Find("Player1_BridgeSides");
-            PlayerAura = GameObject.Find("AuraAnimated_p2");
+            PlayerAura = GameObject.Find("AuraAnimated_p1");
             PlayerAura2 = GameObject.Find("Aura_player1Expander");
             PlayerLights[0] = GameObject.Find("Light_Player1");
             PlayerLights[1] = GameObject.Find("Light_Player1 (2)");
@@ -97,114 +98,92 @@ public class PlayerFAScript : NetworkBehaviour
             }
         }
         
-        PlayerColor = FAColorSlide.Evaluate(PlayerFA_Display);
-        if (NetworkServer.active)
-        {
-            RpcSetPlayerColor();
-        }
-        else if (NetworkClient.active)
-        {
-            CmdSetPlayerColor();
-        }
-        Color.RGBToHSV(PlayerColor, out auraH, out auraS, out auraV);
-        auraS = 0.72f;
-        auraV = 0.35f;
-        AuraColor = Color.HSVToRGB(auraH, auraS, auraV);
-        AuraColor.a = 0.05f + PlayerFA_Display * 0.7f;
+		//color changes and synchronising the sides are only done if EegSelf is active.
+		if (GameObject.Find ("Session Manager").GetComponent<SessionManager> ().EegSelf) {
+			
+			PlayerColor = FAColorSlide.Evaluate (PlayerFA_Display);
+			if (NetworkServer.active) {
+				RpcSetPlayerColor ();
+			} else if (NetworkClient.active) {
+				CmdSetPlayerColor ();
+			}
+			Color.RGBToHSV (PlayerColor, out auraH, out auraS, out auraV);
+			auraS = 0.72f;
+			auraV = 0.35f;
+			AuraColor = Color.HSVToRGB (auraH, auraS, auraV);
+			AuraColor.a = 0.05f + PlayerFA_Display * 0.7f;
 
-        Color BridgeSideColor = PlayerColor;
-        BridgeSideColor.a = 0.4f;
+			Color BridgeSideColor = PlayerColor;
+			BridgeSideColor.a = 0.4f;
 
-        if (NetworkServer.active)
-        {
-            RpcSetColors(AuraColor, BridgeSideColor);
-        }
-        else if (NetworkClient.active)
-        {
-            CmdSetColors(AuraColor, BridgeSideColor);
-        }
+			if (NetworkServer.active) {
+				RpcSetColors (AuraColor, BridgeSideColor);
+			} else if (NetworkClient.active) {
+				CmdSetColors (AuraColor, BridgeSideColor);
+			}
 
 
-        if (NetworkServer.active)
-        {
-            RpcPlayerLight(PlayerColor, PlayerFA_Display);
+			if (NetworkServer.active) {
+				RpcPlayerLight (PlayerColor, PlayerFA_Display);
 
-        }
-        else if (NetworkClient.active)
-        {
-            CmdPlayerLight(PlayerColor, PlayerFA_Display);
+			} else if (NetworkClient.active) {
+				CmdPlayerLight (PlayerColor, PlayerFA_Display);
 
-        }
+			}
 
-        if (UseSyncGlow)
-        { 
-            // calculates the sync, 0 -> sync and 1 -> !sync 
-            float fasync = Mathf.Abs(PlayerFA_Display - OtherFA);
+			if (UseSyncGlow) { 
+				// calculates the sync, 0 -> sync and 1 -> !sync 
+				float fasync = Mathf.Abs (PlayerFA_Display - OtherFA);
 
 
-            // Lower emission saturation according to FA-level when FA-levels in sync
+				// Lower emission saturation according to FA-level when FA-levels in sync
 
-            if (fasync < 0.1)
-            {
-                if (glowS > 0.75f && !flickerS)
-                {
-                    glowS -= 0.001f;
-                } else
-                {
-                    flickerS = true;
-                }
-                if (glowS < 0.9 && flickerS)
-                {
-                    glowS += 0.001f;
-                } else
-                {
-                    flickerS = false;
-                }
-                // emission brightness correlates with FA-sync
-                auraV = glowVMod - fasync;
-                if (glowVMod < 2.0f && !flickerV)
-                {
-                    glowVMod += 0.001f;
-                } else
-                {
-                    flickerV = true;
-                }
-                if (glowVMod > 1.0f && flickerV)
-                {
-                    glowVMod -= 0.001f;
-                } else
-                {
-                    flickerV = false;
-                }
-            } else
-            {
-                auraV = 0.5f - fasync * 2f;
-                if (auraV <= 0f)
-                {
-                    auraV = 0f;
-                }
-                // When falls out of sync, incrementally rise saturation to maximum
-                if (glowS < 1)
-                {
-                    glowS += 0.05f;
-                }
-                if (glowVMod > 0.5f)
-                {
-                    glowVMod -= 0.05f;
-                }
-            }
+				if (fasync < 0.1) {
+					if (glowS > 0.75f && !flickerS) {
+						glowS -= 0.001f;
+					} else {
+						flickerS = true;
+					}
+					if (glowS < 0.9 && flickerS) {
+						glowS += 0.001f;
+					} else {
+						flickerS = false;
+					}
+					// emission brightness correlates with FA-sync
+					auraV = glowVMod - fasync;
+					if (glowVMod < 2.0f && !flickerV) {
+						glowVMod += 0.001f;
+					} else {
+						flickerV = true;
+					}
+					if (glowVMod > 1.0f && flickerV) {
+						glowVMod -= 0.001f;
+					} else {
+						flickerV = false;
+					}
+				} else {
+					auraV = 0.5f - fasync * 2f;
+					if (auraV <= 0f) {
+						auraV = 0f;
+					}
+					// When falls out of sync, incrementally rise saturation to maximum
+					if (glowS < 1) {
+						glowS += 0.05f;
+					}
+					if (glowVMod > 0.5f) {
+						glowVMod -= 0.05f;
+					}
+				}
 
 
-            Color emissionColor = Color.HSVToRGB(auraH, glowS, auraV);
-            if (NetworkServer.active)
-            {
-                RpcEmission(emissionColor);
-            }
-            else if (NetworkClient.active)
-            {
-                CmdEmission(emissionColor);
-            }
-        }
+				Color emissionColor = Color.HSVToRGB (auraH, glowS, auraV);
+				if (NetworkServer.active) {
+					RpcEmission (emissionColor);
+				} else if (NetworkClient.active) {
+					CmdEmission (emissionColor);
+				}
+			}
+		}
         // used with gradient shader
         //PlayerBridgeSides.GetComponent<Renderer>().material.SetFloat("_Threshold", 1.0f - PlayerFA_Display);
     }
@@ -299,7 +278,7 @@ public class PlayerFAScript : NetworkBehaviour
     {
         try { 
             PlayerAura.GetComponent<Renderer>().material.SetColor("_TintColor", AuraColor);
-			Debug.Log("Changing Player Aura Color - why it doesn't show?");
+		//	Debug.Log("Changing Player Aura Color - why it doesn't show?");
             AuraColor.a = AuraColor.a * 0.4f;
             PlayerAura2.GetComponent<Renderer>().material.SetColor("_TintColor", AuraColor);
 

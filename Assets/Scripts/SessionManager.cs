@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
 public class SessionManager : MonoBehaviour
 {
@@ -8,8 +9,8 @@ public class SessionManager : MonoBehaviour
 
 
 	[Header("Session Parameters")]
-	public float StartDelay = 30f;
-    public bool SingleUserSession = true;
+
+ 	
     public bool SimulateSelf = true;
     public bool SimulateOther = true;
 	public Color NeutralEEGColor;
@@ -55,8 +56,8 @@ public class SessionManager : MonoBehaviour
 	*/
 
 
-
-
+	[Header("Don't change")]
+	public bool SingleUserSession = false;
     public GameObject SimPlayer;
 
     public GameObject[] activePlayers;
@@ -67,7 +68,7 @@ public class SessionManager : MonoBehaviour
 
 
     void Awake() { 
-        /*
+      //*//  
 		//Loading parameters from the playerrefs.
 		if (PlayerPrefs.HasKey ("Param_SingleUserSession")) {
 			SingleUserSession = PlayerPrefsX.GetBool ("Param_SingleUserSession");		
@@ -87,8 +88,8 @@ public class SessionManager : MonoBehaviour
 				//} else { Debug.Log ("multi user session");
 			}
 
-		if (PlayerPrefs.HasKey ("Param_RespOther")) {
-				RespOther = PlayerPrefsX.GetBool ("Param_RespOther");		
+		if (PlayerPrefs.HasKey ("Param_EegSelf")) {
+				EegSelf = PlayerPrefsX.GetBool ("Param_EegSelf");		
 				//if (SingleUserSession) { Debug.Log( "single user session");
 				//} else { Debug.Log ("multi user session");
 			}
@@ -99,7 +100,7 @@ public class SessionManager : MonoBehaviour
 					//} else { Debug.Log ("multi user session");
 				}
 
-    */
+    //*/
 
 	
 	}
@@ -176,6 +177,11 @@ public class SessionManager : MonoBehaviour
 		//Debug.Log ("Session Timer Launched");
 		yield return new WaitForSeconds(SessionLength);
 		//Debug.Log ("return to main menu");
+		//NetworkManager nm = GameObject.Find("NetworkManager").GetComponent<NetworkManager>();
+		NetworkManager.singleton.StopHost();
+		//NetworkManager.Shutdown();
+
+
 		Application.LoadLevel (0);
 	}
 

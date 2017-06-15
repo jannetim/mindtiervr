@@ -390,7 +390,7 @@ public class PlayerManager : NetworkBehaviour
                     if (firstwaveset && !breatheCooldown)
                     {
                         breatheCooldown = true;
-                        Debug.Log("user breathing wave sent");
+                      //  Debug.Log("user breathing wave sent");
                         BridgeBars.GetComponent<BreathLayerer>().InitBreatheBar();
                         Debug.Log("Player " + PlayerNumber + " breathing bar sent");
                         //	Debug.Log (PlayerNumber + ": " + breathePast + " " + breatheNow);
