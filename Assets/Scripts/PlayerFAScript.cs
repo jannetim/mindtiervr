@@ -38,9 +38,20 @@ public class PlayerFAScript : NetworkBehaviour
 
     private GameObject BridgeLayers;
 
+	public string sessionName;
+
     // Use this for initialization
     void Start()
     {
+		if (PlayerPrefs.HasKey ("Param_SessionID")) {
+			sessionName = PlayerPrefs.GetString ("Param_SessionID");		
+			//Debug.Log ("Session loaded:" + sessionName);
+		} else {sessionName =" ";}
+		if ((sessionName == "Session1") || (sessionName == "Session2") || (sessionName == "Session3")) {
+			UseSyncGlow = false;
+		}
+
+
 		PlayerColor = new Color(1f, 1f, 1f, 1f);
         /*if (transform.name == "Player(Clone)")
         {

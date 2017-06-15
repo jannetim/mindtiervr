@@ -36,6 +36,8 @@ public class SessionManager : MonoBehaviour
 	[Header("OldControls")]
 	public bool Waves = false;
 	public bool BridgeMeter = true;
+	public bool SingleUserSession = false;
+	public GameObject SimPlayer;
 
 	/*
 	public bool BridgeMeterSelf = true;
@@ -57,8 +59,7 @@ public class SessionManager : MonoBehaviour
 
 
 	[Header("Don't change")]
-	public bool SingleUserSession = false;
-    public GameObject SimPlayer;
+
 
     public GameObject[] activePlayers;
     bool otherInitialized = false;

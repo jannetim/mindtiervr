@@ -290,7 +290,7 @@ public class PlayerManager : NetworkBehaviour
 
 
             //FA COLOR definitions.
-            if ((!IsNPC && SessionManager.GetComponent<SessionManager>().RespSelf) || (SessionManager.GetComponent<SessionManager>().RespOther))
+            if ((!IsNPC && SessionManager.GetComponent<SessionManager>().EegSelf) || (SessionManager.GetComponent<SessionManager>().EegOther))
             {
                 if (SessionManager.GetComponent<SessionManager>().EegSelf)
                 {
