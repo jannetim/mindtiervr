@@ -18,6 +18,9 @@ public class TCPClientFA : MonoBehaviour
     // Use this for initialization
     public static bool running = true;
 
+	//public string StaticIP = "127.0.0.1";
+
+
 
 
     void Start()
@@ -29,6 +32,7 @@ public class TCPClientFA : MonoBehaviour
         //  GlobalClass.EDA = 1;
         SensorData.RespOut = 0f;
         SensorData.FAOut = 0f;
+
 
     }
 
@@ -83,6 +87,16 @@ public class TCPClientThreadFA
 	string StaticIP = "127.0.0.1";
 
 
+	// Added the start () here to pass the static IP address. Hopefull doesn't mess things up. AND IT DOESN' WORK.
+	void Start() {
+		if (PlayerPrefs.HasKey ("StaticIPStored")) {
+			StaticIP = PlayerPrefs.GetString ("StaticIPStored");
+			Debug.Log("Stored IP address loaded to TCPClient: " + StaticIP );
+		}
+	}
+
+
+
     public TCPClientThreadFA(TCPClientFA c)
     {
         openvibeClient = c;
@@ -101,13 +115,7 @@ public class TCPClientThreadFA
 
     public void myTCPClient()
     {
-  /*      if (PlayerPrefs.HasKey("StaticIPStored"))
-        {
-            StaticIP = PlayerPrefs.GetString("StaticIPStored");
-            Debug.Log(StaticIP + "from save");
-        }*/
-
-
+     
 
 
       //  float tmp_EDA = 0f;
@@ -124,7 +132,7 @@ public class TCPClientThreadFA
 
         //myClient.Connect("localhost", 9995);
         myClient.Connect(StaticIP, 9995);
-        Debug.Log("running tcp client2 - connecting");
+        Debug.Log("running tcp client2 - connecting to " + StaticIP);
 
         NetworkStream myClientStream = myClient.GetStream();
 

@@ -397,7 +397,7 @@ public void SetStaticIP(string value7) {
 			PlayerPrefs.SetString ("StaticIPStored", StaticIPString);
 			Debug.Log ("IP saved as: " + StaticIPString);
 		} else {
-			string arvo1 = "130.233.58.206";
+			string arvo1 = "127.0.0.1";
 			PlayerPrefs.SetString ("StaticIPStored", arvo1);			
 			PlayerPrefs.SetString ("StaticIPStored", StaticIPString);
 			Debug.Log ("Static IP: " + StaticIPString);

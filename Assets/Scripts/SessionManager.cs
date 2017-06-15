@@ -33,6 +33,7 @@ public class SessionManager : MonoBehaviour
 	public bool EegSelf = true;
 	public bool EegOther = true;
 	public bool RespOther = true;
+	public string StaticIPStored;
 	[Header("OldControls")]
 	public bool Waves = false;
 	public bool BridgeMeter = true;
@@ -64,6 +65,7 @@ public class SessionManager : MonoBehaviour
     public GameObject[] activePlayers;
     bool otherInitialized = false;
     public GameObject activePlayer;
+	public bool BeginEndFade;
 
     // Use this for initialization
 
@@ -100,6 +102,12 @@ public class SessionManager : MonoBehaviour
 					//if (SingleUserSession) { Debug.Log( "single user session");
 					//} else { Debug.Log ("multi user session");
 				}
+
+		if (PlayerPrefs.HasKey("StaticIPStored"))
+		{
+			StaticIPStored = PlayerPrefs.GetString("StaticIPStored");
+		
+		} else StaticIPStored = "127.0.0.1";
 
     //*/
 
@@ -176,7 +184,9 @@ public class SessionManager : MonoBehaviour
 	IEnumerator SessionTimer()
 	{
 		//Debug.Log ("Session Timer Launched");
-		yield return new WaitForSeconds(SessionLength);
+		yield return new WaitForSeconds(SessionLength-3f);
+		BeginEndFade = true;
+		yield return new WaitForSeconds(3f);
 		//Debug.Log ("return to main menu");
 		//NetworkManager nm = GameObject.Find("NetworkManager").GetComponent<NetworkManager>();
 		NetworkManager.singleton.StopHost();

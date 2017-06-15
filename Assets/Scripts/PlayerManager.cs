@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using UnityEngine.Networking;
+using System;
 
 public class PlayerManager : NetworkBehaviour
 {
@@ -12,6 +13,7 @@ public class PlayerManager : NetworkBehaviour
     public GameObject BridgeBars;
     public GameObject StatueAnimator;
 	public GameObject AuraAnimator;
+
 
     [SyncVar]
     public bool IsNPC = false;
@@ -51,20 +53,64 @@ public class PlayerManager : NetworkBehaviour
     bool breatheQueueCooldown = false;
 
     private NetworkIdentity objNetId;
+	public string sessionName;
+	//public Material UserStatue;
+	//public Material NPCStatue;
+	public GameObject[] PlayerStatues;
+	public CanvasGroup CameraFadeCanvas;
 
+
+	public Color SingleUserStatueColor = new Color (0.1f, 0.1f, 0.1f, 1f);
     // Use this for initialization
     void Start()
     {
-        SessionManager = GameObject.Find("Session Manager");
-        if (SessionManager.GetComponent<SessionManager>().SingleUserSession)
-        {
-            IsNPC = true;
-        }
-        
-        DataHolder = GameObject.Find("Data Holder");
+		SessionManager = GameObject.Find("Session Manager");
+		if (SessionManager.GetComponent<SessionManager>().SingleUserSession)
+		{
+			IsNPC = true;
+		}
 
-        SpawnPoint1 = GameObject.Find("Spawn Point 1");
-        SpawnPoint2 = GameObject.Find("Spawn Point 2");
+		// FINDING OBJECTS
+		DataHolder = GameObject.Find("Data Holder");
+		SpawnPoint1 = GameObject.Find("Spawn Point 1");
+		SpawnPoint2 = GameObject.Find("Spawn Point 2");
+		CameraFadeCanvas = GameObject.Find ("FadeCanvas").GetComponent<CanvasGroup>();
+
+		PlayerStatues = new GameObject[4];
+		PlayerStatues[0] = GameObject.Find("Statue_user1_MeshPart0");
+		PlayerStatues[1] = GameObject.Find("Statue_user1_MeshPart1");
+		PlayerStatues[2] = GameObject.Find("Statue_user2_MeshPart0");
+		PlayerStatues[3] = GameObject.Find("Statue_user2_MeshPart1");
+
+
+        
+
+		// CHANGING THINGS ACCORDING THE SESSIONS.
+
+		if (PlayerPrefs.HasKey ("Param_SessionID")) {
+			sessionName = PlayerPrefs.GetString ("Param_SessionID");		
+			//Debug.Log ("Session loaded:" + sessionName);
+		} else {sessionName =" ";}
+
+		if ((sessionName == "Session1") || (sessionName == "Session2") || (sessionName == "Session3")) {
+			GetComponent<PlayerFAScript>().UseSyncGlow = false;
+
+			try
+			{ 
+				for (int i = 0; i < PlayerStatues.Length; i++)
+				{
+					
+					PlayerStatues[i].GetComponent<Renderer>().material.color = SingleUserStatueColor;  //>().color = PlayerColor;
+
+
+				}
+			} catch (NullReferenceException e) {
+				Debug.Log("Statue Material color issue " + e);
+			}
+
+		}
+
+	
 
         //find out which player this one is, if it has not been set yet.
 
@@ -106,6 +152,8 @@ public class PlayerManager : NetworkBehaviour
             }
 
         }
+
+		StartCoroutine ("FadeToClear", 0.15f);
     }
 
 
@@ -553,9 +601,35 @@ public class PlayerManager : NetworkBehaviour
 				}*/
 			}
 		}
+
+		if (SessionManager.GetComponent<SessionManager> ().BeginEndFade) {
+			StartCoroutine ("FadeToBlack", 0.15f);
+		}
+
 	}
 
 
+
+
+	public IEnumerator FadeToBlack(float speed)
+	{
+		while (CameraFadeCanvas.alpha < 1f)
+		{
+			CameraFadeCanvas.alpha += speed * Time.deltaTime;
+
+			yield return null;
+		}
+	}
+
+	public IEnumerator FadeToClear(float speed)
+	{
+		while (CameraFadeCanvas.alpha > 0f)
+		{
+			CameraFadeCanvas.alpha -= speed * Time.deltaTime;
+
+			yield return null;
+		}
+	}
 
 
 
