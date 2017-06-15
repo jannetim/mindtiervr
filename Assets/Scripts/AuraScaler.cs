@@ -46,11 +46,6 @@ public class AuraScaler : NetworkBehaviour {
                 CmdScale();
             }
         } 
-
-
-
-
-		
 	}
 
     [Command]
@@ -62,6 +57,6 @@ public class AuraScaler : NetworkBehaviour {
     [ClientRpc]
     void RpcScale()
     {
-        this.transform.localScale = new Vector3(scalefactor, scalefactor, scalefactor);
+        transform.localScale = new Vector3(scalefactor, scalefactor, scalefactor);
     }
 }
