@@ -10,6 +10,7 @@ public class PlayerManager : NetworkBehaviour
 	
     public GameObject AuraExpander;
     public GameObject AuraController;
+	public GameObject AuraBone; //accessed by filewriter for recording aura scale.
     public GameObject BridgeBars;
     public GameObject StatueAnimator;
 	public GameObject AuraAnimator;
@@ -25,7 +26,7 @@ public class PlayerManager : NetworkBehaviour
     GameObject SpawnPoint2;
     public int PlayerNumber = 0;
     [SyncVar]
-    private float breatheNow = 9f;
+    public float breatheNow = 9f;
     [SyncVar]
     private float breathePast = 10f;
     private float respThreshold = 0f;
@@ -47,9 +48,10 @@ public class PlayerManager : NetworkBehaviour
 
     public bool RespChanged = true;
     float RespDataOld = 0f;
+	public float fasync;
 
     bool firstwaveset = false;
-    bool breatheCooldown = false;
+    public bool breatheCooldown = false;
     bool breatheQueueCooldown = false;
 
     private NetworkIdentity objNetId;
@@ -139,6 +141,7 @@ public class PlayerManager : NetworkBehaviour
                 BridgeBars = gameObject;
                 StatueAnimator = GameObject.Find("Statue_Player1");
 				AuraAnimator = GameObject.Find("AuraNew_Player1");
+				AuraBone = GameObject.Find("AuraBone1");
             }
             else
             {
@@ -149,6 +152,7 @@ public class PlayerManager : NetworkBehaviour
                 BridgeBars = gameObject;
                 StatueAnimator = GameObject.Find("Statue_Player2");
 				AuraAnimator = GameObject.Find("AuraNew_Player2");
+				AuraBone = GameObject.Find("AuraBone2");
             }
 
         }
@@ -347,7 +351,7 @@ public class PlayerManager : NetworkBehaviour
                 }
                 else
                 {
-                    AuraController.GetComponent<PlayerFAScript>().PlayerFA_Display = 0.2f;
+                    AuraController.GetComponent<PlayerFAScript>().PlayerFA_Display = 0.2f; 
                 }
             }
 
@@ -379,7 +383,7 @@ public class PlayerManager : NetworkBehaviour
 
 
 			// calculate the synchronicity of FA.
-			float fasync = Mathf.Abs (PlayerFA - otherPlayerFA);  
+			fasync = Mathf.Abs (PlayerFA - otherPlayerFA);  
 			//print(PlayerFA + "  " + otherPlayerFA + "   " + fasync);
 
 
@@ -635,7 +639,7 @@ public class PlayerManager : NetworkBehaviour
 
     IEnumerator CoolDown()
     {
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(1.0f); //file writing is once per second, this
         breatheCooldown = false;
     }
 

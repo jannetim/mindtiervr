@@ -39,6 +39,7 @@ public class PlayerFAScript : NetworkBehaviour
     private GameObject BridgeLayers;
 
 	public string sessionName;
+	public float fasync;
 
     // Use this for initialization
     void Start()
@@ -144,7 +145,7 @@ public class PlayerFAScript : NetworkBehaviour
 
 			if (UseSyncGlow) { 
 				// calculates the sync, 0 -> sync and 1 -> !sync 
-				float fasync = Mathf.Abs (PlayerFA_Display - OtherFA);
+				fasync = Mathf.Abs (PlayerFA_Display - OtherFA);
 
 
 				// Lower emission saturation according to FA-level when FA-levels in sync

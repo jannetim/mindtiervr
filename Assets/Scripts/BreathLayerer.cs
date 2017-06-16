@@ -13,6 +13,7 @@ public class BreathLayerer : NetworkBehaviour
     public GameObject Player;
     public GameObject OtherPlane;
     public GameObject Plane, Plane2;
+	public bool SyncHappened = false;
     [Range(0, 1)]
     public float PlaneTransparency = 0.2f;
     private float origAlpha;
@@ -110,6 +111,7 @@ public class BreathLayerer : NetworkBehaviour
         }
         planeColor = Player.GetComponent<PlayerFAScript>().PlayerColor;
     }
+
 
     IEnumerator Fades()
     {
@@ -222,14 +224,26 @@ public class BreathLayerer : NetworkBehaviour
         StartCoroutine("SyncGlow");
     }
 
+	IEnumerator SyncHappenedCheck(){   // filewriter checks the variable changed here.
+		
+		yield return new WaitForSeconds(1.0f);
+		SyncHappened = false;
+	
+	
+	}
+
+
     IEnumerator SyncGlow()
     {
         yield return StartCoroutine("SyncGlowIn");
+		StartCoroutine ("SyncHappenedCheck");
         yield return StartCoroutine("SyncGlowOut");
+
     }
 
     IEnumerator SyncGlowIn()
     {
+		SyncHappened = true;
         Color colorOwn = Plane.GetComponent<Renderer>().material.color;
         Color color2 = Plane2.GetComponent<Renderer>().material.color;
 

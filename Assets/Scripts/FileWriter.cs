@@ -21,6 +21,17 @@ public class FileWriter : MonoBehaviour {
 	string sessionName;
 
 
+
+	float PlayerFAread = 0f;
+	float PlayerRespRead = 0f;
+	float PlayerColorvalue = 0f;
+	float PlayerColorSynchronicity = 0f;  
+	float PlayerAuraSize = 0f;
+	float PlayerBreathingSent = 0f;
+	float BreathingSynchroncity= 0f; 
+
+
+
 	// Use this for initialization
 	void Start () {
 		if (PlayerPrefs.HasKey ("SaveFileNameStored")) {
@@ -41,13 +52,103 @@ public class FileWriter : MonoBehaviour {
 void FixedUpdate () {
 		//File Writing happens here.
 
+		switch (sessionName) {
+		case "Session1":  //no adaptation, solo.
+			PlayerFAread = 0f;
+			PlayerColorvalue = 0f;
+			PlayerColorSynchronicity = 0f;  
+
+			PlayerRespRead = 0f;
+			PlayerAuraSize = 0f;
+			PlayerBreathingSent = 0f;
+			BreathingSynchroncity = 0f; 
+			break;
+
+		case "Session2": //breathing, solo
+			PlayerFAread = 0f;
+			PlayerColorvalue = 0f;
+			PlayerColorSynchronicity = 0f;  
+
+			PlayerRespRead = GetComponent<PlayerManager> ().breatheNow;
+			PlayerAuraSize = GetComponent<PlayerManager> ().AuraBone.transform.localScale.x;
+
+			if (GetComponent<PlayerManager> ().breatheCooldown) {
+				PlayerBreathingSent = 1f;
+			} else {
+				PlayerBreathingSent = 0f;
+			} // is it ok to check if breathe Coold down is active? maybe. It lasts for 1s. Is there are chance to miss one? 
+			BreathingSynchroncity = 0f; 
+			break;
+
+		case "Session3": //eeg, solo.
+			PlayerFAread = GetComponent<PlayerManager> ().PlayerFA;
+			PlayerColorvalue = GetComponent<PlayerFAScript> ().PlayerFA_Display;
+			PlayerColorSynchronicity = 0f; 
+
+			PlayerRespRead = 0f;
+			PlayerAuraSize = 0f;
+			PlayerBreathingSent = 0f;
+			BreathingSynchroncity = 0f; 
+			break;
+
+		case "Session4": //nothing adapts, dyad
+			PlayerFAread = 0f;
+			PlayerColorvalue = 0f;
+			PlayerColorSynchronicity = 0f; 
+
+			PlayerRespRead = 0f;
+			PlayerAuraSize = 0f;
+			PlayerBreathingSent = 0f;
+			BreathingSynchroncity = 0f; 
+			break;
+
+		case "Session5": // breathing, dyad - breathing synchronisity possible
+			PlayerFAread = 0f;
+			PlayerColorvalue = 0f;
+			PlayerColorSynchronicity = 0f;  
+
+			PlayerRespRead = GetComponent<PlayerManager> ().breatheNow;
+			PlayerAuraSize = GetComponent<PlayerManager> ().AuraBone.transform.localScale.x;
+
+			if (GetComponent<PlayerManager> ().breatheCooldown) {
+				PlayerBreathingSent = 1f;
+			} else {
+				PlayerBreathingSent = 0f;
+			}
+		
+	
+			if (GetComponent<BreathLayerer> ().SyncHappened) {
+				BreathingSynchroncity = 1f;
+			} else {
+				BreathingSynchroncity = 0f;
+			}
+		break;
+
+		case "Session6": //eeg dyad - bridge sides synchronisity possible
+		PlayerFAread = GetComponent<PlayerManager>().PlayerFA;
+		 PlayerColorvalue = GetComponent<PlayerFAScript>().PlayerFA_Display;
+		 PlayerColorSynchronicity =GetComponent<PlayerFAScript>().fasync;  // effect happens when this is <0.1;
+
+	   	PlayerRespRead = 0f;
+		 PlayerAuraSize = 0f;
+		 PlayerBreathingSent = 0f;
+		 BreathingSynchroncity= 0f; 
+		break;
+		}
+
+
+
+
+
+
+
 
 		path1 = System.Environment.GetFolderPath (System.Environment.SpecialFolder.Desktop) + "/MindTierData";
 		path2 = path1 + "/" + SaveFileName;
 
 
 		//only write the file once the start timer has ended.
-		if (GetComponent<SessionManager>().StartTimerDone) {
+		if (GameObject.Find("Session Manager").GetComponent<SessionManager>().StartTimerDone) {
 
 			writeTimer += Time.deltaTime;  		//data is written on a frequencey, default, once per second.
 			if (writeTimer > FileWriteFreq) {  
@@ -65,12 +166,23 @@ void FixedUpdate () {
 					saveTimeNow = System.DateTime.Now;				
 					saveTimeNow.ToString ("yyyyMMddHHmmss");
 
-					headerToWrite = "Starting recording a new test: " + sessionName  +" "+ saveTimeNow + Environment.NewLine;//+ " " + simulationToWrite ;
+					headerToWrite = "Starting recording a new test: " + sessionName  +" "+ saveTimeNow + Environment.NewLine + 
+						"Format: DateTime, EegRead, User FA Color, Color Sync, Resp MovingAverage, User AuraSize, Resp. Bar Sent, Resp. Bar Sync" + Environment.NewLine; //+ " " + simulationToWrite ;
 					//			Debug.Log (headerToWrite);
 					System.IO.File.AppendAllText (path2, headerToWrite);
 					headerWritten = true;
 
 				} else {  //HERE we write actual data
+
+					var tmpPlayerFAread = PlayerFAread.ToString ();
+					var tmpPlayerColorvalue = PlayerColorvalue.ToString ();;
+					var tmpPlayerColorSynchronicity = PlayerColorSynchronicity.ToString (); 
+
+					var tmpPlayerRespRead = PlayerRespRead.ToString ();
+					var tmpPlayerAuraSize = PlayerAuraSize.ToString ();
+					var tmpPlayerBreathingSent = PlayerBreathingSent.ToString ();
+					var tmpBreathingSynchroncity= BreathingSynchroncity.ToString (); 
+
 
 					saveTimeNow = System.DateTime.Now;
 					saveTimeNow.ToString ("HHmmss");
@@ -78,8 +190,17 @@ void FixedUpdate () {
 					//var heightTemp = AdaptationLevitationHeight.ToString ();
 					//var whiteTemp = AdaptationBubbleStrength.ToString ();
 
-					stateToWrite = sessionName + " " + saveTimeNow + Environment.NewLine;//+ " "+ heightTemp + " " + whiteTemp + simulationToWrite 
-					//		Debug.Log (MeditationTestType + path2 + stateToWrite);
+					stateToWrite = 
+						saveTimeNow + ","+ 
+						tmpPlayerFAread + ","+
+						tmpPlayerColorvalue + ","+
+						tmpPlayerColorSynchronicity + ","+
+						tmpPlayerRespRead + ","+
+						tmpPlayerAuraSize + ","+
+						tmpPlayerBreathingSent + ","+
+						tmpBreathingSynchroncity + 
+						Environment.NewLine;
+					
 					System.IO.File.AppendAllText (path2, stateToWrite);
 				}
 
