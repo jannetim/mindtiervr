@@ -21,6 +21,7 @@ public class PlayerFAScript : NetworkBehaviour
     [SyncVar]
     public float PlayerFA_Display = 0.0f;
     //public float PlayerFA_adjusted;
+    [SyncVar]
     public float OtherFA = 0.0f;
     [SyncVar]
     public Color AuraColor;
@@ -34,7 +35,7 @@ public class PlayerFAScript : NetworkBehaviour
     bool flickerV;
     private NetworkIdentity objNetId;
     [SyncVar]
-    private int playerNumber;
+    public int playerNumber;
 
     private GameObject BridgeLayers;
 
@@ -109,7 +110,15 @@ public class PlayerFAScript : NetworkBehaviour
                 return;
             }
         }
-        
+
+        foreach (GameObject player in GameObject.FindGameObjectsWithTag("Player"))
+        {
+            if (player.GetComponent<PlayerFAScript>().playerNumber != playerNumber)
+            {
+                OtherFA = player.GetComponent<PlayerFAScript>().PlayerFA_Display;
+            }
+        }
+
 		//color changes and synchronising the sides are only done if EegSelf is active.
 		if (GameObject.Find ("Session Manager").GetComponent<SessionManager> ().EegSelf) {
 			
@@ -147,11 +156,11 @@ public class PlayerFAScript : NetworkBehaviour
 				// calculates the sync, 0 -> sync and 1 -> !sync 
 				fasync = Mathf.Abs (PlayerFA_Display - OtherFA);
 
-
-				// Lower emission saturation according to FA-level when FA-levels in sync
-
-				if (fasync < 0.1) {
-					if (glowS > 0.75f && !flickerS) {
+				// Lower and flickering emission saturation according to FA-level when FA-levels in sync
+				if (fasync < 0.1)
+                {
+                    //Debug.Log("IN SYNC " + fasync);
+                    if (glowS > 0.75f && !flickerS) {
 						glowS -= 0.001f;
 					} else {
 						flickerS = true;
@@ -173,12 +182,15 @@ public class PlayerFAScript : NetworkBehaviour
 					} else {
 						flickerV = false;
 					}
-				} else {
+				}
+                // When falls out of sync, incrementally raise saturation to maximum
+                else
+                {
 					auraV = 0.5f - fasync * 2f;
 					if (auraV <= 0f) {
 						auraV = 0f;
 					}
-					// When falls out of sync, incrementally rise saturation to maximum
+					
 					if (glowS < 1) {
 						glowS += 0.05f;
 					}

@@ -48,7 +48,6 @@ public class PlayerManager : NetworkBehaviour
 
     public bool RespChanged = true;
     float RespDataOld = 0f;
-	public float fasync;
 
     bool firstwaveset = false;
     public bool breatheCooldown = false;
@@ -356,38 +355,6 @@ public class PlayerManager : NetworkBehaviour
             }
 
 
-            /*
-            if (!IsNPC) {
-
-				if (SessionManager.GetComponent<SessionManager> ().EegSelf) {
-					AuraController.GetComponent<PlayerFAScript> ().PlayerFA_Display = PlayerFA;
-			
-				} else {
-					AuraController.GetComponent<PlayerFAScript> ().PlayerFA_Display = 0.2f;
-				}
-			} else {
-				if (SessionManager.GetComponent<SessionManager> ().EegOther) {
-					AuraController.GetComponent<PlayerFAScript> ().PlayerFA_Display = PlayerFA;
-				} else {
-					AuraController.GetComponent<PlayerFAScript> ().PlayerFA_Display = 0.2f;
-				}
-
-			}*/
-
-			float otherPlayerFA = otherPlayerManager.GetComponent<PlayerFAScript> ().PlayerFA_Display;
-			AuraController.GetComponent<PlayerFAScript> ().OtherFA = otherPlayerFA;
-			//AuraController.GetComponent<PlayerFAScript>().PlayerFA_Display = PlayerFA;
-
-
-
-
-
-			// calculate the synchronicity of FA.
-			fasync = Mathf.Abs (PlayerFA - otherPlayerFA);  
-			//print(PlayerFA + "  " + otherPlayerFA + "   " + fasync);
-
-
-
 
 // RESPIRATION CONTROLS START HERE
         
@@ -410,21 +377,6 @@ public class PlayerManager : NetworkBehaviour
                         CmdAnimateStatue(false);
                     }
                 }
-
-                /*
-                if (!IsNPC) {
-				
-					if (SessionManager.GetComponent<SessionManager> ().RespSelf) {
-						StatueAnimator.GetComponent<Animator> ().SetTrigger ("StartOut");
-						//Debug.Log ("Player " + PlayerNumber + " breathing out");
-					}
-				} else {
-					if (SessionManager.GetComponent<SessionManager> ().RespOther) {
-						StatueAnimator.GetComponent<Animator> ().SetTrigger ("StartOut");
-						//Debug.Log ("NPC " + PlayerNumber + " breathing out");
-					}
-				}	*/
-            
 
 
 				// WAVE EFFECT
@@ -456,43 +408,7 @@ public class PlayerManager : NetworkBehaviour
                         
                 }
 
-                /*
-                if (!IsNPC) {
-
-					if (SessionManager.GetComponent<SessionManager> ().RespSelf) {
-						//if ((SessionManager.GetComponent<SessionManager> ().BridgeMeterSelf)) {
-
-						if (firstwaveset && !breatheCooldown) {
-							breatheCooldown = true;
-							Debug.Log ("user breathing wave sent");
-							BridgeBars.GetComponent<BreathLayerer> ().InitBreatheBar ();
-							Debug.Log ("Player " + PlayerNumber + " breathing bar sent");
-							//	Debug.Log (PlayerNumber + ": " + breathePast + " " + breatheNow);
-							StartCoroutine ("CoolDown");
-
-						} else
-							firstwaveset = true;
-					}
-				} else {
-					if (SessionManager.GetComponent<SessionManager> ().RespOther) {
-						//if ((SessionManager.GetComponent<SessionManager> ().BridgeMeterSelf)) {
-
-						if (firstwaveset && !breatheCooldown) {
-							breatheCooldown = true;
-							Debug.Log ("user breathing wave sent");
-							BridgeBars.GetComponent<BreathLayerer> ().InitBreatheBar ();
-							Debug.Log ("NPC " + PlayerNumber + " breathing bar sent");
-							//	Debug.Log (PlayerNumber + ": " + breathePast + " " + breatheNow);
-							StartCoroutine ("CoolDown");
-
-						} else
-							firstwaveset = true;
-					}
-				}*/
-
-
 				outBreathContinues = true;
-
 				inBreathContinues = false;
 
 
@@ -514,20 +430,6 @@ public class PlayerManager : NetworkBehaviour
                         CmdScaleAuraExpand(false);
                     }
                 }
-                /*
-				if (!IsNPC) {
-
-					if ((SessionManager.GetComponent<SessionManager> ().RespSelf)) {//if auraefekti on päällä
-						AuraExpander.GetComponent<AuraScaler> ().expand = false;
-					}
-
-				} else {
-
-					if ((SessionManager.GetComponent<SessionManager> ().RespOther)) {//if auraefekti on päällä
-						AuraExpander.GetComponent<AuraScaler> ().expand = false;
-					}
-
-				}*/
             }
 
 
@@ -549,27 +451,9 @@ public class PlayerManager : NetworkBehaviour
                     }
                 }
 
-                /*
-                if (!IsNPC) {
-
-					if (SessionManager.GetComponent<SessionManager> ().RespSelf) {
-						StatueAnimator.GetComponent<Animator> ().SetTrigger ("StartIn");
-						//Debug.Log ("breath out animtrigger sent");
-					}
-				} else {
-					if (SessionManager.GetComponent<SessionManager> ().RespOther) {
-						StatueAnimator.GetComponent<Animator> ().SetTrigger ("StartIn");
-					}
-
-				}*/
-
 				outBreathContinues = false;
 				inBreathContinues = true;
 
-				//		if (SessionManager.GetComponent<SessionManager>().StatueBreathingSelf){
-				//			StatueAnimator.GetComponent<Animator>().SetTrigger("StartIn");}
-
-          
 			}
 
 
@@ -588,21 +472,6 @@ public class PlayerManager : NetworkBehaviour
                         CmdScaleAuraExpand(true);
                     }
                 }
-
-                /*
-				if (!IsNPC) {
-
-					if ((SessionManager.GetComponent<SessionManager> ().RespSelf)) {//if auraefekti on päällä
-						AuraExpander.GetComponent<AuraScaler> ().expand = true;
-                    }
-
-				} else {
-
-					if ((SessionManager.GetComponent<SessionManager> ().RespOther)) {//if auraefekti on päällä
-                        AuraExpander.GetComponent<AuraScaler> ().expand = true;
-					}
-
-				}*/
 			}
 		}
 
