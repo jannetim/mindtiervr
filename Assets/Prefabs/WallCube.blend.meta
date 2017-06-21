@@ -1,6 +1,6 @@
 fileFormatVersion: 2
-guid: b555ff10d7c184727930aad3ecd827ed
-timeCreated: 1497557722
+guid: f6e7abe3c44e649af937b975a766dc87
+timeCreated: 1497987111
 licenseType: Pro
 ModelImporter:
   serializedVersion: 21
@@ -9,8 +9,7 @@ ModelImporter:
     400000: //RootNode
     2300000: //RootNode
     3300000: //RootNode
-    4300000: Cube
-    4300002: Roof_vault
+    4300000: WallCube
     7400000: Default Take
     9500000: //RootNode
   materials:
