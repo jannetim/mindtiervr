@@ -10,13 +10,22 @@ public class BaseLineManager : MonoBehaviour {
 	bool BeginEndFade = false;
 	float StartTimerLength = 10f;
 	CanvasGroup CameraFadeCanvas;
+	string sessionID;
 
 
 	void Awake() { 
 		//*//  
 		//Loading parameters from the playerrefs.
-		if (PlayerPrefs.HasKey ("Param_BaseLineDuration")) {
-			BaseLineDuration = PlayerPrefs.GetFloat ("Param_BaseLineDuration");		
+		if (PlayerPrefs.HasKey ("Param_SessionID")) {
+			sessionID = PlayerPrefs.GetString("Param_SessionID");	
+
+			if (sessionID == "Session0") {
+				BaseLineDuration = 600f;
+				
+			} else {
+				BaseLineDuration = 120f;
+			}
+
 			//if (SingleUserSession) { Debug.Log( "single user session");
 			//} else { Debug.Log ("multi user session");
 		}
@@ -42,19 +51,24 @@ public class BaseLineManager : MonoBehaviour {
 	}
 
 		IEnumerator SessionTimer()
-		{
-			//Debug.Log ("Session Timer Launched");
-			yield return new WaitForSeconds(BaseLineDuration-3f);
-			BeginEndFade = true;
-			yield return new WaitForSeconds(3f);
-			//Debug.Log ("return to main menu");
-			//NetworkManager nm = GameObject.Find("NetworkManager").GetComponent<NetworkManager>();
+	{
+		//Debug.Log ("Session Timer Launched");
+		yield return new WaitForSeconds (BaseLineDuration - 3f);
+		BeginEndFade = true;
+		yield return new WaitForSeconds (3f);
+		//Debug.Log ("return to main menu");
+		//NetworkManager nm = GameObject.Find("NetworkManager").GetComponent<NetworkManager>();
 		//	NetworkManager.singleton.StopHost();
-			//NetworkManager.Shutdown();
+		//NetworkManager.Shutdown();
 
 
+		if (sessionID == "Session0") {
+			Application.LoadLevel (0);
+		} else {
 			Application.LoadLevel (1);
 		}
+	}
+
 
 		IEnumerator StartTimer()
 		{

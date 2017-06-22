@@ -134,6 +134,53 @@ void FixedUpdate () {
 		 PlayerBreathingSent = 0f;
 		 BreathingSynchroncity= 0f; 
 		break;
+
+		case "Session7": // breathing & eeg solo - breathing synchronisity possible
+			PlayerFAread = GetComponent<PlayerManager>().PlayerFA;
+			PlayerColorvalue = GetComponent<PlayerFAScript>().PlayerFA_Display;
+			PlayerColorSynchronicity =GetComponent<PlayerFAScript>().fasync;  // effect happens when this is <0.1;
+
+			PlayerRespRead = GetComponent<PlayerManager> ().breatheNow;
+			PlayerAuraSize = GetComponent<PlayerManager> ().AuraBone.transform.localScale.x;
+
+			if (GetComponent<PlayerManager> ().breatheCooldown) {
+				PlayerBreathingSent = 1f;
+			} else {
+				PlayerBreathingSent = 0f;
+			}
+
+
+			if (GetComponent<BreathLayerer> ().SyncHappened) {
+				BreathingSynchroncity = 1f;
+			} else {
+				BreathingSynchroncity = 0f;
+			}
+			break;
+
+		
+		case "Session8": // breathing & eeg dyad - breathing synchronisity possible
+			PlayerFAread = GetComponent<PlayerManager>().PlayerFA;
+			PlayerColorvalue = GetComponent<PlayerFAScript>().PlayerFA_Display;
+			PlayerColorSynchronicity =GetComponent<PlayerFAScript>().fasync;  // effect happens when this is <0.1;
+
+			PlayerRespRead = GetComponent<PlayerManager> ().breatheNow;
+			PlayerAuraSize = GetComponent<PlayerManager> ().AuraBone.transform.localScale.x;
+
+			if (GetComponent<PlayerManager> ().breatheCooldown) {
+				PlayerBreathingSent = 1f;
+			} else {
+				PlayerBreathingSent = 0f;
+			}
+
+
+			if (GetComponent<BreathLayerer> ().SyncHappened) {
+				BreathingSynchroncity = 1f;
+			} else {
+				BreathingSynchroncity = 0f;
+			}
+			break;
+
+
 		}
 
 
