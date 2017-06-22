@@ -34,9 +34,10 @@ public class BaseLineManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-			CameraFadeCanvas = GameObject.Find ("FadeCanvas").GetComponent<CanvasGroup>();
+		   
 			StartCoroutine ("SessionTimer");
 			StartCoroutine ("StartTimer");
+		    CameraFadeCanvas = GameObject.Find("Main Camera").gameObject.GetComponent<CanvasGroup>();
 			StartCoroutine ("FadeToClear", 0.15f);
 		
 	}
@@ -92,9 +93,11 @@ public class BaseLineManager : MonoBehaviour {
 			while (CameraFadeCanvas.alpha > 0f)
 			{
 				CameraFadeCanvas.alpha -= speed * Time.deltaTime;
+				
 
 				yield return null;
 			}
+		Debug.Log ("Fading to Clear");
 		}
 
 

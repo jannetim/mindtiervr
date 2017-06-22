@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 
 public class SessionManager : MonoBehaviour
 {
@@ -34,6 +35,7 @@ public class SessionManager : MonoBehaviour
 	public bool EegOther = true;
 	public bool RespOther = true;
 	public string StaticIPStored;
+	public bool TwoUserSession = true;
 	[Header("OldControls")]
 	public bool Waves = false;
 	public bool BridgeMeter = true;
@@ -61,11 +63,12 @@ public class SessionManager : MonoBehaviour
 
 	[Header("Don't change")]
 
-
+	bool bothPlayersIn = false;
     public GameObject[] activePlayers;
     bool otherInitialized = false;
     public GameObject activePlayer;
 	public bool BeginEndFade;
+	bool countdownIntitialized = false;
 
     // Use this for initialization
 
@@ -116,8 +119,7 @@ public class SessionManager : MonoBehaviour
 
 
 	void Start(){
-		StartCoroutine ("SessionTimer");
-		StartCoroutine ("StartTimer");
+
 	}
 
 
@@ -125,6 +127,14 @@ public class SessionManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+		Debug.Log ("number of users:" + NetworkServer.connections.Count); 
+		if ((TwoUserSession) && (NetworkServer.connections.Count == 2) && (!countdownIntitialized))
+		{
+			StartCoroutine ("SessionTimer");
+			StartCoroutine ("StartTimer");
+			countdownIntitialized = true;
+
+		}
 
 
 
@@ -179,6 +189,11 @@ public class SessionManager : MonoBehaviour
 
 
         if (Input.GetKeyDown(KeyCode.I)) { SimPlayer.SetActive(true); }
+		if (Input.GetKeyDown(KeyCode.Alpha1)) { SceneManager.LoadScene (0); }
+		if (Input.GetKeyDown(KeyCode.Alpha2)) { SceneManager.LoadScene (1); }
+		if (Input.GetKeyDown(KeyCode.Alpha3)) { SceneManager.LoadScene (2); }
+		if (Input.GetKeyDown (KeyCode.Alpha4)) { SceneManager.LoadScene (3);}
+
     }
 
 	IEnumerator SessionTimer()
@@ -193,7 +208,7 @@ public class SessionManager : MonoBehaviour
 		//NetworkManager.Shutdown();
 
 
-		Application.LoadLevel (0);
+		SceneManager.LoadScene (0);
 	}
 
 	IEnumerator StartTimer()

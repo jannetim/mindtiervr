@@ -62,6 +62,7 @@ public class PlayerManager : NetworkBehaviour
 	public CanvasGroup CameraFadeCanvas;
 	public Canvas CameraFaderTmp;
 
+	public int numberOfUsers = 0;
 
 
 	public Color SingleUserStatueColor = new Color (0.1f, 0.1f, 0.1f, 1f);
@@ -180,6 +181,11 @@ public class PlayerManager : NetworkBehaviour
                 return;
             }
         }
+
+
+		//here we find if we have two users present.
+		if (Network.connections.Length >= 2) {
+		numberOfUsers = 2;} else {numberOfUsers = 1;}
 
 
 
