@@ -45,9 +45,9 @@ public class BaseLineManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-			if (BeginEndFade) {
+		/*	if (BeginEndFade) {
 				StartCoroutine ("FadeToBlack", 0.15f);
-			}
+			}*/
 		
 	}
 
@@ -79,25 +79,28 @@ public class BaseLineManager : MonoBehaviour {
 		}
 
 		public IEnumerator FadeToBlack(float speed)
-		{
+		{/*
 			while (CameraFadeCanvas.alpha < 1f)
 			{
 				CameraFadeCanvas.alpha += speed * Time.deltaTime;
 
-				yield return null;
-			}
-		}
+				
+			}*/
+        yield return null;
+    }
 
 		public IEnumerator FadeToClear(float speed)
 		{
+        /*
 			while (CameraFadeCanvas.alpha > 0f)
 			{
 				CameraFadeCanvas.alpha -= speed * Time.deltaTime;
 				
 
 				yield return null;
-			}
-		Debug.Log ("Fading to Clear");
+			}*/
+        yield return null;
+        Debug.Log ("Fading to Clear");
 		}
 
 
