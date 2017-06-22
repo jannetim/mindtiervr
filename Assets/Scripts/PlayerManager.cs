@@ -184,8 +184,8 @@ public class PlayerManager : NetworkBehaviour
 
 
 		//here we find if we have two users present.
-		if (Network.connections.Length >= 2) {
-		numberOfUsers = 2;} else {numberOfUsers = 1;}
+	//	if (Network.connections.Length >= 2) {
+	//	numberOfUsers = 2;} else {numberOfUsers = 1;}
 
 
 
