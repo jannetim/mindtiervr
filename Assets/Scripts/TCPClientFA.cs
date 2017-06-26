@@ -18,9 +18,6 @@ public class TCPClientFA : MonoBehaviour
     // Use this for initialization
     public static bool running = true;
 
-	//public string StaticIP = "127.0.0.1";
-
-
 
 
     void Start()
@@ -33,7 +30,6 @@ public class TCPClientFA : MonoBehaviour
         SensorData.RespOut = 0f;
         SensorData.FAOut = 0f;
 
-
     }
 
 
@@ -44,16 +40,14 @@ public class TCPClientFA : MonoBehaviour
         {
             //Debug.Log("Eyecoordinates are: " + GlobalClass.eyeCoordinate_x + " " + GlobalClass.eyeCoordinate_y);
             doit = false;
-			SensorData.RespOut = 1f;
-			SensorData.FAOut = 1f;
+            SensorData.RespOut = 1f;
+            SensorData.FAOut = 1f;
         }
     }
     void OnApplicationQuit()
     {
         Debug.Log("Application quit");
         running = false;
-
-        // remember to destroy the tcpthread after everything else is fixed
     }
     void OnDestroy()
     {
@@ -83,18 +77,8 @@ public class TCPClientThreadFA
 
     float faRange = 0.01f;
 
-
-	string StaticIP = "127.0.0.1";
-
-
-	// Added the start () here to pass the static IP address. Hopefull doesn't mess things up. AND IT DOESN' WORK.
-	void Start() {
-		if (PlayerPrefs.HasKey ("StaticIPStored")) {
-			StaticIP = PlayerPrefs.GetString ("StaticIPStored");
-			Debug.Log("Stored IP address loaded to TCPClient: " + StaticIP );
-		}
-	}
-
+    string StaticIP = "127.0.0.1";
+    //string StaticIP = "130.223.58.224";
 
 
     public TCPClientThreadFA(TCPClientFA c)
@@ -115,10 +99,16 @@ public class TCPClientThreadFA
 
     public void myTCPClient()
     {
-     
+        /*      if (PlayerPrefs.HasKey("StaticIPStored"))
+              {
+                  StaticIP = PlayerPrefs.GetString("StaticIPStored");
+                  Debug.Log(StaticIP + "from save");
+              }*/
 
 
-      //  float tmp_EDA = 0f;
+
+
+        //  float tmp_EDA = 0f;
         string input, stringData;
         byte[] message = new byte[128];
         int bytesRead;
@@ -128,11 +118,11 @@ public class TCPClientThreadFA
 
 
         myClient = new TcpClient();
-		Debug.Log ("new client object created");
+        Debug.Log("new client object created");
 
         //myClient.Connect("localhost", 9995);
         myClient.Connect(StaticIP, 9995);
-        Debug.Log("running tcp client2 - connecting to " + StaticIP);
+        Debug.Log("running tcp client2 - connecting");
 
         NetworkStream myClientStream = myClient.GetStream();
 
@@ -141,10 +131,12 @@ public class TCPClientThreadFA
             Debug.Log("running tcp client3");
             bytesRead = 0;
             Debug.Log("running tcp client4");
+
             try
             {
 
                 bytesRead = myClientStream.Read(message, 0, 128);
+                Debug.Log("reading stream");
 
             }
             catch (Exception e)
@@ -180,8 +172,7 @@ public class TCPClientThreadFA
                 respiration = (float)Convert.ToDouble(words[2]);
 
                 frontalAss = Mathf.Log(alphaRight) - Mathf.Log(alphaLeft);
-                Debug.Log("frontal assymmetry: " + frontalAss + ", alphaRight: " + alphaRight + ", alphaLeft: " + alphaLeft);
-                Debug.Log("Log right " + Mathf.Log(alphaRight) + ", log left: " + Mathf.Log(alphaLeft));
+
                 Debug.Log("Breathing value: " + SensorData.RespOut);
 
 
@@ -214,10 +205,8 @@ public class TCPClientThreadFA
                 }
                 else
                 {
-
-                    SensorData.FAOut = 1f;
-                    //SensorData.FAOut = (frontalAss - faMin) / faRange;
-                    SensorData.RespOut = respiration;// - prevRespiration;
+                    SensorData.FAOut = (frontalAss - faMin) / faRange;
+                    SensorData.RespOut = respiration - prevRespiration;
                 }
 
                 if (initSteps == 1)

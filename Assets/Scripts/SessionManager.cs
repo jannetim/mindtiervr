@@ -128,7 +128,7 @@ public class SessionManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-		Debug.Log ("number of users:" + NetworkServer.connections.Count); 
+	//	Debug.Log ("number of users:" + NetworkServer.connections.Count); 
 		if ((TwoUserSession) && (NetworkServer.connections.Count == 2) && (!countdownIntitialized))
 		{
 			
