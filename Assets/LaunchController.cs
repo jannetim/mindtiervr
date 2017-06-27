@@ -4,16 +4,16 @@ using System.Collections.Generic;
 using UnityEngine.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.Networking;
 
-public class LaunchController : MonoBehaviour {
+
+public class LaunchController2 : MonoBehaviour {
 
 	string StaticIPString;
 	string SaveFileName;
 	//public InputField FilaNameInput;
 	public Text IpInput_field;
 	public Text FileName_field;
-
+	bool HostComputer = true;
 
 	// Use this for initialization
 	void Start () {
@@ -36,17 +36,27 @@ public class LaunchController : MonoBehaviour {
 			//} else { Debug.Log ("multi user session");
 		}
 
+		if (PlayerPrefs.HasKey ("Param_HostOrNot")) {
+			HostComputer = PlayerPrefsX.GetBool ("Param_HostOrNot");
+		} else {
+			bool b = HostComputer;
+			PlayerPrefsX.SetBool ("Param_HostOrNot", b);
+
+		}
+		GameObject.Find("HostClientToggle").GetComponent<Toggle>().isOn = HostComputer;
+
+
 
 
 	}
-	
+
 	// Update is called once per frame
 	void FixedUpdate () {
-	/*	if (Input.GetKeyDown(KeyCode.Alpha1)) { SceneManager.LoadScene (0); }
+		/*	if (Input.GetKeyDown(KeyCode.Alpha1)) { SceneManager.LoadScene (0); }
 		if (Input.GetKeyDown(KeyCode.Alpha2)) { SceneManager.LoadScene (1); }
 		if (Input.GetKeyDown(KeyCode.Alpha3)) { SceneManager.LoadScene (2); }
 		if (Input.GetKeyDown (KeyCode.Alpha4)) { SceneManager.LoadScene (3);}*/
-		
+
 	}
 
 	public  void LaunchSession0(){
@@ -62,11 +72,11 @@ public class LaunchController : MonoBehaviour {
 
 
 		Debug.Log ("Session0 parameters loaded - long baseline");
-        SceneManager.LoadScene (2);
+		SceneManager.LoadScene (2);
 	}
 
 
-// session 1, one user, no adaptations.
+	// session 1, one user, no adaptations.
 	public  void LaunchSession1(){
 		if (PlayerPrefs.HasKey ("Param_SingleUserSession")) {
 			PlayerPrefsX.SetBool ("Param_SingleUserSession", false);
@@ -123,7 +133,7 @@ public class LaunchController : MonoBehaviour {
 	}
 
 
-// session 2, one user, respiration only
+	// session 2, one user, respiration only
 	public  void LaunchSession2(){
 		if (PlayerPrefs.HasKey ("Param_SingleUserSession")) {
 			PlayerPrefsX.SetBool ("Param_SingleUserSession", false);
@@ -177,54 +187,54 @@ public class LaunchController : MonoBehaviour {
 
 		Debug.Log ("Session2 parameters loaded - one user, respiration only");
 		SceneManager.LoadScene (1);
-		}
-		
+	}
 
 
 
 
 
-// session 3, one user, eeg only
+
+	// session 3, one user, eeg only
 	public  void LaunchSession3(){
-	if (PlayerPrefs.HasKey ("Param_SingleUserSession")) {
-		PlayerPrefsX.SetBool ("Param_SingleUserSession", false);
-	} else {
-		bool b = false;
-		PlayerPrefsX.SetBool ("Param_SingleUserSession", b);
+		if (PlayerPrefs.HasKey ("Param_SingleUserSession")) {
+			PlayerPrefsX.SetBool ("Param_SingleUserSession", false);
+		} else {
+			bool b = false;
+			PlayerPrefsX.SetBool ("Param_SingleUserSession", b);
 
-	}
+		}
 
-	if (PlayerPrefs.HasKey ("Param_RespSelf")) {
-		PlayerPrefsX.SetBool ("Param_RespSelf", false);
-	} else {
-		bool b = false;
-		PlayerPrefsX.SetBool ("Param_RespSelf", b);
+		if (PlayerPrefs.HasKey ("Param_RespSelf")) {
+			PlayerPrefsX.SetBool ("Param_RespSelf", false);
+		} else {
+			bool b = false;
+			PlayerPrefsX.SetBool ("Param_RespSelf", b);
 
-	}
+		}
 
-	if (PlayerPrefs.HasKey ("Param_EegSelf")) {
-		PlayerPrefsX.SetBool ("Param_EegSelf", true);
-	} else {
-		bool b = false;
-		PlayerPrefsX.SetBool ("Param_EegSelf", b);
+		if (PlayerPrefs.HasKey ("Param_EegSelf")) {
+			PlayerPrefsX.SetBool ("Param_EegSelf", true);
+		} else {
+			bool b = false;
+			PlayerPrefsX.SetBool ("Param_EegSelf", b);
 
-	}
+		}
 
-	if (PlayerPrefs.HasKey ("Param_RespOther")) {
-		PlayerPrefsX.SetBool ("Param_RespOther", false);
-	} else {
-		bool b = false;
-		PlayerPrefsX.SetBool ("Param_RespOther", b);
+		if (PlayerPrefs.HasKey ("Param_RespOther")) {
+			PlayerPrefsX.SetBool ("Param_RespOther", false);
+		} else {
+			bool b = false;
+			PlayerPrefsX.SetBool ("Param_RespOther", b);
 
-	}
+		}
 
-	if (PlayerPrefs.HasKey ("Param_EegOther")) {
-		PlayerPrefsX.SetBool ("Param_EegOther", false);
-	} else {
-		bool b = false;
+		if (PlayerPrefs.HasKey ("Param_EegOther")) {
+			PlayerPrefsX.SetBool ("Param_EegOther", false);
+		} else {
+			bool b = false;
 			PlayerPrefsX.SetBool ("Param_EegOther", b);
 
-	}
+		}
 
 		if (PlayerPrefs.HasKey ("Param_SessionID")) {
 			PlayerPrefs.SetString ("Param_SessionID", "Session3");
@@ -242,47 +252,47 @@ public class LaunchController : MonoBehaviour {
 
 
 
-// session 4 - two users, no adaptations.
-public  void LaunchSession4(){
-	if (PlayerPrefs.HasKey ("Param_SingleUserSession")) {
-		PlayerPrefsX.SetBool ("Param_SingleUserSession", false);
-	} else {
-		bool b = false;
-		PlayerPrefsX.SetBool ("Param_SingleUserSession", b);
+	// session 4 - two users, no adaptations.
+	public  void LaunchSession4(){
+		if (PlayerPrefs.HasKey ("Param_SingleUserSession")) {
+			PlayerPrefsX.SetBool ("Param_SingleUserSession", false);
+		} else {
+			bool b = false;
+			PlayerPrefsX.SetBool ("Param_SingleUserSession", b);
 
-	}
+		}
 
-	if (PlayerPrefs.HasKey ("Param_RespSelf")) {
-		PlayerPrefsX.SetBool ("Param_RespSelf", false);
-	} else {
-		bool b = false;
-		PlayerPrefsX.SetBool ("Param_RespSelf", b);
+		if (PlayerPrefs.HasKey ("Param_RespSelf")) {
+			PlayerPrefsX.SetBool ("Param_RespSelf", false);
+		} else {
+			bool b = false;
+			PlayerPrefsX.SetBool ("Param_RespSelf", b);
 
-	}
+		}
 
-	if (PlayerPrefs.HasKey ("Param_EegSelf")) {
-		PlayerPrefsX.SetBool ("Param_EegSelf", false);
-	} else {
-		bool b = false;
+		if (PlayerPrefs.HasKey ("Param_EegSelf")) {
+			PlayerPrefsX.SetBool ("Param_EegSelf", false);
+		} else {
+			bool b = false;
 			PlayerPrefsX.SetBool ("Param_EegSelf", b);
 
-	}
+		}
 
-	if (PlayerPrefs.HasKey ("Param_RespOther")) {
-		PlayerPrefsX.SetBool ("Param_RespOther", false);
-	} else {
-		bool b = false;
-		PlayerPrefsX.SetBool ("Param_RespOther", b);
+		if (PlayerPrefs.HasKey ("Param_RespOther")) {
+			PlayerPrefsX.SetBool ("Param_RespOther", false);
+		} else {
+			bool b = false;
+			PlayerPrefsX.SetBool ("Param_RespOther", b);
 
-	}
+		}
 
-	if (PlayerPrefs.HasKey ("Param_EegOther")) {
-		PlayerPrefsX.SetBool ("Param_EegOther", false);
-	} else {
-		bool b = false;
+		if (PlayerPrefs.HasKey ("Param_EegOther")) {
+			PlayerPrefsX.SetBool ("Param_EegOther", false);
+		} else {
+			bool b = false;
 			PlayerPrefsX.SetBool ("Param_EegOther", b);
 
-	}
+		}
 		if (PlayerPrefs.HasKey ("Param_SessionID")) {
 			PlayerPrefs.SetString ("Param_SessionID", "Session4");
 		} else {
@@ -299,47 +309,47 @@ public  void LaunchSession4(){
 	}
 
 
-// session 5, two users, respiration only
-public  void LaunchSession5(){
-	if (PlayerPrefs.HasKey ("Param_SingleUserSession")) {
-		PlayerPrefsX.SetBool ("Param_SingleUserSession", false);
-	} else {
-		bool b = false;
-		PlayerPrefsX.SetBool ("Param_SingleUserSession", b);
+	// session 5, two users, respiration only
+	public  void LaunchSession5(){
+		if (PlayerPrefs.HasKey ("Param_SingleUserSession")) {
+			PlayerPrefsX.SetBool ("Param_SingleUserSession", false);
+		} else {
+			bool b = false;
+			PlayerPrefsX.SetBool ("Param_SingleUserSession", b);
 
-	}
+		}
 
-	if (PlayerPrefs.HasKey ("Param_RespSelf")) {
-		PlayerPrefsX.SetBool ("Param_RespSelf", true);
-	} else {
-		bool b = true;
-		PlayerPrefsX.SetBool ("Param_RespSelf", b);
+		if (PlayerPrefs.HasKey ("Param_RespSelf")) {
+			PlayerPrefsX.SetBool ("Param_RespSelf", true);
+		} else {
+			bool b = true;
+			PlayerPrefsX.SetBool ("Param_RespSelf", b);
 
-	}
+		}
 
-	if (PlayerPrefs.HasKey ("Param_EegSelf")) {
-		PlayerPrefsX.SetBool ("Param_EegSelf", false);
-	} else {
-		bool b = false;
+		if (PlayerPrefs.HasKey ("Param_EegSelf")) {
+			PlayerPrefsX.SetBool ("Param_EegSelf", false);
+		} else {
+			bool b = false;
 			PlayerPrefsX.SetBool ("Param_EegSelf", b);
 
-	}
+		}
 
-	if (PlayerPrefs.HasKey ("Param_RespOther")) {
-		PlayerPrefsX.SetBool ("Param_RespOther", true);
-	} else {
-		bool b = true;
-		PlayerPrefsX.SetBool ("Param_RespOther", b);
+		if (PlayerPrefs.HasKey ("Param_RespOther")) {
+			PlayerPrefsX.SetBool ("Param_RespOther", true);
+		} else {
+			bool b = true;
+			PlayerPrefsX.SetBool ("Param_RespOther", b);
 
-	}
+		}
 
-	if (PlayerPrefs.HasKey ("Param_EegOther")) {
-		PlayerPrefsX.SetBool ("Param_EegOther", true);
-	} else {
-		bool b = true;
+		if (PlayerPrefs.HasKey ("Param_EegOther")) {
+			PlayerPrefsX.SetBool ("Param_EegOther", true);
+		} else {
+			bool b = true;
 			PlayerPrefsX.SetBool ("Param_EegOther", b);
 
-	}
+		}
 
 		if (PlayerPrefs.HasKey ("Param_SessionID")) {
 			PlayerPrefs.SetString ("Param_SessionID", "Session5");
@@ -355,8 +365,8 @@ public  void LaunchSession5(){
 	}
 
 
-//session 6 - two users, eeg only
-public  void LaunchSession6(){
+	//session 6 - two users, eeg only
+	public  void LaunchSession6(){
 		if (PlayerPrefs.HasKey ("Param_SingleUserSession")) {
 			PlayerPrefsX.SetBool ("Param_SingleUserSession", false);
 		} else {
@@ -411,7 +421,7 @@ public  void LaunchSession6(){
 	}
 
 	//session 6 - two users, eeg only
-public  void LaunchSession7(){
+	public  void LaunchSession7(){
 		if (PlayerPrefs.HasKey ("Param_SingleUserSession")) {
 			PlayerPrefsX.SetBool ("Param_SingleUserSession", false);
 		} else {
@@ -465,7 +475,7 @@ public  void LaunchSession7(){
 		SceneManager.LoadScene (1);
 	}
 
-public  void LaunchSession8(){
+	public  void LaunchSession8(){
 		if (PlayerPrefs.HasKey ("Param_SingleUserSession")) {
 			PlayerPrefsX.SetBool ("Param_SingleUserSession", false);
 		} else {
@@ -522,7 +532,7 @@ public  void LaunchSession8(){
 
 
 
-public void SetStaticIP(string value7) {
+	public void SetStaticIP(string value7) {
 		StaticIPString = IpInput_field.text.ToString();
 
 		if (PlayerPrefs.HasKey ("StaticIPStored")) {
@@ -536,10 +546,10 @@ public void SetStaticIP(string value7) {
 		}
 	}
 
-public void SetSaveFileName(string saveFieldInput) {
-		
+	public void SetSaveFileName(string saveFieldInput) {
+
 		SaveFileName = FileName_field.text.ToString();
-	
+
 
 		if (PlayerPrefs.HasKey ("SaveFileNameStored")) {
 			PlayerPrefs.SetString ("SaveFileNameStored", SaveFileName);
@@ -553,6 +563,21 @@ public void SetSaveFileName(string saveFieldInput) {
 		}
 	}
 
+
+	public void SetHostComputer() {
+
+		HostComputer = !HostComputer;
+		Debug.Log(HostComputer);
+
+		if (PlayerPrefs.HasKey ("Param_HostOrNot")) {
+			PlayerPrefsX.SetBool ("Param_HostOrNot", HostComputer);
+		} else {
+			bool b = HostComputer;
+			PlayerPrefsX.SetBool ("Param_HostOrNot", b);
+
+		}
+
+	}
 
 
 }

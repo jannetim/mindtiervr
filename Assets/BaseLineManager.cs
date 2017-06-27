@@ -41,6 +41,19 @@ public class BaseLineManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        
+        if (PlayerPrefs.HasKey("Param_HostOrNot"))
+        {
+            if (PlayerPrefsX.GetBool("Param_HostOrNot"))
+            {
+                GameObject.Find("Network Manager").GetComponent<NetworkManager>().StartHost();
+            } else
+            {
+                GameObject.Find("Network Manager").GetComponent<NetworkManager>().StartClient();
+            }
+        }
+            
+ 
         if (GameObject.FindGameObjectsWithTag("Player").Length > 1 && !started)
         {
             started = true;
@@ -48,7 +61,7 @@ public class BaseLineManager : MonoBehaviour {
             StartCoroutine("StartTimer");
             CameraFadeCanvas = GameObject.Find("Main Camera").gameObject.GetComponent<CanvasGroup>();
             StartCoroutine("FadeToClear", 0.15f);
-            
+            Debug.Log("started baseline");
         }
 		/*	if (BeginEndFade) {
 				StartCoroutine ("FadeToBlack", 0.15f);
