@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
+using System.Linq;
 
 public class SessionManager : MonoBehaviour
 {
@@ -11,7 +12,7 @@ public class SessionManager : MonoBehaviour
 
 	[Header("Session Parameters")]
 
- 	
+	public bool MultiUserSession = true;
     public bool SimulateSelf = true;
     public bool SimulateOther = true;
 	public Color NeutralEEGColor;
@@ -68,9 +69,12 @@ public class SessionManager : MonoBehaviour
     bool otherInitialized = false;
     public GameObject activePlayer;
 	public bool BeginEndFade;
-	bool countdownIntitialized = false;
+	public bool countdownIntitialized = false;
 
     // Use this for initialization
+
+	public GameObject[] PlayerObjectList;
+	//PlayerObjectList = new List <GameObject();PlayerObjectList;
 
 
     void Awake() { 
@@ -119,8 +123,7 @@ public class SessionManager : MonoBehaviour
 
 
 	void Start(){
-		StartCoroutine ("SessionTimer");
-		StartCoroutine ("StartTimer");
+		
 	}
 
 
@@ -128,13 +131,21 @@ public class SessionManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-	//	Debug.Log ("number of users:" + NetworkServer.connections.Count); 
-		if ((TwoUserSession) && (NetworkServer.connections.Count == 2) && (!countdownIntitialized))
-		{
-			
+
+		PlayerObjectList= GameObject.FindGameObjectsWithTag("Player");
+
+
+	
+
+		if ((MultiUserSession) && (PlayerObjectList.Length ==2) && (countdownIntitialized == false)){
 			countdownIntitialized = true;
+			StartCoroutine ("StartTimer");
+			StartCoroutine ("SessionTimer");
+		
 
 		}
+		
+
 
 
 
