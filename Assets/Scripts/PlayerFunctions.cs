@@ -2,18 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
-
+using UnityEngine.SceneManagement;
 
 public class PlayerFunctions : NetworkBehaviour {
     public Camera Cam;
     public AudioListener AudioListener;
     GameObject bridge;
+
     // Use this for initialization
     void Start () {
-        //bridge = GameObject.Find("sceneholder2/Environment assets/Bridge");
+
+        if (!SceneManager.GetActiveScene().name.Equals("ForestShrine16_network"))
+        {
+            return;
+        }
         if (GameObject.Find("Session Manager").GetComponent<SessionManager>().SingleUserSession)
         {
-            // if real player then camera enabled
             if (gameObject.name != "PlayerSim")
             {
                 Cam.enabled = true;
@@ -34,13 +38,17 @@ public class PlayerFunctions : NetworkBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        if (!SceneManager.GetActiveScene().name.Equals("ForestShrine16_network"))
+        {
+            transform.gameObject.GetComponent<PlayerFAScript>().enabled = false;
+        }
         /*Renderer renderer = bridge.GetComponent<Renderer>();
         Material material = renderer.materials[1];
         float faValue = Mathf.Abs(Mathf.Sin(Time.time * 0.2f)) + 0.5f;
 
         material.SetColor("_EmissionColor", new Color(faValue, faValue, faValue));
         */
-
+        /*
         if (!isLocalPlayer)
         {
             return;
@@ -51,13 +59,15 @@ public class PlayerFunctions : NetworkBehaviour {
         transform.Rotate(0, x, 0);
         transform.Translate(0, 0, z);
 
+    */
 
-
-        // player sends wave
         if (Input.GetKeyDown("r"))
         {
             Debug.Log("pressed r");
-            //GameObject.Find("ParticlePillar").GetComponent<ParticleSystem>().Stop();
+            GameObject.Find("Network Manager").GetComponent<NetworkManager>().StopHost();
+            GameObject.Find("Network Manager").GetComponent<NetworkManager>().StopServer();
+            //GameObject.Find("Network Manager").GetComponent<NetworkManager>().ServerChangeScene("LaunchManager");
+            SceneManager.LoadScene(0);
         }
     }
 }

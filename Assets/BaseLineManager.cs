@@ -11,7 +11,7 @@ public class BaseLineManager : MonoBehaviour {
 	float StartTimerLength = 10f;
 	CanvasGroup CameraFadeCanvas;
 	string sessionID;
-
+    bool started;
 
 	void Awake() { 
 		//*//  
@@ -25,7 +25,7 @@ public class BaseLineManager : MonoBehaviour {
 			} else {
 				BaseLineDuration = 120f;
 			}
-
+            started = false;
 			//if (SingleUserSession) { Debug.Log( "single user session");
 			//} else { Debug.Log ("multi user session");
 		}
@@ -35,16 +35,21 @@ public class BaseLineManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		   
-			StartCoroutine ("SessionTimer");
-			StartCoroutine ("StartTimer");
-		    CameraFadeCanvas = GameObject.Find("Main Camera").gameObject.GetComponent<CanvasGroup>();
-			StartCoroutine ("FadeToClear", 0.15f);
+
 		
 	}
 	
 	// Update is called once per frame
 	void Update () {
-
+        if (GameObject.FindGameObjectsWithTag("Player").Length > 1 && !started)
+        {
+            started = true;
+            StartCoroutine("SessionTimer");
+            StartCoroutine("StartTimer");
+            CameraFadeCanvas = GameObject.Find("Main Camera").gameObject.GetComponent<CanvasGroup>();
+            StartCoroutine("FadeToClear", 0.15f);
+            
+        }
 		/*	if (BeginEndFade) {
 				StartCoroutine ("FadeToBlack", 0.15f);
 			}*/
