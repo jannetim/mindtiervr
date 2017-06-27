@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 
-public class LaunchController2 : MonoBehaviour {
+public class LaunchController : MonoBehaviour {
 
 	string StaticIPString;
 	string SaveFileName;

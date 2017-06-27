@@ -34,26 +34,24 @@ public class BaseLineManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		   
-
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-        
         if (PlayerPrefs.HasKey("Param_HostOrNot"))
         {
             if (PlayerPrefsX.GetBool("Param_HostOrNot"))
             {
                 GameObject.Find("Network Manager").GetComponent<NetworkManager>().StartHost();
-            } else
+                Debug.Log("Started host");
+            }
+            else
             {
                 GameObject.Find("Network Manager").GetComponent<NetworkManager>().StartClient();
+                Debug.Log("Started client");
             }
         }
-            
- 
+    }
+	
+	// Update is called once per frame
+	void Update () {
+
         if (GameObject.FindGameObjectsWithTag("Player").Length > 1 && !started)
         {
             started = true;
