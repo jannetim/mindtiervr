@@ -15,13 +15,22 @@ public class QuestionHandler : MonoBehaviour {
     ToggleGroup tg;
     Color ButtonOriginal;
     Color ButtonSelected;
-    public Toggle[] Toggles;
+    Toggle[] Toggles;
+    bool feelings;
+    bool feelingsPair;
+    public Image image;
+    public GameObject Qt;
+    public GameObject Ft;
+    public Toggle[] QuestionToggles;
+    public Toggle[] FeelingToggles;
+    public Sprite[] Images;
     public GameObject Proceed;
     public ParticleSystem ps;
 
+
     // Use this for initialization
     void Start () {
-        questionNumber = 0;
+        questionNumber = -1;
         Questions = new string[24];
         Questions[0] = "Minusta tuntuu sympaattiselta";
         Questions[1] = "Minusta tuntuu myötätuntoiselta";
@@ -47,11 +56,14 @@ public class QuestionHandler : MonoBehaviour {
         Questions[21] = "Minun tunteeni vaikuttivat vuorovaikutuksemme tunnelmaan";
         Questions[22] = "Parini asenteet vaikuttivat tunteisiini";
         Questions[23] = "Minun asenteeni vaikuttivat parini tunteisiin";
-
         question = GameObject.Find("Question").GetComponent<Text>();
+        Toggles = FeelingToggles;
         tg = GameObject.Find("Question Holder").GetComponent<ToggleGroup>();
-        question.text = Questions[0];
-        chosenToggleCounter = 2;
+        question.text = "Valitse seuraavista hahmoista ne, jotka parhaiten kuvastavat tunnetilaasi.";
+        //question.text = Questions[0];
+        feelings = true;
+        feelingsPair = false;
+        chosenToggleCounter = 4;
         chosenToggle = Toggles[chosenToggleCounter];
         readyToProceed = false;
         ps = (ParticleSystem)GameObject.Find("SelectorParticles").GetComponent(typeof(ParticleSystem));
@@ -67,6 +79,7 @@ public class QuestionHandler : MonoBehaviour {
         readyToProceed = false;
         ButtonColorToOriginal();
         Proceed.SetActive(false);
+        questionNumber++;
         foreach (Toggle toggle in Toggles)
         {
             if (toggle.isOn)
@@ -77,14 +90,43 @@ public class QuestionHandler : MonoBehaviour {
                 tg.allowSwitchOff = false;
             }
         }
-        questionNumber++;
-        if (questionNumber >= 24)
-        {
-            // proceed to somewhere
-            SceneManager.LoadScene(0);
+        if (!feelings) { 
+            if (questionNumber >= 24)
+            {
+                // proceed to somewhere
+                SceneManager.LoadScene(0);
 
+            }
+            question.text = Questions[questionNumber];
+        } else
+        {
+            if (questionNumber > 2)
+            {
+                if (feelingsPair)
+                {
+                    feelings = false;
+                    Toggles = QuestionToggles;
+                    Ft.SetActive(false);
+                    Qt.SetActive(true);
+                    question.text = Questions[0];
+                    image.transform.gameObject.SetActive(false);
+
+                } else
+                {
+                    Debug.Log(image.transform.gameObject.activeInHierarchy);
+                    image.transform.gameObject.SetActive(false);
+                    feelingsPair = true;
+                    question.text = "Valitse seuraavista hahmoista ne, joiden arvelet parhaiten kuvaavan parisi tunnetilaa.";
+                }
+                questionNumber = -1;
+            } else { 
+                if (!image.transform.gameObject.activeInHierarchy)
+                {
+                    image.transform.gameObject.SetActive(true);
+                }
+                image.sprite = Images[questionNumber];
+            }
         }
-        question.text = Questions[questionNumber];
         ps.transform.position = new Vector3(chosenToggle.transform.position.x, chosenToggle.transform.position.y - 4, chosenToggle.transform.position.z);
     }
 
@@ -102,7 +144,7 @@ public class QuestionHandler : MonoBehaviour {
 
         if (OVRInput.GetDown(OVRInput.Button.One) || OVRInput.GetDown(OVRInput.Button.Two) || OVRInput.GetDown(OVRInput.Button.Three) || OVRInput.GetDown(OVRInput.Button.Four) 
         || OVRInput.GetDown(OVRInput.Button.PrimaryThumbstick) || OVRInput.GetDown(OVRInput.RawButton.LIndexTrigger)
-            || OVRInput.GetDown(OVRInput.Button.SecondaryThumbstick) || OVRInput.GetDown(OVRInput.RawButton.RIndexTrigger))
+            || OVRInput.GetDown(OVRInput.Button.SecondaryThumbstick) || OVRInput.GetDown(OVRInput.RawButton.RIndexTrigger) || Input.GetKeyDown("r"))
         {
             if (readyToProceed)
             {
@@ -114,7 +156,7 @@ public class QuestionHandler : MonoBehaviour {
         }
 
 
-        if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickLeft) || OVRInput.GetDown(OVRInput.Button.SecondaryThumbstickLeft))
+        if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickLeft) || OVRInput.GetDown(OVRInput.Button.SecondaryThumbstickLeft) || Input.GetKeyDown("left"))
         {
             if (readyToProceed)
             {
@@ -131,7 +173,7 @@ public class QuestionHandler : MonoBehaviour {
             ps.transform.position = new Vector3(chosenToggle.transform.position.x, chosenToggle.transform.position.y - 3, chosenToggle.transform.position.z);
 
         }
-        if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickRight) || OVRInput.GetDown(OVRInput.Button.SecondaryThumbstickRight))
+        if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickRight) || OVRInput.GetDown(OVRInput.Button.SecondaryThumbstickRight) || Input.GetKeyDown("right"))
         {
             if (readyToProceed)
             {
@@ -150,14 +192,14 @@ public class QuestionHandler : MonoBehaviour {
 
 
 
-        if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickUp) || OVRInput.GetDown(OVRInput.Button.SecondaryThumbstickUp))
+        if (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickUp) || OVRInput.GetDown(OVRInput.Button.SecondaryThumbstickUp) || Input.GetKeyDown("up"))
         {
             readyToProceed = false;
             ps.transform.position = new Vector3(chosenToggle.transform.position.x, chosenToggle.transform.position.y - 3, chosenToggle.transform.position.z);
             ButtonColorToOriginal();
 
         }
-        if (Proceed.activeInHierarchy && (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickDown) || OVRInput.GetDown(OVRInput.Button.SecondaryThumbstickDown)))
+        if (Proceed.activeInHierarchy && (OVRInput.GetDown(OVRInput.Button.PrimaryThumbstickDown) || OVRInput.GetDown(OVRInput.Button.SecondaryThumbstickDown) || Input.GetKeyDown("down")))
         {
             readyToProceed = true;
             ps.transform.position = new Vector3(Proceed.transform.position.x, Proceed.transform.position.y - 3, Proceed.transform.position.z);
