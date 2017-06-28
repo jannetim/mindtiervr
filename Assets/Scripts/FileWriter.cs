@@ -135,7 +135,7 @@ void FixedUpdate () {
 		 BreathingSynchroncity= 0f; 
 		break;
 
-		case "Session7": // breathing & eeg solo - breathing synchronisity possible
+		case "Session7": // breathing & eeg solo, no synchronisity possible 
 			PlayerFAread = GetComponent<PlayerManager>().PlayerFA;
 			PlayerColorvalue = GetComponent<PlayerFAScript>().PlayerFA_Display;
 			PlayerColorSynchronicity =GetComponent<PlayerFAScript>().fasync;  // effect happens when this is <0.1;
@@ -158,7 +158,7 @@ void FixedUpdate () {
 			break;
 
 		
-		case "Session8": // breathing & eeg dyad - breathing synchronisity possible
+		case "Session8": // breathing & eeg dyad - breathing and eeg synchronisity possible
 			PlayerFAread = GetComponent<PlayerManager>().PlayerFA;
 			PlayerColorvalue = GetComponent<PlayerFAScript>().PlayerFA_Display;
 			PlayerColorSynchronicity =GetComponent<PlayerFAScript>().fasync;  // effect happens when this is <0.1;

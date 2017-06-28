@@ -123,7 +123,12 @@ public class SessionManager : MonoBehaviour
 
 
 	void Start(){
-		
+		SessionLength = SessionLength + StartTimerLength +3f;
+		Debug.Log (SessionLength);
+		StartCoroutine ("StartTimer");
+
+		StartCoroutine ("SessionTimer");
+	
 	}
 
 
@@ -132,19 +137,7 @@ public class SessionManager : MonoBehaviour
     void Update()
     {
 
-		PlayerObjectList= GameObject.FindGameObjectsWithTag("Player");
-
-
 	
-
-		if ((MultiUserSession) && (PlayerObjectList.Length ==2) && (countdownIntitialized == false)){
-			countdownIntitialized = true;
-			StartCoroutine ("StartTimer");
-			StartCoroutine ("SessionTimer");
-		
-
-		}
-		
 
 
 
