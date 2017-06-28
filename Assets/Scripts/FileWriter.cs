@@ -54,18 +54,21 @@ void FixedUpdate () {
 
 		switch (sessionName) {
 		case "Session1":  //no adaptation, solo.
-			PlayerFAread = 0f;
+			PlayerFAread = GetComponent<PlayerManager>().PlayerFA;
 			PlayerColorvalue = 0f;
 			PlayerColorSynchronicity = 0f;  
 
-			PlayerRespRead = 0f;
+			PlayerRespRead = GetComponent<PlayerManager> ().breatheNow;
 			PlayerAuraSize = 0f;
 			PlayerBreathingSent = 0f;
 			BreathingSynchroncity = 0f; 
 			break;
 
+
+
+
 		case "Session2": //breathing, solo
-			PlayerFAread = 0f;
+			PlayerFAread = GetComponent<PlayerManager>().PlayerFA;
 			PlayerColorvalue = 0f;
 			PlayerColorSynchronicity = 0f;  
 
@@ -80,30 +83,32 @@ void FixedUpdate () {
 			BreathingSynchroncity = 0f; 
 			break;
 
+
+
 		case "Session3": //eeg, solo.
 			PlayerFAread = GetComponent<PlayerManager> ().PlayerFA;
 			PlayerColorvalue = GetComponent<PlayerFAScript> ().PlayerFA_Display;
 			PlayerColorSynchronicity = 0f; 
 
-			PlayerRespRead = 0f;
+			PlayerRespRead = GetComponent<PlayerManager> ().breatheNow;
 			PlayerAuraSize = 0f;
 			PlayerBreathingSent = 0f;
 			BreathingSynchroncity = 0f; 
 			break;
 
 		case "Session4": //nothing adapts, dyad
-			PlayerFAread = 0f;
+			PlayerFAread = GetComponent<PlayerManager>().PlayerFA;
 			PlayerColorvalue = 0f;
 			PlayerColorSynchronicity = 0f; 
 
-			PlayerRespRead = 0f;
+			PlayerRespRead = GetComponent<PlayerManager> ().breatheNow;
 			PlayerAuraSize = 0f;
 			PlayerBreathingSent = 0f;
 			BreathingSynchroncity = 0f; 
 			break;
 
 		case "Session5": // breathing, dyad - breathing synchronisity possible
-			PlayerFAread = 0f;
+			PlayerFAread = GetComponent<PlayerManager>().PlayerFA;
 			PlayerColorvalue = 0f;
 			PlayerColorSynchronicity = 0f;  
 
@@ -129,7 +134,7 @@ void FixedUpdate () {
 		 PlayerColorvalue = GetComponent<PlayerFAScript>().PlayerFA_Display;
 		 PlayerColorSynchronicity =GetComponent<PlayerFAScript>().fasync;  // effect happens when this is <0.1;
 
-	   	PlayerRespRead = 0f;
+			PlayerRespRead = GetComponent<PlayerManager> ().breatheNow;
 		 PlayerAuraSize = 0f;
 		 PlayerBreathingSent = 0f;
 		 BreathingSynchroncity= 0f; 
