@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 
 public class BaseLineManager : MonoBehaviour {
 
@@ -67,7 +68,7 @@ public class BaseLineManager : MonoBehaviour {
 		
 	}
 
-		IEnumerator SessionTimer()
+	IEnumerator SessionTimer()
 	{
 		//Debug.Log ("Session Timer Launched");
 		yield return new WaitForSeconds (BaseLineDuration - 3f);
@@ -80,44 +81,46 @@ public class BaseLineManager : MonoBehaviour {
 
 
 		if (sessionID == "Session0") {
-			Application.LoadLevel (0);
+            //Application.LoadLevel (0);
+            SceneManager.LoadScene(0);
 		} else {
-			Application.LoadLevel (1);
-		}
+            //Application.LoadLevel (1);
+            SceneManager.LoadScene(1);
+        }
 	}
 
 
-		IEnumerator StartTimer()
-		{
-			//Debug.Log ("Session Timer Launched");
-			yield return new WaitForSeconds(StartTimerLength);
-			StartTimerDone = true;
-		}
+	IEnumerator StartTimer()
+	{
+		//Debug.Log ("Session Timer Launched");
+		yield return new WaitForSeconds(StartTimerLength);
+		StartTimerDone = true;
+	}
 
-		public IEnumerator FadeToBlack(float speed)
-		{/*
-			while (CameraFadeCanvas.alpha < 1f)
-			{
-				CameraFadeCanvas.alpha += speed * Time.deltaTime;
+	public IEnumerator FadeToBlack(float speed)
+	{   /*
+		while (CameraFadeCanvas.alpha < 1f)
+		{
+			CameraFadeCanvas.alpha += speed * Time.deltaTime;
 
 				
-			}*/
+		}*/
         yield return null;
     }
 
-		public IEnumerator FadeToClear(float speed)
-		{
+	public IEnumerator FadeToClear(float speed)
+	{
         /*
 			while (CameraFadeCanvas.alpha > 0f)
-			{
-				CameraFadeCanvas.alpha -= speed * Time.deltaTime;
+		{
+			CameraFadeCanvas.alpha -= speed * Time.deltaTime;
 				
 
-				yield return null;
-			}*/
+			yield return null;
+		}*/
         yield return null;
         Debug.Log ("Fading to Clear");
-		}
+	}
 
 
 }
