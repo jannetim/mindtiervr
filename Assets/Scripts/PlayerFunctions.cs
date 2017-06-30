@@ -11,29 +11,23 @@ public class PlayerFunctions : NetworkBehaviour {
 
     // Use this for initialization
     void Start () {
+        /* if (GameObject.Find("Session Manager").GetComponent<SessionManager>().SingleUserSession)
+         {
+             if (gameObject.name != "PlayerSim")
+             {
+                 Cam.enabled = true;
+                 AudioListener.enabled = true;
+             }
 
-        if (!SceneManager.GetActiveScene().name.Equals("ForestShrine16_network"))
+         }
+         else */
+        if (!isLocalPlayer)
         {
             return;
         }
-        if (GameObject.Find("Session Manager").GetComponent<SessionManager>().SingleUserSession)
-        {
-            if (gameObject.name != "PlayerSim")
-            {
-                Cam.enabled = true;
-                AudioListener.enabled = true;
-            }
+        Cam.enabled = true;
+        AudioListener.enabled = true;
 
-        }
-        else if (!isLocalPlayer)
-        {
-            return;
-        }
-        else
-        {
-            Cam.enabled = true;
-            AudioListener.enabled = true;
-        }
     }
 	
 	// Update is called once per frame
@@ -67,7 +61,7 @@ public class PlayerFunctions : NetworkBehaviour {
             GameObject.Find("Network Manager").GetComponent<NetworkManager>().StopHost();
             GameObject.Find("Network Manager").GetComponent<NetworkManager>().StopServer();
             //GameObject.Find("Network Manager").GetComponent<NetworkManager>().ServerChangeScene("LaunchManager");
-            SceneManager.LoadScene(0);
+            SceneManager.LoadScene(3);
         }
     }
 }
