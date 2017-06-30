@@ -104,7 +104,7 @@ public class BaseLineManager : MonoBehaviour {
             SceneManager.LoadScene(0);
 		} else {
             //Application.LoadLevel (1);
-            string[] multiPlayerSessions = new string[] { "Session4", "Session5", "Session6", "Session8" };
+            string[] multiPlayerSessions = new string[] { "Session1", "Session2", "Session3", "Session4", "Session5", "Session6", "Session7", "Session8" };
             if (PlayerPrefs.HasKey("Param_SessionID"))
             {
                 string session = PlayerPrefs.GetString("Param_SessionID");
