@@ -25,7 +25,7 @@ public class PlayerFAScript : NetworkBehaviour
     public float OtherFA = 0.0f;
     [SyncVar]
     public Color AuraColor;
-    public bool UseSyncGlow;
+    public bool UseSyncGlow = false;
     float auraH;
     float auraS;
     float auraV;
@@ -112,7 +112,10 @@ public class PlayerFAScript : NetworkBehaviour
             }
         }
 
-        foreach (GameObject player in GameObject.FindGameObjectsWithTag("Player"))
+        if (GameObject.Find("Session Manager").GetComponent<SessionManager>().StartTimerDone)
+        { UseSyncGlow = true; }
+
+            foreach (GameObject player in GameObject.FindGameObjectsWithTag("Player"))
         {
             if (player.GetComponent<PlayerFAScript>().playerNumber != playerNumber)
             {
@@ -212,6 +215,8 @@ public class PlayerFAScript : NetworkBehaviour
         // used with gradient shader
         //PlayerBridgeSides.GetComponent<Renderer>().material.SetFloat("_Threshold", 1.0f - PlayerFA_Display);
     }
+
+
 
 
     [Command]
