@@ -24,7 +24,7 @@ public class BaseLineManager : MonoBehaviour {
 				BaseLineDuration = 600f;
 				
 			} else {
-				BaseLineDuration = 120f;
+				BaseLineDuration = 30f;
 			}
             started = false;
 			//if (SingleUserSession) { Debug.Log( "single user session");
