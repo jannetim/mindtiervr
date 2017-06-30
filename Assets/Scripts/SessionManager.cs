@@ -260,4 +260,21 @@ public class SessionManager : MonoBehaviour
         StartTimerDone = true;
     }
 
+    private void OnDisconnectedFromServer(NetworkDisconnection info)
+    {
+        if (Network.isServer)
+        {
+            Debug.Log("Local server connection disconnected");
+        }
+
+        else if (info == NetworkDisconnection.LostConnection)
+        {
+            Debug.Log("Lost connection to the server");
+        }
+        else
+        {
+            Debug.Log("Successfully diconnected from the server");
+        }
+        SceneManager.LoadScene(3);
+    }
 }
