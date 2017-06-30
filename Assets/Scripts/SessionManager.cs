@@ -244,7 +244,7 @@ public class SessionManager : MonoBehaviour
                         NetworkManager.singleton.StopServer();
                     } else
                     {
-                        NetworkManager.Shutdown();
+                        //NetworkManager.Shutdown();
                     }
                 }
             }
