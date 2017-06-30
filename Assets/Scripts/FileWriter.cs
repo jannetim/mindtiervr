@@ -200,7 +200,7 @@ void FixedUpdate () {
 
 
 		//only write the file once the start timer has ended.
-		if (GameObject.Find("Session Manager").GetComponent<SessionManager>().StartTimerDone) {
+	//	if (GameObject.Find("Session Manager").GetComponent<SessionManager>().StartTimerDone) {
 
 			writeTimer += Time.deltaTime;  		//data is written on a frequencey, default, once per second.
 			if (writeTimer > FileWriteFreq) {  
@@ -261,5 +261,5 @@ void FixedUpdate () {
 		} 
 
 
-	}
+	//}
 }
