@@ -241,11 +241,14 @@ public class SessionManager : MonoBehaviour
                         }
                         NetworkManager.singleton.StopHost();
                         NetworkManager.singleton.StopServer();
+                    } else
+                    {
+                        NetworkManager.singleton.StopClient();
                     }
                 }
             }
         }
-        NetworkManager.singleton.StopClient();
+
         SceneManager.LoadScene(3);
     }
 

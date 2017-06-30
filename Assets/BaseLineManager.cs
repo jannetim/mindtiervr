@@ -119,11 +119,14 @@ public class BaseLineManager : MonoBehaviour {
                             NetworkManager.singleton.StopServer();
                             //GameObject.Find("Network Manager").GetComponent<NetworkManager>().StopHost();
                             //GameObject.Find("Network Manager").GetComponent<NetworkManager>().StopServer();
+                        } else
+                        {
+                            NetworkManager.singleton.StopClient();
                         }
                     }
                 }
             }
-            NetworkManager.singleton.StopClient();
+            
             SceneManager.LoadScene(2);
         }
 	}
