@@ -65,14 +65,23 @@ public class BaseLineManager : MonoBehaviour {
         /*	if (BeginEndFade) {
 				StartCoroutine ("FadeToBlack", 0.15f);
 			}*/
-        if (Input.GetKeyDown(KeyCode.F1)) { SceneManager.LoadScene(0); }
-        if (Input.GetKeyDown(KeyCode.F2)) { SceneManager.LoadScene(1); }
-        if (Input.GetKeyDown(KeyCode.F3)) {
-            SceneManager.LoadScene(2);
+        if (Input.GetKeyDown(KeyCode.F1)) {
             GameObject.Find("Network Manager").GetComponent<NetworkManager>().StopHost();
             GameObject.Find("Network Manager").GetComponent<NetworkManager>().StopServer();
+            SceneManager.LoadScene(0); }
+        if (Input.GetKeyDown(KeyCode.F2)) {
+            GameObject.Find("Network Manager").GetComponent<NetworkManager>().StopHost();
+            GameObject.Find("Network Manager").GetComponent<NetworkManager>().StopServer();
+            SceneManager.LoadScene(1); }
+        if (Input.GetKeyDown(KeyCode.F3)) {
+            GameObject.Find("Network Manager").GetComponent<NetworkManager>().StopHost();
+            GameObject.Find("Network Manager").GetComponent<NetworkManager>().StopServer();
+            SceneManager.LoadScene(2);
         }
-        if (Input.GetKeyDown(KeyCode.F4)) { SceneManager.LoadScene(3); }
+        if (Input.GetKeyDown(KeyCode.F4)) {
+            GameObject.Find("Network Manager").GetComponent<NetworkManager>().StopHost();
+            GameObject.Find("Network Manager").GetComponent<NetworkManager>().StopServer();
+            SceneManager.LoadScene(3); }
 
     }
 
@@ -90,10 +99,14 @@ public class BaseLineManager : MonoBehaviour {
 
 		if (sessionID == "Session0") {
             //Application.LoadLevel (0);
+            GameObject.Find("Network Manager").GetComponent<NetworkManager>().StopHost();
+            GameObject.Find("Network Manager").GetComponent<NetworkManager>().StopServer();
             SceneManager.LoadScene(0);
 		} else {
             //Application.LoadLevel (1);
-            SceneManager.LoadScene(1);
+            GameObject.Find("Network Manager").GetComponent<NetworkManager>().StopHost();
+            GameObject.Find("Network Manager").GetComponent<NetworkManager>().StopServer();
+            SceneManager.LoadScene(2);
         }
 	}
 
