@@ -24,6 +24,7 @@ public class BreathLayerer : NetworkBehaviour
     private float ownOrigV, otherOrigV;
     public BreathLayerer OtherScript;
     private NetworkIdentity objNetId;
+    bool syncResetting = false;
     // Use this for initialization
     void Start()
     {
@@ -110,6 +111,9 @@ public class BreathLayerer : NetworkBehaviour
             }
         }
         planeColor = Player.GetComponent<PlayerFAScript>().PlayerColor;
+
+        if ((SyncHappened) && (!syncResetting)) { StartCoroutine("SyncHappenedCheck");
+        } 
     }
 
 
@@ -221,25 +225,29 @@ public class BreathLayerer : NetworkBehaviour
 
     public void StartSyncGlow()
     {
-        SyncHappened = true;
+        
         StartCoroutine("SyncGlow");
-        StartCoroutine("SyncHappenedCheck");
+       
     }
 
 	IEnumerator SyncHappenedCheck(){   // filewriter checks the variable changed here.
-		
-		yield return new WaitForSeconds(2.0f);
+        syncResetting = true;
+        yield return new WaitForSeconds(2.0f);
 		SyncHappened = false;
-	
-	
-	}
+        syncResetting = false;
+
+
+
+    }
 
 
     IEnumerator SyncGlow()
     {
+        SyncHappened = true;
+      
         yield return StartCoroutine("SyncGlowIn");
-
-		
+        
+ 
         yield return StartCoroutine("SyncGlowOut");
 
     }
