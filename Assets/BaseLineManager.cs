@@ -125,6 +125,7 @@ public class BaseLineManager : MonoBehaviour {
                         } else
                         {
                             NetworkManager.Shutdown();
+                            yield return new WaitForSeconds(2f);
                         }
                     }
                 }
