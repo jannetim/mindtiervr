@@ -24,7 +24,7 @@ public class BaseLineManager : MonoBehaviour {
 				BaseLineDuration = 600f;
 				
 			} else {
-				BaseLineDuration = 30f;
+				BaseLineDuration = 15f;
 			}
             started = false;
 			//if (SingleUserSession) { Debug.Log( "single user session");
@@ -124,7 +124,7 @@ public class BaseLineManager : MonoBehaviour {
                             //GameObject.Find("Network Manager").GetComponent<NetworkManager>().StopServer();
                         } else
                         {
-                            NetworkManager.singleton.StopClient();
+                            NetworkManager.Shutdown();
                         }
                     }
                 }
