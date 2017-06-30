@@ -221,7 +221,9 @@ public class BreathLayerer : NetworkBehaviour
 
     public void StartSyncGlow()
     {
+        SyncHappened = true;
         StartCoroutine("SyncGlow");
+        StartCoroutine("SyncHappenedCheck");
     }
 
 	IEnumerator SyncHappenedCheck(){   // filewriter checks the variable changed here.
@@ -236,14 +238,15 @@ public class BreathLayerer : NetworkBehaviour
     IEnumerator SyncGlow()
     {
         yield return StartCoroutine("SyncGlowIn");
-		StartCoroutine ("SyncHappenedCheck");
+
+		
         yield return StartCoroutine("SyncGlowOut");
 
     }
 
     IEnumerator SyncGlowIn()
     {
-		SyncHappened = true;
+		
         Color colorOwn = Plane.GetComponent<Renderer>().material.color;
         Color color2 = Plane2.GetComponent<Renderer>().material.color;
 
