@@ -116,6 +116,13 @@ public class SessionManager : MonoBehaviour
 		
 		} else StaticIPStored = "127.0.0.1";
 
+		if (PlayerPrefs.HasKey ("SessionLengthStored")) {
+			SessionLength = PlayerPrefs.GetFloat ("SessionLengthStored");	
+	
+		}
+
+
+
     //*/
 
 	

@@ -13,7 +13,11 @@ public class LaunchController : MonoBehaviour {
 	//public InputField FilaNameInput;
 	public Text IpInput_field;
 	public Text FileName_field;
+	public Text SessionLength_field;
+
 	bool HostComputer = true;
+	string SessionLengthString;
+	float SessionLength;
 
 	// Use this for initialization
 	void Start () {
@@ -45,6 +49,14 @@ public class LaunchController : MonoBehaviour {
 		}
 		GameObject.Find("HostClientToggle").GetComponent<Toggle>().isOn = HostComputer;
 
+		if (PlayerPrefs.HasKey ("SessionLengthStored")) {
+			SessionLengthString = PlayerPrefs.GetString ("SessionLengthStored");
+			GameObject.Find ("SessionLengthPlaceholderText").gameObject.GetComponent<Text> ().text = SessionLengthString; 
+			Debug.Log("SessionLengthStored: " + SessionLengthString);
+			//if (SingleUserSession) { Debug.Log( "single user session");
+			//} else { Debug.Log ("multi user session");
+		}
+
 
 
 
@@ -72,12 +84,27 @@ public class LaunchController : MonoBehaviour {
 
 
 		Debug.Log ("Session0 parameters loaded - long baseline");
-		SceneManager.LoadScene (2);
+		SceneManager.LoadScene (1);
 	}
 
 
-	// session 1, one user, no adaptations.
 	public  void LaunchSession1(){
+		SetSession1 ();
+		SceneManager.LoadScene (1);
+
+	}
+
+	public  void LaunchSession1Questions(){
+		SetSession1 ();
+		SceneManager.LoadScene (3);
+	}
+	public  void LaunchSession1Meditation(){
+		SetSession1 ();
+		SceneManager.LoadScene (2);
+	}
+
+	// session 1, one user, no adaptations.
+	public  void SetSession1(){
 		if (PlayerPrefs.HasKey ("Param_SingleUserSession")) {
 			PlayerPrefsX.SetBool ("Param_SingleUserSession", false);
 		} else {
@@ -128,13 +155,28 @@ public class LaunchController : MonoBehaviour {
 
 
 		Debug.Log ("Session1 parameters loaded - one user, no adaptations");
-		SceneManager.LoadScene (1);
+
 
 	}
 
+	public  void LaunchSession2(){
+		SetSession2 ();
+		SceneManager.LoadScene (1);
+	}
+
+	public  void LaunchSession2Questions(){
+		SetSession2 ();
+		SceneManager.LoadScene (3);
+	}
+	public  void LaunchSession2Meditation(){
+		SetSession2 ();
+		SceneManager.LoadScene (2);
+	}
+
+
 
 	// session 2, one user, respiration only
-	public  void LaunchSession2(){
+	public  void SetSession2(){
 		if (PlayerPrefs.HasKey ("Param_SingleUserSession")) {
 			PlayerPrefsX.SetBool ("Param_SingleUserSession", false);
 		} else {
@@ -186,16 +228,28 @@ public class LaunchController : MonoBehaviour {
 
 
 		Debug.Log ("Session2 parameters loaded - one user, respiration only");
-		SceneManager.LoadScene (1);
+
 	}
 
 
 
 
+	public  void LaunchSession3(){
+		SetSession3 ();
+		SceneManager.LoadScene (1);
+	}
 
+	public  void LaunchSession3Questions(){
+		SetSession3 ();
+		SceneManager.LoadScene (3);
+	}
+	public  void LaunchSession3Meditation(){
+		SetSession3 ();
+		SceneManager.LoadScene (2);
+	}
 
 	// session 3, one user, eeg only
-	public  void LaunchSession3(){
+	public  void SetSession3(){
 		if (PlayerPrefs.HasKey ("Param_SingleUserSession")) {
 			PlayerPrefsX.SetBool ("Param_SingleUserSession", false);
 		} else {
@@ -246,14 +300,27 @@ public class LaunchController : MonoBehaviour {
 
 
 		Debug.Log ("Session3 parameters loaded - one user, eeg only");
-		SceneManager.LoadScene (1);
+
 
 	}
 
 
+	public  void LaunchSession4(){
+		SetSession4 ();
+		SceneManager.LoadScene (1);
+	}
+	public  void LaunchSession4Questions(){
+		SetSession4 ();
+		SceneManager.LoadScene (3);
+	}
+	public  void LaunchSession4Meditation(){
+		SetSession4 ();
+		SceneManager.LoadScene (2);
+	}
+
 
 	// session 4 - two users, no adaptations.
-	public  void LaunchSession4(){
+	public  void SetSession4(){
 		if (PlayerPrefs.HasKey ("Param_SingleUserSession")) {
 			PlayerPrefsX.SetBool ("Param_SingleUserSession", false);
 		} else {
@@ -305,12 +372,25 @@ public class LaunchController : MonoBehaviour {
 
 
 		Debug.Log ("Sessio4 parameters loaded - two users, no adaptations.");
+
+	}
+
+	public  void LaunchSession5(){
+		SetSession5 ();
 		SceneManager.LoadScene (1);
+	}
+	public  void LaunchSession5Questions(){
+		SetSession5 ();
+		SceneManager.LoadScene (3);
+	}
+	public  void LaunchSession5Meditation(){
+		SetSession5 ();
+		SceneManager.LoadScene (2);
 	}
 
 
 	// session 5, two users, respiration only
-	public  void LaunchSession5(){
+	public  void SetSession5(){
 		if (PlayerPrefs.HasKey ("Param_SingleUserSession")) {
 			PlayerPrefsX.SetBool ("Param_SingleUserSession", false);
 		} else {
@@ -361,12 +441,26 @@ public class LaunchController : MonoBehaviour {
 
 
 		Debug.Log ("Session5 parameters loaded - two users, respiration only");
+
+	}
+
+	public  void LaunchSession6(){
+		SetSession6 ();
 		SceneManager.LoadScene (1);
+	}
+
+	public  void LaunchSession6Questions(){
+		SetSession6 ();
+		SceneManager.LoadScene (3);
+	}
+	public  void LaunchSession6Meditation(){
+		SetSession6 ();
+		SceneManager.LoadScene (2);
 	}
 
 
 	//session 6 - two users, eeg only
-	public  void LaunchSession6(){
+	public  void SetSession6(){
 		if (PlayerPrefs.HasKey ("Param_SingleUserSession")) {
 			PlayerPrefsX.SetBool ("Param_SingleUserSession", false);
 		} else {
@@ -417,11 +511,26 @@ public class LaunchController : MonoBehaviour {
 
 
 		Debug.Log ("Session6 parameters loaded -two users, eeg only");
+	
+	}
+
+
+	public  void LaunchSession7(){
+		SetSession7 ();
 		SceneManager.LoadScene (1);
 	}
 
-	//session 6 - two users, eeg only
-	public  void LaunchSession7(){
+	public  void LaunchSession7Questions(){
+		SetSession7 ();
+		SceneManager.LoadScene (3);
+	}
+	public  void LaunchSession7Meditation(){
+		SetSession7 ();
+		SceneManager.LoadScene (2);
+	}
+
+	//session 7 - solo, both resp and eeg
+	public  void SetSession7(){
 		if (PlayerPrefs.HasKey ("Param_SingleUserSession")) {
 			PlayerPrefsX.SetBool ("Param_SingleUserSession", false);
 		} else {
@@ -472,10 +581,26 @@ public class LaunchController : MonoBehaviour {
 
 
 		Debug.Log ("Session7 parameters loaded -one user, eeg & respiration");
+
+	}
+
+
+	// session 8 - dyad, bot resp and eeg
+	public  void LaunchSession8(){
+		SetSession8 ();
 		SceneManager.LoadScene (1);
 	}
 
-	public  void LaunchSession8(){
+	public  void LaunchSession8Questions(){
+		SetSession8 ();
+		SceneManager.LoadScene (3);
+	}
+	public  void LaunchSession8Meditation(){
+		SetSession8 ();
+		SceneManager.LoadScene (2);
+	}
+
+	public  void SetSession8(){
 		if (PlayerPrefs.HasKey ("Param_SingleUserSession")) {
 			PlayerPrefsX.SetBool ("Param_SingleUserSession", false);
 		} else {
@@ -526,7 +651,7 @@ public class LaunchController : MonoBehaviour {
 
 
 		Debug.Log ("Session7 parameters loaded - two users, eeg & respiration");
-		SceneManager.LoadScene (1);
+	
 	}
 
 
@@ -567,7 +692,7 @@ public class LaunchController : MonoBehaviour {
 	public void SetHostComputer() {
 
 		HostComputer = !HostComputer;
-		Debug.Log(HostComputer);
+		Debug.Log("This computer is a host: "+ HostComputer);
 
 		if (PlayerPrefs.HasKey ("Param_HostOrNot")) {
 			PlayerPrefsX.SetBool ("Param_HostOrNot", HostComputer);
@@ -575,6 +700,25 @@ public class LaunchController : MonoBehaviour {
 			bool b = HostComputer;
 			PlayerPrefsX.SetBool ("Param_HostOrNot", b);
 
+		}
+
+	}
+
+
+	public void SetSessionLength(string value2) {
+
+		SessionLengthString = SessionLength_field.text.ToString();
+		SessionLength = float.Parse(SessionLengthString);
+		if (PlayerPrefs.HasKey ("SessionLengthStored")) {
+			PlayerPrefs.SetFloat ("SessionLengthStored", SessionLength );
+			Debug.Log ("Session Length set to " + SessionLength);
+
+		} else {
+			float arvo = 600f;
+			PlayerPrefs.SetFloat ("SessionLengthStored", arvo);
+			PlayerPrefs.SetFloat ("SessionLengthStored", arvo);
+			Debug.Log ("Session Length set to " + arvo);
+		
 		}
 
 	}
