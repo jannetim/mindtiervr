@@ -109,13 +109,17 @@ public class QuestionHandler : MonoBehaviour {
             }
         }
         if (!feelingsQuestionSet) { 
-            if (questionNumber >= 23)
+            if (questionNumber >= 24)
             {
                 question.text = "Kiitos vastauksista! Valvoja tulee pian käynnistämään seuraavan session";
+                Proceed.SetActive(false);
+                readyToProceed = false;
+                Qt.SetActive(false);
                 StartCoroutine("Ending");
                 // proceed to somewhere
+            } else {
+                question.text = Questions[questionNumber];
             }
-            question.text = Questions[questionNumber];
         } else
         {
             if (questionNumber > 2)
