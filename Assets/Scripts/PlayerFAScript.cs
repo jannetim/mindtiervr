@@ -98,7 +98,7 @@ public class PlayerFAScript : NetworkBehaviour
 
         // dynamic modifier for glow HDR
         glowVMod = 0.5f;
-
+        UseSyncGlow = false;
     }
 
     // Update is called once per frame
