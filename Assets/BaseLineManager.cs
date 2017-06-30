@@ -118,12 +118,15 @@ public class BaseLineManager : MonoBehaviour {
                             {
                                 yield return new WaitForSeconds(3f);
                             }
-                            GameObject.Find("Network Manager").GetComponent<NetworkManager>().StopHost();
-                            GameObject.Find("Network Manager").GetComponent<NetworkManager>().StopServer();
+                            NetworkManager.singleton.StopHost();
+                            NetworkManager.singleton.StopServer();
+                            //GameObject.Find("Network Manager").GetComponent<NetworkManager>().StopHost();
+                            //GameObject.Find("Network Manager").GetComponent<NetworkManager>().StopServer();
                         }
                     }
                 }
             }
+            NetworkManager.singleton.StopClient();
             SceneManager.LoadScene(2);
         }
 	}
