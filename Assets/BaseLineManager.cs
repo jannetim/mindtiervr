@@ -104,8 +104,26 @@ public class BaseLineManager : MonoBehaviour {
             SceneManager.LoadScene(0);
 		} else {
             //Application.LoadLevel (1);
-            GameObject.Find("Network Manager").GetComponent<NetworkManager>().StopHost();
-            GameObject.Find("Network Manager").GetComponent<NetworkManager>().StopServer();
+            string[] multiPlayerSessions = new string[] { "Session4", "Session5", "Session6", "Session8" };
+            if (PlayerPrefs.HasKey("Param_SessionID"))
+            {
+                string session = PlayerPrefs.GetString("Param_SessionID");
+                if (System.Array.IndexOf(multiPlayerSessions, session) > -1)
+                {
+                    if (PlayerPrefs.HasKey("Param_HostOrNot"))
+                    {
+                        if (PlayerPrefsX.GetBool("Param_HostOrNot"))
+                        {
+                            while (GameObject.FindGameObjectsWithTag("Player").Length > 1)
+                            {
+                                yield return new WaitForSeconds(3f);
+                            }
+                            GameObject.Find("Network Manager").GetComponent<NetworkManager>().StopHost();
+                            GameObject.Find("Network Manager").GetComponent<NetworkManager>().StopServer();
+                        }
+                    }
+                }
+            }
             SceneManager.LoadScene(2);
         }
 	}
