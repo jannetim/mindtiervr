@@ -62,13 +62,17 @@ public class BaseLineManager : MonoBehaviour {
             StartCoroutine("FadeToClear", 0.15f);
             Debug.Log("started baseline");
         }
-		/*	if (BeginEndFade) {
+        /*	if (BeginEndFade) {
 				StartCoroutine ("FadeToBlack", 0.15f);
 			}*/
-		
-	}
+        if (Input.GetKeyDown(KeyCode.F1)) { SceneManager.LoadScene(0); }
+        if (Input.GetKeyDown(KeyCode.F2)) { SceneManager.LoadScene(1); }
+        if (Input.GetKeyDown(KeyCode.F3)) { SceneManager.LoadScene(2); }
+        if (Input.GetKeyDown(KeyCode.F4)) { SceneManager.LoadScene(3); }
 
-	IEnumerator SessionTimer()
+    }
+
+    IEnumerator SessionTimer()
 	{
 		//Debug.Log ("Session Timer Launched");
 		yield return new WaitForSeconds (BaseLineDuration - 3f);
