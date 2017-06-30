@@ -238,10 +238,11 @@ public class SessionManager : MonoBehaviour
                     {
                         while (GameObject.FindGameObjectsWithTag("Player").Length > 1)
                         {
-                            yield return new WaitForSeconds(0.1f);
+                            yield return new WaitForSeconds(1.5f);
+                            NetworkManager.singleton.StopHost();
+                            NetworkManager.singleton.StopServer();
                         }
-                        NetworkManager.singleton.StopHost();
-                        NetworkManager.singleton.StopServer();
+
                     } else
                     {
                         //NetworkManager.Shutdown();
