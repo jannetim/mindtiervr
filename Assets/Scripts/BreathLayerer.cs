@@ -226,7 +226,7 @@ public class BreathLayerer : NetworkBehaviour
 
 	IEnumerator SyncHappenedCheck(){   // filewriter checks the variable changed here.
 		
-		yield return new WaitForSeconds(1.0f);
+		yield return new WaitForSeconds(2.0f);
 		SyncHappened = false;
 	
 	
