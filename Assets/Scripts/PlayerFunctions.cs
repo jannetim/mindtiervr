@@ -55,13 +55,13 @@ public class PlayerFunctions : NetworkBehaviour {
 
     */
 
-        if (Input.GetKeyDown("r"))
+        /*if (Input.GetKeyDown("r"))
         {
             Debug.Log("pressed r");
             GameObject.Find("Network Manager").GetComponent<NetworkManager>().StopHost();
             GameObject.Find("Network Manager").GetComponent<NetworkManager>().StopServer();
             //GameObject.Find("Network Manager").GetComponent<NetworkManager>().ServerChangeScene("LaunchManager");
             SceneManager.LoadScene(3);
-        }
+        }*/
     }
 }

@@ -41,7 +41,7 @@ public class LaunchController : MonoBehaviour {
 		}
 
 		if (PlayerPrefs.HasKey ("Param_HostOrNot")) {
-			HostComputer = PlayerPrefsX.GetBool ("Param_HostOrNot");
+			//HostComputer = PlayerPrefsX.GetBool ("Param_HostOrNot");
 		} else {
 			bool b = HostComputer;
 			PlayerPrefsX.SetBool ("Param_HostOrNot", b);

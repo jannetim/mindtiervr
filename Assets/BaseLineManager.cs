@@ -67,7 +67,11 @@ public class BaseLineManager : MonoBehaviour {
 			}*/
         if (Input.GetKeyDown(KeyCode.F1)) { SceneManager.LoadScene(0); }
         if (Input.GetKeyDown(KeyCode.F2)) { SceneManager.LoadScene(1); }
-        if (Input.GetKeyDown(KeyCode.F3)) { SceneManager.LoadScene(2); }
+        if (Input.GetKeyDown(KeyCode.F3)) {
+            SceneManager.LoadScene(2);
+            GameObject.Find("Network Manager").GetComponent<NetworkManager>().StopHost();
+            GameObject.Find("Network Manager").GetComponent<NetworkManager>().StopServer();
+        }
         if (Input.GetKeyDown(KeyCode.F4)) { SceneManager.LoadScene(3); }
 
     }

@@ -101,7 +101,7 @@ public class PlayerManager : NetworkBehaviour
 			//Debug.Log ("Session loaded:" + sessionName);
 		} else {sessionName =" ";}
 
-		if ((sessionName == "Session1") || (sessionName == "Session2") || (sessionName == "Session3")) {
+		if ((sessionName == "Session1") || (sessionName == "Session2") || (sessionName == "Session3") || (sessionName == "Session7")) {
 			GetComponent<PlayerFAScript>().UseSyncGlow = false;
 
 			try
