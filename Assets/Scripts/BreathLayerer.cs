@@ -245,7 +245,7 @@ public class BreathLayerer : NetworkBehaviour
     IEnumerator SyncGlow()
     {
         SyncHappened = true;
-        Debug.Log("Breathing Sync marked as true");
+       
         yield return StartCoroutine("SyncGlowIn");
         
  
@@ -255,7 +255,7 @@ public class BreathLayerer : NetworkBehaviour
 
     IEnumerator SyncGlowIn()
     {
-		
+        Debug.Log("Breathing Sync happened!");
         Color colorOwn = Plane.GetComponent<Renderer>().material.color;
         Color color2 = Plane2.GetComponent<Renderer>().material.color;
 
