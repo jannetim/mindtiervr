@@ -236,7 +236,7 @@ public class SessionManager : MonoBehaviour
                 {
                     if (PlayerPrefsX.GetBool("Param_HostOrNot"))
                     {
-                        while (GameObject.FindGameObjectsWithTag("Player").Length > 1)
+                        if (GameObject.FindGameObjectsWithTag("Player").Length > 1)
                         {
                             yield return new WaitForSeconds(1.5f);
                             NetworkManager.singleton.StopHost();
