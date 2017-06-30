@@ -37,8 +37,7 @@ public class PlayerInstantiator : MonoBehaviour {
                     }
                     else
                     {
-                        manager.StartClient();
-                        Debug.Log("Started client");
+                        StartClient();
                     }
                 }
             }
@@ -46,6 +45,24 @@ public class PlayerInstantiator : MonoBehaviour {
     }
 
 
+    void StartClient()
+    {
+        if (GameObject.Find("Player(Clone)"))
+        {
+            manager.StartClient();
+            Debug.Log("Started client");
+        } else
+        {
+            Debug.Log("Waiting for host...");
+            StartCoroutine("WaitForHost");
+        }
+    }
+
+    IEnumerator WaitForHost()
+    {
+        yield return new WaitForSeconds(0.1f);
+        StartClient();
+    }
 
     // Update is called once per frame
     void Update () {
