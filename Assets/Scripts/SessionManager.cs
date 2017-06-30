@@ -245,7 +245,7 @@ public class SessionManager : MonoBehaviour
                     } else
                     {
                         NetworkManager.Shutdown();
-                        yield return new WaitForSeconds(0.5f);
+                        yield return new WaitForSeconds(0.1f);
                     }
                 }
             }

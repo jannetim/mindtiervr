@@ -111,7 +111,7 @@ public class QuestionHandler : MonoBehaviour {
         if (!feelingsQuestionSet) { 
             if (questionNumber >= 23)
             {
-                question.text = "Kiitos! Valvoja tulee hetken kuluttua lyömään sinua päähän";
+                question.text = "Kiitos vastauksista! Valvoja tulee pian käynnistämään seuraavan session";
                 StartCoroutine("Ending");
                 // proceed to somewhere
             }
