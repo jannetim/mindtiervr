@@ -642,7 +642,7 @@ public class LaunchController : MonoBehaviour {
 		}
 
 		if (PlayerPrefs.HasKey ("Param_SessionID")) {
-			PlayerPrefs.SetString ("Param_SessionID", "Session7");
+			PlayerPrefs.SetString ("Param_SessionID", "Session8");
 		} else {
 			string b = "Session8";
 			PlayerPrefs.SetString ("Param_SessionID", b);
