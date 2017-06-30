@@ -147,7 +147,7 @@ public class PlayerManager : NetworkBehaviour
                 //BridgeBars = GameObject.Find("Player1_BridgeLayers");
                 BridgeBars = gameObject;
                 StatueAnimator = GameObject.Find("Statue_Player1");
-				AuraAnimator = GameObject.Find("AuraNew_Player1");
+				AuraAnimator = GameObject.Find("AuraNew_Player2");
 				AuraBone = GameObject.Find("AuraBone1");
             }
             else
@@ -158,7 +158,7 @@ public class PlayerManager : NetworkBehaviour
                 //BridgeBars = GameObject.Find("Player2_BridgeLayers");
                 BridgeBars = gameObject;
                 StatueAnimator = GameObject.Find("Statue_Player2");
-				AuraAnimator = GameObject.Find("AuraNew_Player2");
+				AuraAnimator = GameObject.Find("AuraNew_Player1");
 				AuraBone = GameObject.Find("AuraBone2");
             }
 
