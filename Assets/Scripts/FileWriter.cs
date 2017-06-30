@@ -5,8 +5,9 @@ using System.Threading;
 using System.Runtime.InteropServices;
 using System.IO;
 using System;
+using UnityEngine.Networking;
 
-public class FileWriter : MonoBehaviour {
+public class FileWriter : NetworkBehaviour {
 
 	public bool FileWriting = true;
 	public float FileWriteFreq = 1f;
@@ -34,7 +35,11 @@ public class FileWriter : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		if (PlayerPrefs.HasKey ("SaveFileNameStored")) {
+        if (!isLocalPlayer)
+        {
+            return;
+        }
+        if (PlayerPrefs.HasKey ("SaveFileNameStored")) {
 			SaveFileName = PlayerPrefs.GetString ("SaveFileNameStored");		
 			Debug.Log ("FileName parameter loaded: "+ SaveFileName );
 		} else { SaveFileName = "Testfile.txt";
@@ -50,9 +55,12 @@ public class FileWriter : MonoBehaviour {
 
 
 void FixedUpdate () {
-		//File Writing happens here.
-
-		switch (sessionName) {
+        //File Writing happens here.
+        if (!isLocalPlayer)
+        {
+            return;
+        }
+        switch (sessionName) {
 		case "Session1":  //no adaptation, solo.
 			PlayerFAread = GetComponent<PlayerManager>().PlayerFA;
 			PlayerColorvalue = 0f;
