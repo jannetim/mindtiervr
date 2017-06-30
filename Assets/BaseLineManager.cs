@@ -114,10 +114,7 @@ public class BaseLineManager : MonoBehaviour {
                     {
                         if (PlayerPrefsX.GetBool("Param_HostOrNot"))
                         {
-                            while (GameObject.FindGameObjectsWithTag("Player").Length > 1)
-                            {
-                                yield return new WaitForSeconds(3f);
-                            }
+                            while (GameObject.FindGameObjectsWithTag("Player").Length > 1) {}
                             NetworkManager.singleton.StopHost();
                             NetworkManager.singleton.StopServer();
                             //GameObject.Find("Network Manager").GetComponent<NetworkManager>().StopHost();

@@ -34,30 +34,30 @@ public class QuestionHandler : MonoBehaviour {
     void Start () {
         questionNumber = -1;
         Questions = new string[24];
-        Questions[0] = "Minusta tuntuu sympaattiselta";
-        Questions[1] = "Minusta tuntuu myötätuntoiselta";
-        Questions[2] = "Minusta tuntuu lämminsydämiseltä";
-        Questions[3] = "Minusta tuntuu lämpimältä";
-        Questions[4] = "Minusta tuntuu hellältä";
-        Questions[5] = "Minusta tuntuu liikuttuneelta";
-        Questions[6] = "Huomasin parini";
-        Questions[7] = "Parini huomasi minut";
-        Questions[8] = "Parini läsnäolo oli minulle ilmeistä";
-        Questions[9] = "Minun läsnäoloni oli ilmeistä parilleni";
-        Questions[10] = "Parini kiinnitti huomioni";
-        Questions[11] = "Kiinnitin parini huomion";
-        Questions[12] = "Tiesin miltä paristani tuntui";
-        Questions[13] = "Parini tiesi miltä minusta tuntui";
-        Questions[14] = "Parini tunteet eivät olleet minulle selkeitä";
-        Questions[15] = "Minun tunteeni eivät olleet parilleni selkeitä";
-        Questions[16] = "Pystyin kuvailemaan parini tuntemuksia tarkasti";
-        Questions[17] = "Parini pystyi kuvailemaan minun tuntemuksiani tarkasti";
-        Questions[18] = "Parini mielialalla oli välillä vaikutusta minuun";
-        Questions[19] = "Minun mielialallani oli välillä vaikutusta pariini";
-        Questions[20] = "Parini tuntemukset vaikuttivat vuorovaikutuksemme tunnelmaan";
-        Questions[21] = "Minun tuntemukseni vaikuttivat vuorovaikutuksemme tunnelmaan";
-        Questions[22] = "Parini asenteet vaikuttivat siihen miltä minusta tuntui";
-        Questions[23] = "Minun asenteeni vaikuttivat siihen miltä paristani tuntui";
+        Questions[0] = "Minusta tuntuu sympaattiselta.";
+        Questions[1] = "Minusta tuntuu myötätuntoiselta.";
+        Questions[2] = "Minusta tuntuu lämminsydämiseltä.";
+        Questions[3] = "Minusta tuntuu lämpimältä.";
+        Questions[4] = "Minusta tuntuu hellältä.";
+        Questions[5] = "Minusta tuntuu liikuttuneelta.";
+        Questions[6] = "Huomasin parini.";
+        Questions[7] = "Parini huomasi minut.";
+        Questions[8] = "Parini läsnäolo oli minulle ilmeistä.";
+        Questions[9] = "Minun läsnäoloni oli ilmeistä parilleni.";
+        Questions[10] = "Parini kiinnitti huomioni.";
+        Questions[11] = "Kiinnitin parini huomion.";
+        Questions[12] = "Tiesin miltä paristani tuntui.";
+        Questions[13] = "Parini tiesi miltä minusta tuntui.";
+        Questions[14] = "Parini tunteet eivät olleet minulle selkeitä.";
+        Questions[15] = "Minun tunteeni eivät olleet parilleni selkeitä.";
+        Questions[16] = "Pystyin kuvailemaan parini tuntemuksia tarkasti.";
+        Questions[17] = "Parini pystyi kuvailemaan minun tuntemuksiani tarkasti.";
+        Questions[18] = "Parini mielialalla oli välillä vaikutusta minuun.";
+        Questions[19] = "Minun mielialallani oli välillä vaikutusta pariini.";
+        Questions[20] = "Parini tuntemukset vaikuttivat vuorovaikutuksemme tunnelmaan.";
+        Questions[21] = "Minun tuntemukseni vaikuttivat vuorovaikutuksemme tunnelmaan.";
+        Questions[22] = "Parini asenteet vaikuttivat siihen miltä minusta tuntui.";
+        Questions[23] = "Minun asenteeni vaikuttivat siihen miltä paristani tuntui.";
         question = GameObject.Find("Question").GetComponent<Text>();
         Toggles = FeelingToggles;
         tg = GameObject.Find("Question Holder").GetComponent<ToggleGroup>();
@@ -111,9 +111,9 @@ public class QuestionHandler : MonoBehaviour {
         if (!feelingsQuestionSet) { 
             if (questionNumber >= 23)
             {
+                question.text = "Kiitos! Valvoja tulee hetken kuluttua lyömään sinua päähän";
+                StartCoroutine("Ending");
                 // proceed to somewhere
-                SceneManager.LoadScene(0);
-
             }
             question.text = Questions[questionNumber];
         } else
@@ -251,6 +251,12 @@ public class QuestionHandler : MonoBehaviour {
         ColorBlock cb = Proceed.GetComponent<Button>().colors;
         cb.normalColor = ButtonOriginal;
         Proceed.GetComponent<Button>().colors = cb;
+    }
+
+    IEnumerator Ending()
+    {
+        yield return new WaitForSeconds(5f);
+        SceneManager.LoadScene(0);
     }
 
 }

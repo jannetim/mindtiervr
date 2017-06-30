@@ -246,7 +246,7 @@ public class SessionManager : MonoBehaviour
                 }
             }
         }
-
+        NetworkManager.singleton.StopClient();
         SceneManager.LoadScene(3);
     }
 
