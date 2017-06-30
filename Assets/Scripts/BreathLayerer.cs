@@ -231,11 +231,12 @@ public class BreathLayerer : NetworkBehaviour
     }
 
 	IEnumerator SyncHappenedCheck(){   // filewriter checks the variable changed here.
+        Debug.Log("resetting breathing sync marker");
         syncResetting = true;
         yield return new WaitForSeconds(2.0f);
 		SyncHappened = false;
         syncResetting = false;
-
+        
 
 
     }
@@ -244,7 +245,7 @@ public class BreathLayerer : NetworkBehaviour
     IEnumerator SyncGlow()
     {
         SyncHappened = true;
-      
+        Debug.Log("Breathing Sync marked as true");
         yield return StartCoroutine("SyncGlowIn");
         
  
