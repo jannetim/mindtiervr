@@ -4,13 +4,15 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 
-public class PlayerInstantiator : MonoBehaviour {
+public class PlayerInstantiator : MonoBehaviour
+{
 
     NetworkManager manager;
     string[] singlePlayerSessions;
     string[] multiPlayerSessions;
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start()
+    {
         singlePlayerSessions = new string[] { "Session1", "Session2", "Session3", "Session7" };
         multiPlayerSessions = new string[] { "Session4", "Session5", "Session6", "Session8" };
         manager = transform.GetComponent<NetworkManager>();
@@ -42,13 +44,30 @@ public class PlayerInstantiator : MonoBehaviour {
                     }
                 }
             }
-        } 
+        }
+    }
+
+    private void OnDisconnectedFromServer(NetworkDisconnection info)
+    {
+        if (Network.isServer)
+        {
+            Debug.Log("Local server connection disconnected");
+        }
+
+        else if (info == NetworkDisconnection.LostConnection)
+        {
+            Debug.Log("Lost connection to the server");
+        } else
+        {
+            Debug.Log("Successfully diconnected from the server");
+        }
+        SceneManager.LoadScene(3);
     }
 
 
-
     // Update is called once per frame
-    void Update () {
+    void Update()
+    {
 
 
     }
