@@ -528,6 +528,7 @@ public class PlayerManager : NetworkBehaviour
                     {
                         CmdScaleAuraExpand(false);
                     }
+                    Debug.Log("Aura scaled breathing out!");
                 }
                 /*
 				if (!IsNPC) {
@@ -602,6 +603,8 @@ public class PlayerManager : NetworkBehaviour
                     {
                         CmdScaleAuraExpand(true);
                     }
+
+                    Debug.Log("Aura scaled breathing in!");
                 }
 
                 /*
