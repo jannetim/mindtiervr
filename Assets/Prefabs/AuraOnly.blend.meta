@@ -25,6 +25,8 @@ ModelImporter:
     400014: stayStillBone3
     400016: Armature_Aura3
     400018: AuraAnimated3
+    2300000: AuraAnimated3
+    3300000: AuraAnimated3
     4300000: AuraAnimated
     4300002: AuraAnimated3
     7400000: Default Take
@@ -44,14 +46,14 @@ ModelImporter:
     bakeSimulation: 0
     resampleCurves: 1
     optimizeGameObjects: 0
-    motionNodeName: 
+    motionNodeName: Armature_Aura3/stayStillBone3
     rigImportErrors: 
     rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
-    animationCompression: 0
+    animationCompression: 3
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
