@@ -652,7 +652,7 @@ public class LaunchController : MonoBehaviour {
 		}
 
 
-		Debug.Log ("Session7 parameters loaded - two users, eeg & respiration");
+		Debug.Log ("Session8 parameters loaded - two users, eeg & respiration");
 	
 	}
 
