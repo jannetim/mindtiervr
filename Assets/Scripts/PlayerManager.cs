@@ -143,7 +143,9 @@ public class PlayerManager : NetworkBehaviour
             {
                 //AuraController = GameObject.Find("Player1_Manager");
                 AuraController = gameObject;
-                AuraExpander = GameObject.Find("Aura_player1Expander");
+               
+
+                //AuraExpander = GameObject.Find("Aura_player1Expander");
                 //BridgeBars = GameObject.Find("Player1_BridgeLayers");
                 BridgeBars = gameObject;
                 StatueAnimator = GameObject.Find("Statue_Player1");
@@ -154,7 +156,8 @@ public class PlayerManager : NetworkBehaviour
             {
                 //AuraController = GameObject.Find("Player2_Manager");
                 AuraController = gameObject;
-                AuraExpander = GameObject.Find("Aura_player2Expander");
+                AuraExpander = GameObject.Find("AuraBone2");
+                //AuraExpander = GameObject.Find("Aura_player2Expander");
                 //BridgeBars = GameObject.Find("Player2_BridgeLayers");
                 BridgeBars = gameObject;
                 StatueAnimator = GameObject.Find("Statue_Player2");
@@ -697,7 +700,7 @@ public class PlayerManager : NetworkBehaviour
 
     [ClientRpc]
     void RpcScaleAuraExpand(bool expand)
-    {/*
+    {
         if (expand)
         {
             try
@@ -719,7 +722,7 @@ public class PlayerManager : NetworkBehaviour
             {
                 Debug.Log(e);
             }
-        }*/
+        }
 
     }
 
