@@ -4,10 +4,10 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 public class AuraScaler : NetworkBehaviour {
-	public float ExpandSpeed = 0.1f;
-	public float maxSize = 0.55f;
-	public float minSize = 0.4f;
-	float scalefactor = 1.0f;
+	public float ExpandSpeed = 0.03f;
+	public float maxSize = 1.5f;
+	public float minSize = 1.0f;
+	float scalefactor = 1.1f;
 	public bool expand = false;
 
 	// Use this for initialization
