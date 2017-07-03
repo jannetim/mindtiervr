@@ -210,7 +210,7 @@ public class TCPClientThreadFA
                     float faOutTemp = (frontalAss - faMin) / faRange;
                     if (float.IsNaN(faOutTemp))
                     {
-                        faOutTemp = 0.0f
+                        faOutTemp = 0.0f;
                     }
 
                     SensorData.FAOut = faOutTemp;
