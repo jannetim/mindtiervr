@@ -205,7 +205,15 @@ public class TCPClientThreadFA
                 }
                 else
                 {
-                    SensorData.FAOut = (frontalAss - faMin) / faRange;
+
+                    //check that we give out reasonable numbers)
+                    float faOutTemp = (frontalAss - faMin) / faRange;
+                    if (float.IsNaN(faOutTemp))
+                    {
+                        faOutTemp = 0.0f
+                    }
+
+                    SensorData.FAOut = faOutTemp;
                     SensorData.RespOut = respiration - prevRespiration;
                 }
 
