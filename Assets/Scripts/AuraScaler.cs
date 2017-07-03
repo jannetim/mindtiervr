@@ -7,7 +7,7 @@ public class AuraScaler : NetworkBehaviour {
 	public float ExpandSpeed = 0.1f;
 	public float maxSize = 0.55f;
 	public float minSize = 0.4f;
-	float scalefactor = 0.4f;
+	float scalefactor = 1.0f;
 	public bool expand = false;
 
 	// Use this for initialization
