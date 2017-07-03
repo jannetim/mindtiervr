@@ -673,13 +673,15 @@ public class PlayerManager : NetworkBehaviour
        // Debug.Log("startin " + startIn);
         if (startIn)
         {
+            AuraAnimator.GetComponent<Animator>().SetTrigger("StartOutAura");
             StatueAnimator.GetComponent<Animator>().SetTrigger("StartIn");
-			AuraAnimator.GetComponent<Animator>().SetTrigger("StartOutAura");
+			
         }
         else
         {
+            AuraAnimator.GetComponent<Animator>().SetTrigger("StartInAura");
             StatueAnimator.GetComponent<Animator>().SetTrigger("StartOut");
-			AuraAnimator.GetComponent<Animator>().SetTrigger("StartInAura");
+			
         }
 
 
