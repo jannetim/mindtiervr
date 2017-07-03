@@ -112,7 +112,7 @@ public class PlayerFAScript : NetworkBehaviour
             }
         }
 
-        if (GameObject.Find("Session Manager").GetComponent<SessionManager>().StartTimerDone)
+        if ((GameObject.Find("Session Manager").GetComponent<SessionManager>().StartTimerDone) && ((sessionName != "Session3")))
         { UseSyncGlow = true; }
 
             foreach (GameObject player in GameObject.FindGameObjectsWithTag("Player"))

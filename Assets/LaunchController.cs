@@ -50,7 +50,9 @@ public class LaunchController : MonoBehaviour {
 		GameObject.Find("HostClientToggle").GetComponent<Toggle>().isOn = HostComputer;
 
 		if (PlayerPrefs.HasKey ("SessionLengthStored")) {
-			SessionLengthString = PlayerPrefs.GetString ("SessionLengthStored");
+            float b = PlayerPrefs.GetFloat("SessionLengthStored");
+            SessionLengthString = b.ToString();
+                
 			GameObject.Find ("SessionLengthPlaceholderText").gameObject.GetComponent<Text> ().text = SessionLengthString; 
 			Debug.Log("SessionLengthStored: " + SessionLengthString);
 			//if (SingleUserSession) { Debug.Log( "single user session");
