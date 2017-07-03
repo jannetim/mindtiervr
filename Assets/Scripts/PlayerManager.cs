@@ -145,7 +145,7 @@ public class PlayerManager : NetworkBehaviour
                 AuraController = gameObject;
                
 
-                //AuraExpander = GameObject.Find("Aura_player1Expander");
+                AuraExpander = GameObject.Find("AuraBone1");
                 //BridgeBars = GameObject.Find("Player1_BridgeLayers");
                 BridgeBars = gameObject;
                 StatueAnimator = GameObject.Find("Statue_Player1");
