@@ -49,7 +49,7 @@ public class PlayerFAScript : NetworkBehaviour
 			sessionName = PlayerPrefs.GetString ("Param_SessionID");		
 			//Debug.Log ("Session loaded:" + sessionName);
 		} else {sessionName =" ";}
-		if ((sessionName == "Session1") || (sessionName == "Session2") || (sessionName == "Session3")) {
+		if ((sessionName == "Session1") || (sessionName == "Session2") || (sessionName == "Session3") || (sessionName == "Session7")) {
 			UseSyncGlow = false;
 		}
 
@@ -112,7 +112,7 @@ public class PlayerFAScript : NetworkBehaviour
             }
         }
 
-        if ((GameObject.Find("Session Manager").GetComponent<SessionManager>().StartTimerDone) && ((sessionName != "Session3")))
+        if ((GameObject.Find("Session Manager").GetComponent<SessionManager>().StartTimerDone) && (sessionName != "Session3") && (sessionName != "Session7"))
         { UseSyncGlow = true; }
 
             foreach (GameObject player in GameObject.FindGameObjectsWithTag("Player"))
