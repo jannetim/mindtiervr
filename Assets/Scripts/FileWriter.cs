@@ -203,7 +203,7 @@ void FixedUpdate () {
 
 
 
-		path1 = System.Environment.GetFolderPath (System.Environment.SpecialFolder.Desktop) + "/MindTierData";
+		path1 = System.Environment.GetFolderPath (System.Environment.SpecialFolder.Desktop) + "/DYNECOM_Data";
 		path2 = path1 + "/" + SaveFileName;
 
 
