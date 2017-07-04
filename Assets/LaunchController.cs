@@ -426,9 +426,9 @@ public class LaunchController : MonoBehaviour {
 		}
 
 		if (PlayerPrefs.HasKey ("Param_EegOther")) {
-			PlayerPrefsX.SetBool ("Param_EegOther", true);
+			PlayerPrefsX.SetBool ("Param_EegOther", false);
 		} else {
-			bool b = true;
+			bool b = false;
 			PlayerPrefsX.SetBool ("Param_EegOther", b);
 
 		}

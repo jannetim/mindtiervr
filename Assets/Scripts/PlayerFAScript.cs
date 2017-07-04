@@ -54,7 +54,7 @@ public class PlayerFAScript : NetworkBehaviour
 		}
 
 
-		PlayerColor = new Color(0f, 0f, 0f, 0f);
+		PlayerColor = new Color(0.5f, 0.5f, 0.5f, 1.0f);
         PlayerFA_Display = 0.0f;
         /*if (transform.name == "Player(Clone)")
         {
