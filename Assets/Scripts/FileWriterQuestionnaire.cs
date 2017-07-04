@@ -24,7 +24,7 @@ void Start () {
 
 	
 			if (PlayerPrefs.HasKey ("SaveFileNameStored")) {
-				SaveFileName = PlayerPrefs.GetString ("SaveFileNameStored") + "_questiinnaire.txt";		
+				SaveFileName = PlayerPrefs.GetString ("SaveFileNameStored") + "_questions.txt";		
 				Debug.Log ("FileName parameter loaded: "+ SaveFileName );
 			} else { SaveFileName = "Testfile.txt";
 			}
