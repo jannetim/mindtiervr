@@ -38,13 +38,13 @@ public class PlayerManager : NetworkBehaviour
     bool outBreathContinues = false;
     private GameObject otherPlayerManager;
     public float[] respArray = new float[6];
-    public float[] faArray = new float[20];
+    public float[] faArray = new float[10];
     //private Queue<float> respQueue = new Queue< float > (10);
 
     public Queue<float> respMinQueue = new Queue<float>(new float[3]);
     public Queue<float> respMaxQueue = new Queue<float>(new float[3]);
     public Queue<float> respQueue = new Queue<float>(new float[6]);
-    public Queue<float> faQueue = new Queue<float>(new float[20]);
+    public Queue<float> faQueue = new Queue<float>(new float[10]);
 
     public bool RespChanged = true;
     float RespDataOld = 0f;
@@ -268,7 +268,7 @@ public class PlayerManager : NetworkBehaviour
 						respThreshold = (respMax - respMin) * 0.02f;
 
 
-						if (faQueue.Count == 20) {
+						if (faQueue.Count == 10) {
 							faQueue.Dequeue ();
 						}
 						faQueue.Enqueue (SensorData.FAOut);
@@ -319,7 +319,7 @@ public class PlayerManager : NetworkBehaviour
 
 						respThreshold = (respMax - respMin) * 0.02f;
 
-						if (faQueue.Count == 20) {
+						if (faQueue.Count == 10) {
 							faQueue.Dequeue ();
 						}
 						faQueue.Enqueue (SensorData.FAOut);
