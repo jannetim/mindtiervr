@@ -40,8 +40,9 @@ public class FileWriter : NetworkBehaviour {
             return;
         }
         if (PlayerPrefs.HasKey ("SaveFileNameStored")) {
-			SaveFileName = PlayerPrefs.GetString ("SaveFileNameStored");		
-			Debug.Log ("FileName parameter loaded: "+ SaveFileName );
+			//SaveFileName = PlayerPrefs.GetString ("SaveFileNameStored");
+            SaveFileName = PlayerPrefs.GetString("SaveFileNameStored") + "_data.txt";
+            Debug.Log ("FileName parameter loaded: "+ SaveFileName );
 		} else { SaveFileName = "Testfile.txt";
 		}
 

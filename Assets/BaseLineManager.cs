@@ -21,7 +21,7 @@ public class BaseLineManager : MonoBehaviour {
 			sessionID = PlayerPrefs.GetString("Param_SessionID");	
 
 			if (sessionID == "Session0") {
-				BaseLineDuration = 600f;
+				BaseLineDuration = 360f;
 				
 			} else {
 				BaseLineDuration = 30f;
