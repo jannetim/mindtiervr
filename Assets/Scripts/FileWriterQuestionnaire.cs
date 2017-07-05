@@ -65,12 +65,15 @@ void Start () {
 			//			Debug.Log (headerToWrite);
 			System.IO.File.AppendAllText (path2, headerToWrite);
 			headerWritten = true;
-		} 
+		}
 
-		string tmpQuestionNumber = QuestionNumber.ToString();
+        saveTimeNow = System.DateTime.Now;
+        saveTimeNow.ToString("yyyyMMddHHmmss");
+
+        string tmpQuestionNumber = QuestionNumber.ToString();
 		string tmpAnswer = Answer.ToString();
 
-		stateToWrite = sessionName +","+ QuestionNumber +","+ tmpAnswer + Environment.NewLine; 
+		stateToWrite = saveTimeNow+ "," + sessionName +","+ QuestionNumber +","+ tmpAnswer + Environment.NewLine; 
 			System.IO.File.AppendAllText (path2, stateToWrite);
 		
 		
