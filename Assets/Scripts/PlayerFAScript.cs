@@ -161,7 +161,7 @@ public class PlayerFAScript : NetworkBehaviour
 				fasync = Mathf.Abs (PlayerFA_Display - OtherFA);
 
 				// Lower and flickering emission saturation according to FA-level when FA-levels in sync
-				if (fasync < 0.1)
+				if (fasync < 0.2f)
                 {
                     //Debug.Log("IN SYNC " + fasync);
                     if (glowS > 0.75f && !flickerS) {
