@@ -37,7 +37,7 @@ public class PlayerManager : NetworkBehaviour
     [SyncVar]
     bool outBreathContinues = false;
     private GameObject otherPlayerManager;
-    public float[] respArray = new float[6];
+    public float[] respArray = new float[5];
     public float[] faArray = new float[6];
     //private Queue<float> respQueue = new Queue< float > (10);
 
@@ -229,7 +229,7 @@ public class PlayerManager : NetworkBehaviour
 				if (PlayerNumber == 1) {
 
 					if (RespChanged) {
-						if (respQueue.Count == 6) {
+						if (respQueue.Count == 5) {
 							respQueue.Dequeue ();
 						}
 						respQueue.Enqueue (SensorData.RespOut);
@@ -286,7 +286,7 @@ public class PlayerManager : NetworkBehaviour
 
 				if (PlayerNumber == 2) {
 					if (RespChanged) {
-						if (respQueue.Count == 6) {
+						if (respQueue.Count == 5) {
 							respQueue.Dequeue ();
 						}
 						respQueue.Enqueue (SensorData.RespOut);
@@ -397,7 +397,7 @@ public class PlayerManager : NetworkBehaviour
 
 
 
-			// calculate the synchronicity of FA.
+			// calculate the synchronicity of FA. // not used in this script.
 			fasync = Mathf.Abs (PlayerFA - otherPlayerFA);  
 			//print(PlayerFA + "  " + otherPlayerFA + "   " + fasync);
 
