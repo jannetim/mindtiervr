@@ -42,6 +42,8 @@ public class PlayerFAScript : NetworkBehaviour
 	public string sessionName;
 	public float fasync;
 
+    public GameObject OtherFAObject; //used for debugging.
+
     // Use this for initialization
     void Start()
     {
@@ -118,10 +120,13 @@ public class PlayerFAScript : NetworkBehaviour
             foreach (GameObject player in GameObject.FindGameObjectsWithTag("Player"))
         {
             Debug.Log("Other player numnber:" + player.GetComponent<PlayerFAScript>().playerNumber + " My player number: " + playerNumber);
+           
 ;            if (player.GetComponent<PlayerFAScript>().playerNumber != playerNumber)
             {
                 OtherFA = player.GetComponent<PlayerFAScript>().PlayerFA_Display;
-     
+                Debug.Log = ("other FA: " + player.GetComponent<PlayerFAScript>().PlayerFA_Display);
+                OtherFAObject = player;
+
             }
         }
 
