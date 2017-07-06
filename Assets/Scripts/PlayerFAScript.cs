@@ -119,15 +119,14 @@ public class PlayerFAScript : NetworkBehaviour
 
         foreach (GameObject player in GameObject.FindGameObjectsWithTag("Player"))
         {
-            
-           
 ;           if (player.GetComponent<PlayerFAScript>().playerNumber != playerNumber)
             {
                 if (NetworkClient.active)
                 {
-                    OtherFA = player.GetComponent<PlayerFAScript>().PlayerFA_Display;
-                    CmdSetOtherFA(OtherFA);
+                    CmdSetOtherFA(PlayerFA_Display);
                 }
+                OtherFA = player.GetComponent<PlayerFAScript>().PlayerFA_Display;
+
                 Debug.Log("Other player numnber:" + player.GetComponent<PlayerFAScript>().playerNumber + " My player number: " + playerNumber);
                 Debug.Log("other FA: " + player.GetComponent<PlayerFAScript>().PlayerFA_Display + "My FA: "+ PlayerFA_Display);
                 OtherFAObject = player;
@@ -229,9 +228,9 @@ public class PlayerFAScript : NetworkBehaviour
 
 
     [Command]
-    void CmdSetOtherFA(float otherFA)
+    void CmdSetFA(float playerFA)
     {
-        OtherFA = otherFA;
+        PlayerFA_Display = playerFA;
     }
 
 
