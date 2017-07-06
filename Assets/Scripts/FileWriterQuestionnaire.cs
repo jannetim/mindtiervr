@@ -73,9 +73,10 @@ void Start () {
         string tmpQuestionNumber = QuestionNumber.ToString();
 		string tmpAnswer = Answer.ToString();
 
-		stateToWrite = saveTimeNow+ "," + sessionName +","+ QuestionNumber +","+ tmpAnswer + Environment.NewLine; 
-			System.IO.File.AppendAllText (path2, stateToWrite);
-		
+        if (QuestionNumber < 31) {
+            stateToWrite = saveTimeNow + "," + sessionName + "," + QuestionNumber + "," + tmpAnswer + Environment.NewLine;
+            System.IO.File.AppendAllText(path2, stateToWrite);
+        }
 		
 	}
 }
