@@ -117,13 +117,17 @@ public class PlayerFAScript : NetworkBehaviour
         if ((GameObject.Find("Session Manager").GetComponent<SessionManager>().StartTimerDone) && (sessionName != "Session3") && (sessionName != "Session7"))
         { UseSyncGlow = true; }
 
-            foreach (GameObject player in GameObject.FindGameObjectsWithTag("Player"))
+        foreach (GameObject player in GameObject.FindGameObjectsWithTag("Player"))
         {
             
            
-;            if (player.GetComponent<PlayerFAScript>().playerNumber != playerNumber)
+;           if (player.GetComponent<PlayerFAScript>().playerNumber != playerNumber)
             {
-                OtherFA = player.GetComponent<PlayerFAScript>().PlayerFA_Display;
+                if (NetworkClient.active)
+                {
+                    OtherFA = player.GetComponent<PlayerFAScript>().PlayerFA_Display;
+                    CmdSetOtherFA(OtherFA);
+                }
                 Debug.Log("Other player numnber:" + player.GetComponent<PlayerFAScript>().playerNumber + " My player number: " + playerNumber);
                 Debug.Log("other FA: " + player.GetComponent<PlayerFAScript>().PlayerFA_Display + "My FA: "+ PlayerFA_Display);
                 OtherFAObject = player;
@@ -161,7 +165,6 @@ public class PlayerFAScript : NetworkBehaviour
 
 			} else if (NetworkClient.active) {
 				CmdPlayerLight (PlayerColor, PlayerFA_Display);
-
 			}
 
 			if (UseSyncGlow) { 
@@ -225,6 +228,11 @@ public class PlayerFAScript : NetworkBehaviour
     }
 
 
+    [Command]
+    void CmdSetOtherFA(float otherFA)
+    {
+        OtherFA = otherFA;
+    }
 
 
     [Command]
