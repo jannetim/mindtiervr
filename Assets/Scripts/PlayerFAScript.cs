@@ -117,9 +117,11 @@ public class PlayerFAScript : NetworkBehaviour
 
             foreach (GameObject player in GameObject.FindGameObjectsWithTag("Player"))
         {
-            if (player.GetComponent<PlayerFAScript>().playerNumber != playerNumber)
+            Debug.Log("Other player numnber:" + player.GetComponent<PlayerFAScript>().playerNumber + " My player number: " + playerNumber);
+;            if (player.GetComponent<PlayerFAScript>().playerNumber != playerNumber)
             {
                 OtherFA = player.GetComponent<PlayerFAScript>().PlayerFA_Display;
+     
             }
         }
 
@@ -161,7 +163,7 @@ public class PlayerFAScript : NetworkBehaviour
 				fasync = Mathf.Abs (PlayerFA_Display - OtherFA);
 
 				// Lower and flickering emission saturation according to FA-level when FA-levels in sync
-				if (fasync < 0.2f)
+				if (fasync < 0.1f)
                 {
                     //Debug.Log("IN SYNC " + fasync);
                     if (glowS > 0.75f && !flickerS) {
