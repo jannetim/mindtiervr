@@ -123,7 +123,7 @@ public class PlayerFAScript : NetworkBehaviour
             {
                 if (NetworkClient.active)
                 {
-                    CmdSetOtherFA(PlayerFA_Display);
+                    CmdSetFA(PlayerFA_Display);
                 }
                 OtherFA = player.GetComponent<PlayerFAScript>().PlayerFA_Display;
 
