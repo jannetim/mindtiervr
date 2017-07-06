@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class BaseLineManager : MonoBehaviour {
 
-	public float BaseLineDuration = 30f;
+	public float BaseLineDuration = 120f;
 	public bool StartTimerDone = false;
 	bool BeginEndFade = false;
 	float StartTimerLength = 10f;
@@ -24,7 +24,7 @@ public class BaseLineManager : MonoBehaviour {
 				BaseLineDuration = 360f;
 				
 			} else {
-				BaseLineDuration = 30f;
+				BaseLineDuration = 120f;
 			}
             started = false;
 			//if (SingleUserSession) { Debug.Log( "single user session");
