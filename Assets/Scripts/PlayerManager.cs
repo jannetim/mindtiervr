@@ -43,7 +43,7 @@ public class PlayerManager : NetworkBehaviour
 
     public Queue<float> respMinQueue = new Queue<float>(new float[3]);
     public Queue<float> respMaxQueue = new Queue<float>(new float[3]);
-    public Queue<float> respQueue = new Queue<float>(new float[6]);
+    public Queue<float> respQueue = new Queue<float>(new float[5]);
     public Queue<float> faQueue = new Queue<float>(new float[9]);
 
     public bool RespChanged = true;
