@@ -124,7 +124,7 @@ public class PlayerFAScript : NetworkBehaviour
 ;            if (player.GetComponent<PlayerFAScript>().playerNumber != playerNumber)
             {
                 OtherFA = player.GetComponent<PlayerFAScript>().PlayerFA_Display;
-                Debug.Log = ("other FA: " + player.GetComponent<PlayerFAScript>().PlayerFA_Display);
+                Debug.Log("other FA: " + player.GetComponent<PlayerFAScript>().PlayerFA_Display);
                 OtherFAObject = player;
 
             }
