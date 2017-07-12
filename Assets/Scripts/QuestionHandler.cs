@@ -111,7 +111,7 @@ public class QuestionHandler : MonoBehaviour {
         if (!feelingsQuestionSet) { 
             if (questionNumber >= 24)
             {
-                question.text = "Kiitos vastauksista! Valvoja tulee pian käynnistämään seuraavan session";
+                question.text = "Kiitos vastauksista! Valvoja tulee pian käynnistämään seuraavan session. Voit leputtaa silmiäsi sulkemalla ne seuraavaa sessiota odottaessasi.";
                 Proceed.SetActive(false);
                 readyToProceed = false;
                 Qt.SetActive(false);
