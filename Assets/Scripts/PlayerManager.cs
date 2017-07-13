@@ -526,10 +526,12 @@ public class PlayerManager : NetworkBehaviour
                     if (NetworkServer.active)
                     {
                         RpcScaleAuraExpand(false);
+                        RpcScaleStatueExpand(false);
                     }
                     else if (NetworkClient.active)
                     {
                         CmdScaleAuraExpand(false);
+                        CmdScaleStatueExpand(false);
                     }
                     Debug.Log("Aura scaled breathing out!");
                 }
@@ -601,10 +603,12 @@ public class PlayerManager : NetworkBehaviour
                     if (NetworkServer.active)
                     {
                         RpcScaleAuraExpand(true);
+                        RpcScaleStatueExpand(true);
                     }
                     else if (NetworkClient.active)
                     {
                         CmdScaleAuraExpand(true);
+                        CmdScaleStatueExpand(true);
                     }
 
                     Debug.Log("Aura scaled breathing in!");
@@ -712,7 +716,7 @@ public class PlayerManager : NetworkBehaviour
             try
             {
                 AuraExpander.GetComponent<AuraScaler>().expand = true;
-                StatueExpander.GetComponent<StatueScaler>().expand = true;
+                
             }
             catch (UnassignedReferenceException e)
             {
@@ -724,7 +728,7 @@ public class PlayerManager : NetworkBehaviour
             try
             {
                 AuraExpander.GetComponent<AuraScaler>().expand = false;
-                StatueExpander.GetComponent<StatueScaler>().expand = false;
+               
             }
             catch (UnassignedReferenceException e)
             {
@@ -733,6 +737,47 @@ public class PlayerManager : NetworkBehaviour
         }
 
     }
+
+    [Command]
+    void CmdScaleStatueExpand(bool expand)
+    {
+        RpcScaleStatueExpand(expand);
+    }
+
+    [ClientRpc]
+    void RpcScaleStatueExpand(bool expand)
+    {
+        if (expand)
+        {
+            try
+            {
+                StatueExpander.GetComponent<StatueScaler>().expand = true;
+
+            }
+            catch (UnassignedReferenceException e)
+            {
+                Debug.Log(e);
+            }
+        }
+        else
+        {
+            try
+            {
+                StatueExpander.GetComponent<StatueScaler>().expand = false;
+
+            }
+            catch (UnassignedReferenceException e)
+            {
+                Debug.Log(e);
+            }
+        }
+
+    }
+
+
+ 
+         
+
 
     [Command]
     void CmdAssignLocalAuthority(GameObject obj)
