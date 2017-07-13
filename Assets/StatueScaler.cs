@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class StatueScaler : NetworkBehaviour
-{
+public class StatueScaler : NetworkBehaviour {
     public float ExpandSpeed = 0.03f;
     public float maxSize = 1.2f;
     public float minSize = 0.9204f;
@@ -12,14 +11,12 @@ public class StatueScaler : NetworkBehaviour
     public bool expand = false;
 
     // Use this for initialization
-    void Start()
-    {
+    void Start()  {
 
     }
 
     // Update is called once per frame
-    void FixedUpdate()
-    {
+    void FixedUpdate() {
         //scalefactor = (0.40f + 0.15f * (Mathf.Sin (Time.time * 0.8f)*0.5f + 1f));
         // eli, tossa on sinikäyrä välillä 0-1, (ajanmukaan, tulee respiraatiosta).
         //0.4 on minimiskaala

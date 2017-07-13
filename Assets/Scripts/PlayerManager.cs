@@ -608,7 +608,7 @@ public class PlayerManager : NetworkBehaviour
                     else if (NetworkClient.active)
                     {
                         CmdScaleAuraExpand(true);
-                        CmdScaleStatueExpand(true);
+                       // CmdScaleStatueExpand(true);
                     }
 
                     Debug.Log("Aura scaled breathing in!");
