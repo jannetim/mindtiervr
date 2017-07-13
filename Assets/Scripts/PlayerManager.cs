@@ -9,6 +9,7 @@ public class PlayerManager : NetworkBehaviour
 {
 	
     public GameObject AuraExpander;
+    public GameObject StatueExpander;
     public GameObject AuraController;
 	public GameObject AuraBone; //accessed by filewriter for recording aura scale.
     public GameObject BridgeBars;
@@ -146,6 +147,7 @@ public class PlayerManager : NetworkBehaviour
                
 
                 AuraExpander = GameObject.Find("AuraBone1");
+                StatueExpander = GameObject.Find("chestbone1");
                 //BridgeBars = GameObject.Find("Player1_BridgeLayers");
                 BridgeBars = gameObject;
                 StatueAnimator = GameObject.Find("Statue_Player1");
@@ -157,6 +159,7 @@ public class PlayerManager : NetworkBehaviour
                 //AuraController = GameObject.Find("Player2_Manager");
                 AuraController = gameObject;
                 AuraExpander = GameObject.Find("AuraBone2");
+                StatueExpander = GameObject.Find("chestbone2");
                 //AuraExpander = GameObject.Find("Aura_player2Expander");
                 //BridgeBars = GameObject.Find("Player2_BridgeLayers");
                 BridgeBars = gameObject;
@@ -709,6 +712,7 @@ public class PlayerManager : NetworkBehaviour
             try
             {
                 AuraExpander.GetComponent<AuraScaler>().expand = true;
+                StatueExpander.GetComponent<StatueScaler>().expand = true;
             }
             catch (UnassignedReferenceException e)
             {
@@ -720,6 +724,7 @@ public class PlayerManager : NetworkBehaviour
             try
             {
                 AuraExpander.GetComponent<AuraScaler>().expand = false;
+                StatueExpander.GetComponent<StatueScaler>().expand = false;
             }
             catch (UnassignedReferenceException e)
             {
